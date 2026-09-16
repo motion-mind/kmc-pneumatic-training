@@ -167,23 +167,16 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 20px 16px 70px; }
 .tstat-num { fill: var(--scale-line); font-size: 8px; font-weight: 750; text-anchor: middle; }
 .tstat-idx { fill: var(--accent); }
 
-.tc-bracket { fill: url(#bracketGrad); stroke: #8f8560; stroke-width: 1; }
-.tc-slot { fill: #6f6647; opacity: 0.5; }
-.tc-port { fill: #c6b489; stroke: #8a7b58; stroke-width: 1; }
-.tc-barb { fill: #c6b489; stroke: #8a7b58; stroke-width: 1; }
-.tc-hole { fill: #5b5140; }
-.tc-body { fill: url(#bodyGrad); stroke: #8a7b58; stroke-width: 1.5; }
-.tc-plateau { fill: url(#plateauGrad); stroke: #a89670; stroke-opacity: 0.35; stroke-width: 1; }
-.tc-plug { fill: #1c1d1e; stroke: #000000; stroke-width: 1; }
-.tc-dial { fill: #cdbb96; stroke: #8a7b58; stroke-width: 1.2; }
-.tc-screw { fill: #b9ae96; stroke: #6f6450; stroke-width: 1; }
-.tc-panel { fill: url(#panelGrad); stroke: #8a7b58; stroke-width: 1.2; }
-.tc-knob { fill: #bfae8c; stroke: #6f6450; stroke-width: 1.2; }
-.tc-knobptr { stroke: #4a4130; stroke-width: 1.4; stroke-linecap: round; }
+.tc-body { fill: url(#bodyGrad); stroke: #9c8a63; stroke-width: 1.6; }
+.tc-boss { fill: url(#bossGrad); stroke: #9c8a63; stroke-width: 1; }
+.tc-bore { fill: #4a3f2c; }
+.tc-plug { fill: #1b1c1d; stroke: #000000; stroke-width: 1; }
+.tc-dial { fill: #cdbb96; stroke: #9c8a63; stroke-width: 1.2; }
+.tc-cross { stroke: #6d6250; stroke-width: 1.6; stroke-linecap: round; }
+.tc-panel { fill: url(#panelGrad); stroke: #9c8a63; stroke-width: 1.2; }
+.tc-paneltext { fill: #695b3e; font-size: 6px; font-weight: 800; letter-spacing: 0.01em; }
 .tc-note { fill: #6d5f42; font-size: 7px; font-weight: 800; letter-spacing: 0.02em; }
-.tc-paneltext { fill: #6b5d40; font-size: 6.5px; font-weight: 800; letter-spacing: 0.02em; }
-.tc-brandplate { fill: #f2f1ea; stroke: #b8b3a4; stroke-width: 0.8; }
-.tc-brand { fill: #2a2a2a; font-size: 5.5px; font-weight: 750; }
+.tc-sticker { fill: #f2f1ea; stroke: #b8b3a4; stroke-width: 0.8; }
 .knob-tick { stroke: #7a6c4c; stroke-width: 1; }
 .fitting { fill: var(--metal); stroke: var(--dev-edge); stroke-width: 1; }
 

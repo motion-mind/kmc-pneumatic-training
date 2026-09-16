@@ -26,12 +26,12 @@
   };
 
   var TUBES = [
-    { id: "mainToThermostat", points: [[190, 510], [190, 456]], cls: "wire-main", name: "main air to thermostat" },
-    { id: "mainToController", points: [[490, 510], [490, 420]], cls: "wire-main", name: "main air to controller" },
-    { id: "tLine", points: [[110, 456], [110, 530], [635, 530], [635, 478]], cls: "wire-reset", name: "reset signal to controller" },
-    { id: "bLine", points: [[490, 352], [450, 352]], cls: "wire-branch", name: "branch to actuator" },
-    { id: "hLine", points: [[640, 250], [640, 300]], cls: "wire-sensor", name: "sensor H line" },
-    { id: "lLine", points: [[680, 250], [680, 300]], cls: "wire-sensor", name: "sensor L line" }
+    { id: "mainToThermostat", points: [[910, 516], [910, 456]], cls: "wire-main", name: "main air to thermostat" },
+    { id: "mainToController", points: [[520, 516], [520, 420], [558, 420]], cls: "wire-main", name: "main air to controller" },
+    { id: "tLine", points: [[678, 332], [678, 282], [880, 282], [880, 320]], cls: "wire-reset", name: "reset signal to controller" },
+    { id: "bLine", points: [[556, 372], [450, 372]], cls: "wire-branch", name: "branch to actuator" },
+    { id: "hLine", points: [[585, 250], [585, 332]], cls: "wire-sensor", name: "sensor H line" },
+    { id: "lLine", points: [[622, 250], [622, 320]], cls: "wire-sensor", name: "sensor L line" }
   ];
 
   var els = {};
@@ -58,12 +58,12 @@
     if (gs) {
       for (a = -60; a <= 60; a += 15) {
         var major = (a % 30 === 0);
-        p1 = polar(86, 376, 26, a);
-        p2 = polar(86, 376, major ? 31.5 : 30, a);
+        p1 = polar(834, 370, 26, a);
+        p2 = polar(834, 370, major ? 31.5 : 30, a);
         gs.appendChild(seg("tstat-tick" + (major ? " major" : ""), p1[0], p1[1], p2[0], p2[1]));
       }
       [-60, -30, 0, 30, 60].forEach(function (ang) {
-        var pt = polar(86, 376, 20.5, ang);
+        var pt = polar(834, 370, 20.5, ang);
         var t = document.createElementNS(NS, "text");
         t.setAttribute("class", "tstat-num");
         t.setAttribute("x", pt[0].toFixed(1));
@@ -73,15 +73,6 @@
       });
     }
 
-    [["knobLoScale", 716, 376], ["knobHiScale", 716, 402]].forEach(function (spec) {
-      var gk = document.getElementById(spec[0]);
-      if (!gk) return;
-      for (var ang = 0; ang < 360; ang += 30) {
-        p1 = polar(spec[1], spec[2], 6.2, ang);
-        p2 = polar(spec[1], spec[2], 9, ang);
-        gk.appendChild(seg("knob-tick", p1[0], p1[1], p2[0], p2[1]));
-      }
-    });
   }
 
   function buildTube(t) {
@@ -219,7 +210,7 @@
 
     var needAng = -60 + (state.setpoint - 60) / 20 * 120;
     document.getElementById("tNeedle").setAttribute("transform",
-      "rotate(" + needAng.toFixed(1) + " 86 376)");
+      "rotate(" + needAng.toFixed(1) + " 834 370)");
 
     var zone = document.getElementById("zoneRect");
     var tc = clamp((state.roomTemp - 55) / 30, 0, 1);

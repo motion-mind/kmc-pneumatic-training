@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — interactive</title>
 <meta name="description" content="Interactive pneumatic VAV training: plug and unplug the thermostat, KMC box controller, actuator and airflow sensor lines and watch the system respond.">
-<link rel="stylesheet" href="css/style.css?v=5">
+<link rel="stylesheet" href="css/style.css?v=6">
 </head>
 <body>
 <header class="topbar">
@@ -20,28 +20,23 @@
 
 <main>
   <p class="intro">Click any tube to <b>unplug</b> it &mdash; click again to reconnect. Click the air supply to cut main air.
-  The controller ports are laid out as they are on the real KMC CSC-3000 face, so you can see how the lines land on the device.</p>
+  The controller is drawn from the front of a KMC CSC-3000 series device, so the lines land on the ports exactly as they do on the real face.</p>
 
   <div class="stage-wrap">
     <div class="stage">
-      <svg id="sim" viewBox="0 0 1000 560" role="img" aria-label="Interactive pneumatic VAV system diagram">
+      <svg id="sim" viewBox="0 0 1000 580" role="img" aria-label="Interactive pneumatic VAV system diagram">
         <defs>
           <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#d9cba9"/>
-            <stop offset="1" stop-color="#b9a67d"/>
+            <stop offset="0" stop-color="#dccfb0"/>
+            <stop offset="1" stop-color="#c0ad86"/>
           </linearGradient>
-          <linearGradient id="plateauGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#e2d3ae"/>
-            <stop offset="1" stop-color="#cbb992"/>
+          <linearGradient id="bossGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#d5c5a0"/>
+            <stop offset="1" stop-color="#bda984"/>
           </linearGradient>
           <linearGradient id="panelGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#c9b791"/>
-            <stop offset="1" stop-color="#b4a179"/>
-          </linearGradient>
-          <linearGradient id="bracketGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#bdb277"/>
-            <stop offset="0.5" stop-color="#e7ddb0"/>
-            <stop offset="1" stop-color="#a99f6c"/>
+            <stop offset="0" stop-color="#cebd98"/>
+            <stop offset="1" stop-color="#b9a67f"/>
           </linearGradient>
         </defs>
 
@@ -50,132 +45,111 @@
         <polygon class="air-arrow" points="780,210 806,196 806,224"/>
         <text class="lbl" x="792" y="160" text-anchor="end">from AHU</text>
         <line id="flowLine" class="airflow" x1="780" y1="210" x2="202" y2="210"/>
-        <text id="rdFlow" class="lbl val" x="500" y="156" text-anchor="middle">540 CFM</text>
+        <text id="rdFlow" class="lbl val" x="470" y="156" text-anchor="middle">540 CFM</text>
 
-        <line class="sensor-bar" x1="626" y1="210" x2="694" y2="210"/>
-        <circle class="sensor-tap" cx="640" cy="250" r="4.5"/>
-        <circle class="sensor-tap" cx="680" cy="250" r="4.5"/>
+        <line class="sensor-bar" x1="574" y1="210" x2="634" y2="210"/>
+        <circle class="sensor-tap" cx="585" cy="250" r="4.5"/>
+        <circle class="sensor-tap" cx="622" cy="250" r="4.5"/>
         <text class="lbl" x="660" y="160" text-anchor="middle">flow sensor</text>
 
         <line id="blade" class="blade" x1="350" y1="210" x2="430" y2="210"/>
-        <rect class="shaft" x="388" y="210" width="4" height="80"/>
-        <text id="rdDamper" class="lbl val" x="404" y="272">45%</text>
+        <rect class="shaft" x="388" y="210" width="4" height="90"/>
+        <text id="rdDamper" class="lbl val" x="404" y="262">45%</text>
 
         <rect id="zoneRect" class="zone" x="60" y="150" width="140" height="120" rx="12"/>
         <text class="eq dim" x="130" y="184" text-anchor="middle">ZONE</text>
         <text id="rdRoom" class="lbl val big" x="130" y="230" text-anchor="middle">76.0&deg;F</text>
         <text id="rdRoomSp" class="lbl" x="130" y="254" text-anchor="middle">set 72&deg;F</text>
 
-        <g id="compressor" class="clickable" tabindex="0" role="button" aria-label="Toggle main air supply">
-          <rect class="unit" x="856" y="482" width="120" height="60" rx="8"/>
-          <circle class="fan" cx="884" cy="512" r="13"/>
-          <path class="fan" d="M884 499 A13 13 0 0 1 884 525"/>
-          <text class="eq" x="936" y="508" text-anchor="middle">MAIN</text>
-          <text class="eq" x="936" y="526" text-anchor="middle">AIR</text>
-          <text id="rdComp" class="lbl val" x="916" y="558" text-anchor="middle">20 psi</text>
-        </g>
-        <line id="mainHeader" class="wire wire-main" x1="190" y1="510" x2="856" y2="510"/>
-
-        <g class="dev-shadow">
-          <rect class="tstat-plate" x="30" y="320" width="196" height="136" rx="15"/>
-          <rect class="tstat-recess" x="40" y="330" width="176" height="116" rx="11"/>
-          <line class="tstat-louvre" x1="50" y1="431" x2="206" y2="431"/>
-          <line class="tstat-louvre" x1="50" y1="438" x2="206" y2="438"/>
-          <circle class="tstat-dial" cx="86" cy="376" r="31"/>
-          <g id="tstatScale"></g>
-          <line id="tNeedle" class="needle" x1="86" y1="376" x2="86" y2="349"/>
-          <circle class="dial-hub" cx="86" cy="376" r="3.5"/>
-          <polygon class="tstat-idx" points="86,339 81,330 91,330"/>
-          <text class="eq" x="136" y="346">THERMOSTAT</text>
-          <text class="eq dim" x="136" y="360">master &middot; 3&ndash;15 psi</text>
-          <text id="rdTOut" class="lbl val" x="136" y="390">9.0 psi</text>
-          <text id="rdTSp" class="lbl" x="136" y="410">set 72&deg;F</text>
-          <rect class="fitting" x="104" y="450" width="12" height="14" rx="2"/>
-          <rect class="fitting" x="184" y="450" width="12" height="14" rx="2"/>
-        </g>
-
-        <!-- KMC CSC-3000 style reset volume controller, real port layout -->
-        <g class="dev-shadow">
-          <rect class="tc-bracket" x="476" y="346" width="20" height="88" rx="4"/>
-          <rect class="tc-slot" x="481" y="381" width="10" height="18" rx="5"/>
-          <rect class="tc-bracket" x="772" y="346" width="20" height="88" rx="4"/>
-          <rect class="tc-slot" x="777" y="381" width="10" height="18" rx="5"/>
-
-          <g>
-            <rect class="tc-port" x="490" y="345.5" width="32" height="13" rx="2"/>
-            <rect class="tc-barb" x="493" y="343.5" width="4" height="17" rx="2"/>
-            <circle class="tc-hole" cx="491" cy="352" r="2.6"/>
-          </g>
-          <g>
-            <rect class="tc-port" x="490" y="413.5" width="32" height="13" rx="2"/>
-            <rect class="tc-barb" x="493" y="411.5" width="4" height="17" rx="2"/>
-            <circle class="tc-hole" cx="491" cy="420" r="2.6"/>
-          </g>
-          <g>
-            <rect class="tc-port" x="633.5" y="300" width="13" height="22" rx="2"/>
-            <rect class="tc-barb" x="631.5" y="303" width="17" height="4" rx="2"/>
-            <circle class="tc-hole" cx="640" cy="301" r="2.6"/>
-          </g>
-          <g>
-            <rect class="tc-port" x="673.5" y="300" width="13" height="22" rx="2"/>
-            <rect class="tc-barb" x="671.5" y="303" width="17" height="4" rx="2"/>
-            <circle class="tc-hole" cx="680" cy="301" r="2.6"/>
-          </g>
-          <g>
-            <rect class="tc-port" x="628.5" y="460" width="13" height="18" rx="2"/>
-            <rect class="tc-barb" x="626.5" y="463" width="17" height="4" rx="2"/>
-            <circle class="tc-hole" cx="635" cy="477" r="2.6"/>
-          </g>
-
-          <polygon class="tc-body" points="550,318 720,318 750,348 750,430 720,460 550,460 520,430 520,348"/>
-          <polygon class="tc-plateau" points="572,342 698,342 724,366 724,412 698,436 572,436 546,412 546,366"/>
-
-          <circle class="tc-port" cx="548" cy="395" r="9"/>
-          <circle class="tc-plug" cx="548" cy="395" r="6.5"/>
-
-          <circle class="tc-dial" cx="586" cy="388" r="24"/>
-          <text class="tc-note" x="564" y="372" text-anchor="end">N.O.</text>
-          <text class="tc-note" x="608" y="372" text-anchor="start">N.C.</text>
-          <circle class="tc-screw" cx="586" cy="388" r="5"/>
-          <line class="tc-knobptr" x1="586" y1="388" x2="586" y2="379"/>
-          <text class="tc-note" x="586" y="424" text-anchor="middle">DAMPER</text>
-
-          <rect class="tc-panel" x="634" y="346" width="104" height="88" rx="6"/>
-          <text class="tc-paneltext" x="642" y="360">RESET START</text>
-          <text class="tc-paneltext" x="642" y="379">LO STAT &Delta;P</text>
-          <text class="tc-paneltext" x="642" y="405">HI STAT &Delta;P</text>
-          <text class="tc-paneltext" x="642" y="424">RESET SPAN</text>
-          <circle class="tc-screw" cx="716" cy="357" r="4.5"/>
-          <circle class="tc-knob" cx="716" cy="376" r="9"/>
-          <g id="knobLoScale"></g>
-          <line class="tc-knobptr" x1="716" y1="376" x2="716" y2="369"/>
-          <circle class="tc-knob" cx="716" cy="402" r="9"/>
-          <g id="knobHiScale"></g>
-          <line class="tc-knobptr" x1="716" y1="402" x2="716" y2="395"/>
-          <circle class="tc-screw" cx="716" cy="421" r="4.5"/>
-
-          <rect class="tc-brandplate" x="528" y="441" width="86" height="12" rx="2"/>
-          <text class="tc-brand" x="571" y="450" text-anchor="middle">KMC Controls, Inc.</text>
-        </g>
-        <text class="portlbl" x="528" y="356">B</text>
-        <text class="portlbl" x="528" y="426">M</text>
-        <text class="portlbl" x="640" y="336" text-anchor="middle">H</text>
-        <text class="portlbl" x="680" y="336" text-anchor="middle">L</text>
-        <text class="portlbl" x="614" y="452">T</text>
-        <text class="portlbl" x="548" y="380" text-anchor="middle">G</text>
-
         <g>
-          <rect class="unit" x="330" y="290" width="120" height="80" rx="8"/>
-          <text class="eq" x="390" y="318" text-anchor="middle">DAMPER</text>
-          <text class="eq" x="390" y="336" text-anchor="middle">ACTUATOR</text>
-          <text id="rdAct" class="lbl val" x="390" y="360" text-anchor="middle">6.6 psi</text>
+          <rect class="unit" x="330" y="300" width="120" height="80" rx="8"/>
+          <text class="eq" x="390" y="328" text-anchor="middle">DAMPER</text>
+          <text class="eq" x="390" y="346" text-anchor="middle">ACTUATOR</text>
+          <text id="rdAct" class="lbl val" x="390" y="370" text-anchor="middle">6.6 psi</text>
         </g>
 
-        <text id="rdMainTstat" class="lbl val" x="198" y="500">20 psi</text>
-        <text id="rdMainCtrl" class="lbl val" x="482" y="470" text-anchor="end">20 psi</text>
-        <text id="rdT" class="lbl val" x="350" y="522" text-anchor="middle">9.0 psi</text>
-        <text id="rdB" class="lbl val" x="470" y="342" text-anchor="middle">6.6 psi</text>
-        <text id="rdDp" class="lbl val" x="560" y="286" text-anchor="middle">&Delta;P 0.25 in wc</text>
+        <g id="compressor" class="clickable" tabindex="0" role="button" aria-label="Toggle main air supply">
+          <rect class="unit" x="30" y="486" width="120" height="60" rx="8"/>
+          <circle class="fan" cx="58" cy="516" r="13"/>
+          <path class="fan" d="M58 503 A13 13 0 0 1 58 529"/>
+          <text class="eq" x="110" y="512" text-anchor="middle">MAIN</text>
+          <text class="eq" x="110" y="530" text-anchor="middle">AIR</text>
+          <text id="rdComp" class="lbl val" x="90" y="562" text-anchor="middle">20 psi</text>
+        </g>
+        <line id="mainHeader" class="wire wire-main" x1="150" y1="516" x2="910" y2="516"/>
+
+        <!-- room thermostat (remote) -->
+        <g class="dev-shadow">
+          <rect class="tstat-plate" x="800" y="320" width="160" height="136" rx="15"/>
+          <rect class="tstat-recess" x="810" y="330" width="140" height="116" rx="11"/>
+          <line class="tstat-louvre" x1="820" y1="431" x2="940" y2="431"/>
+          <line class="tstat-louvre" x1="820" y1="438" x2="940" y2="438"/>
+          <circle class="tstat-dial" cx="834" cy="370" r="24"/>
+          <g id="tstatScale"></g>
+          <line id="tNeedle" class="needle" x1="834" y1="370" x2="834" y2="348"/>
+          <circle class="dial-hub" cx="834" cy="370" r="3.5"/>
+          <polygon class="tstat-idx" points="834,338 829,330 839,330"/>
+          <text class="eq" x="866" y="344">THERMOSTAT</text>
+          <text class="eq dim" x="866" y="358">remote &middot; 3&ndash;15 psi</text>
+          <text id="rdTOut" class="lbl val" x="866" y="390">9.0 psi</text>
+          <text id="rdTSp" class="lbl" x="866" y="408">set 72&deg;F</text>
+          <rect class="fitting" x="874" y="312" width="12" height="14" rx="2"/>
+          <rect class="fitting" x="904" y="450" width="12" height="14" rx="2"/>
+        </g>
+
+        <!-- KMC CSC-3000 series reset volume controller (front face) -->
+        <g class="dev-shadow">
+          <polygon class="tc-body" points="580,295 680,295 725,340 725,425 680,470 580,470 535,425 535,340"/>
+
+          <circle class="tc-boss" cx="648" cy="344" r="13"/>
+          <circle class="tc-bore" cx="648" cy="344" r="5"/>
+
+          <circle class="tc-boss" cx="585" cy="332" r="10"/>
+          <circle class="tc-bore" cx="585" cy="332" r="4"/>
+          <circle class="tc-boss" cx="622" cy="320" r="10"/>
+          <circle class="tc-bore" cx="622" cy="320" r="4"/>
+          <circle class="tc-boss" cx="678" cy="332" r="10"/>
+          <circle class="tc-bore" cx="678" cy="332" r="4"/>
+
+          <circle class="tc-boss" cx="556" cy="372" r="10"/>
+          <circle class="tc-bore" cx="556" cy="372" r="4"/>
+          <circle class="tc-boss" cx="558" cy="420" r="10"/>
+          <circle class="tc-bore" cx="558" cy="420" r="4"/>
+          <circle class="tc-boss" cx="634" cy="414" r="11"/>
+          <circle class="tc-bore" cx="634" cy="414" r="4"/>
+
+          <circle class="tc-dial" cx="596" cy="376" r="22"/>
+          <line class="tc-cross" x1="587" y1="376" x2="605" y2="376"/>
+          <line class="tc-cross" x1="596" y1="367" x2="596" y2="385"/>
+          <text class="tc-note" x="576" y="360" text-anchor="end">N.O.</text>
+          <text class="tc-note" x="616" y="360" text-anchor="start">N.C.</text>
+          <text class="tc-note" x="596" y="412" text-anchor="middle">DAMPER</text>
+
+          <circle class="tc-plug" cx="596" cy="442" r="9"/>
+
+          <rect class="tc-panel" x="652" y="368" width="70" height="84" rx="5"/>
+          <text class="tc-paneltext" x="658" y="382">RESET START</text>
+          <text class="tc-paneltext" x="658" y="400">LO STAT &Delta;P</text>
+          <text class="tc-paneltext" x="658" y="418">HI STAT &Delta;P</text>
+          <text class="tc-paneltext" x="658" y="434">RESET SPAN</text>
+          <circle class="tc-boss" cx="710" cy="400" r="6.5"/>
+          <circle class="tc-bore" cx="710" cy="400" r="2.5"/>
+          <circle class="tc-boss" cx="710" cy="418" r="6.5"/>
+          <circle class="tc-bore" cx="710" cy="418" r="2.5"/>
+          <rect class="tc-sticker" x="658" y="440" width="46" height="9" rx="1.5"/>
+        </g>
+        <text class="portlbl" x="585" y="352" text-anchor="middle">H</text>
+        <text class="portlbl" x="622" y="340" text-anchor="middle">L</text>
+        <text class="portlbl" x="678" y="352" text-anchor="middle">T</text>
+        <text class="portlbl" x="568" y="368">B</text>
+        <text class="portlbl" x="570" y="424">M</text>
+        <text class="portlbl" x="596" y="460" text-anchor="middle">G</text>
+
+        <text id="rdMainTstat" class="lbl val" x="900" y="492" text-anchor="end">20 psi</text>
+        <text id="rdMainCtrl" class="lbl val" x="512" y="472" text-anchor="end">20 psi</text>
+        <text id="rdT" class="lbl val" x="780" y="272" text-anchor="middle">9.0 psi</text>
+        <text id="rdB" class="lbl val" x="500" y="366" text-anchor="middle">6.6 psi</text>
+        <text id="rdDp" class="lbl val" x="480" y="286" text-anchor="middle">&Delta;P 0.25 in wc</text>
 
         <g id="tubeLayer"></g>
       </svg>
@@ -237,8 +211,8 @@
   <section class="trythis">
     <h2>Try this</h2>
     <ol>
-      <li>Click the <b>main-air line to the controller</b> (port <b>M</b>, lower-left) &mdash; it loses air and the damper falls to its spring position.</li>
-      <li>Unplug the <b>reset line</b> (port <b>T</b>, bottom) &mdash; the controller sees 0 psi and holds LO STAT.</li>
+      <li>Click the <b>main-air line to the controller</b> (port <b>M</b>) &mdash; it loses air and the damper falls to its spring position.</li>
+      <li>Unplug the <b>reset line</b> (port <b>T</b>, top right) &mdash; the controller sees 0 psi and holds LO STAT.</li>
       <li>Unplug a <b>sensor line</b> (<b>H</b> or <b>L</b>, top) &mdash; the controller can&rsquo;t measure flow, so it drives wide open.</li>
       <li>Switch to <b>Reverse</b> reset while the thermostat is direct-acting &mdash; the loop controls backwards and runs away.</li>
     </ol>
@@ -251,6 +225,6 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=5"></script>
+<script src="js/sim.js?v=6"></script>
 </body>
 </html>
