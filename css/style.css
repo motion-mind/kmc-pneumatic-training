@@ -306,3 +306,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
   .stage { padding: 6px; }
   .intro { font-size: 15px; }
 }
+
+.tc-ptr { stroke: var(--red); stroke-width: 2.4; stroke-linecap: round; }
+.tc-note-mark { fill: #6d5f42; }
+.link { stroke: var(--muted); stroke-width: 2.5; stroke-dasharray: 5 4; }
+#opposedNote, #opposedLink { display: none; }

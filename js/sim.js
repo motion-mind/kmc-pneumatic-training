@@ -6,7 +6,7 @@
   var tubeLayer = document.getElementById("tubeLayer");
 
   var MAX = 1200, MIN = 300, RESET_START = 8, RESET_SPAN = 5;
-  var DEFAULTS = { mainOn: true, resetType: "direct", setpoint: 72, roomTemp: 78, terminalType: "reheat" };
+  var DEFAULTS = { mainOn: true, resetType: "direct", setpoint: 72, roomTemp: 78, terminalType: "reheat", damperAction: "NO", dualActuators: true };
 
   var state = {
     mainOn: DEFAULTS.mainOn,
@@ -14,6 +14,8 @@
     setpoint: DEFAULTS.setpoint,
     roomTemp: DEFAULTS.roomTemp,
     terminalType: DEFAULTS.terminalType,
+    damperAction: DEFAULTS.damperAction,
+    dualActuators: DEFAULTS.dualActuators,
     lines: {
       mainToThermostat: true,
       mainToController: true,
@@ -172,15 +174,21 @@
     else coolCmd = clamp(flowSP / MAX * 100, 5, 100);
 
     var e = state.roomTemp - state.setpoint;
+    var coldFail = (state.damperAction === "NO") ? 100 : 0;
     var coldPct, hotPct, reheatPct;
 
     if (dual) {
-      coldPct = failHeat ? 0 : clamp(0.5 + e * 0.4, 0, 1) * 100;
-      hotPct = failHeat ? 100 : (L.hotLine ? clamp(0.5 - e * 0.4, 0, 1) * 100 : 100);
       reheatPct = 0;
+      if (state.dualActuators) {
+        coldPct = failHeat ? 0 : clamp(0.5 + e * 0.4, 0, 1) * 100;
+        hotPct = failHeat ? 100 : (L.hotLine ? clamp(0.5 - e * 0.4, 0, 1) * 100 : 100);
+      } else {
+        coldPct = failHeat ? 0 : clamp(0.5 + e * 0.4, 0, 1) * 100;
+        hotPct = 100 - coldPct;
+      }
     } else {
       reheatPct = (failHeat || !L.reheatLine) ? 100 : clamp((state.setpoint - state.roomTemp - 0.5) / 3, 0, 1) * 100;
-      coldPct = failHeat ? 0 : coolCmd;
+      coldPct = failHeat ? coldFail : coolCmd;
       hotPct = 0;
     }
 
@@ -255,6 +263,14 @@
 
     document.getElementById("reheatGroup").style.display = dual ? "none" : "";
     document.getElementById("dualGroup").style.display = dual ? "" : "none";
+    document.getElementById("hotActuator").style.display = (dual && state.dualActuators) ? "" : "none";
+    document.getElementById("opposedNote").style.display = (dual && !state.dualActuators) ? "" : "none";
+    document.getElementById("opposedLink").style.display = (dual && !state.dualActuators) ? "" : "none";
+
+    var nc = state.damperAction === "NC";
+    document.getElementById("damperPtr").setAttribute("transform",
+      "rotate(" + (nc ? 90 : 180) + " 596 376)");
+    setText("roAction", nc ? "N.C." : "N.O.", false);
 
     var needAng = -60 + (state.setpoint - 60) / 20 * 120;
     document.getElementById("tNeedle").setAttribute("transform",
@@ -352,6 +368,16 @@
     var mb = document.getElementById("mainBtn");
     mb.textContent = state.mainOn ? "Cut main air" : "Restore main air";
     mb.classList.toggle("on", !state.mainOn);
+    document.getElementById("dualActCtl").style.display = dual ? "" : "none";
+    document.getElementById("daDual").classList.toggle("active", state.dualActuators);
+    document.getElementById("daSingle").classList.toggle("active", !state.dualActuators);
+  }
+
+  function setActuators(v) { state.dualActuators = v; syncMode(); syncControls(); }
+
+  function toggleDamperAction() {
+    state.damperAction = state.damperAction === "NO" ? "NC" : "NO";
+    syncControls();
   }
 
   function setTerminal(t) { state.terminalType = t; syncMode(); syncControls(); }
@@ -359,8 +385,12 @@
   function syncMode() {
     var dual = state.terminalType === "dual";
     for (var id in els) {
-      var m = els[id].mode;
-      els[id].g.style.display = (m === "always" || (m === "dual") === dual) ? "" : "none";
+      var m = els[id].mode, show;
+      if (m === "always") show = true;
+      else if (m === "dual") show = dual;
+      else show = !dual;
+      if (id === "hotLine") show = dual && state.dualActuators;
+      els[id].g.style.display = show ? "" : "none";
     }
     var rg = document.getElementById("reheatGroup");
     var dg = document.getElementById("dualGroup");
@@ -383,6 +413,8 @@
     state.setpoint = DEFAULTS.setpoint;
     state.roomTemp = DEFAULTS.roomTemp;
     state.terminalType = DEFAULTS.terminalType;
+    state.damperAction = DEFAULTS.damperAction;
+    state.dualActuators = DEFAULTS.dualActuators;
     reconnectAll();
     syncMode();
     syncControls();
@@ -402,6 +434,13 @@
     document.getElementById("rtReverse").addEventListener("click", function () { setResetType("reverse"); });
     document.getElementById("ttReheat").addEventListener("click", function () { setTerminal("reheat"); });
     document.getElementById("ttDual").addEventListener("click", function () { setTerminal("dual"); });
+    document.getElementById("daDual").addEventListener("click", function () { setActuators(true); });
+    document.getElementById("daSingle").addEventListener("click", function () { setActuators(false); });
+    var dd = document.getElementById("damperDial");
+    dd.addEventListener("click", toggleDamperAction);
+    dd.addEventListener("keydown", function (e) {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggleDamperAction(); }
+    });
     document.getElementById("mainBtn").addEventListener("click", toggleMain);
     document.getElementById("reconnect").addEventListener("click", reconnectAll);
     document.getElementById("resetAll").addEventListener("click", resetAll);
