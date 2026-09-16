@@ -179,7 +179,7 @@
       hotPct = failHeat ? 100 : (L.hotLine ? clamp(0.5 - e * 0.4, 0, 1) * 100 : 100);
       reheatPct = 0;
     } else {
-      reheatPct = failHeat ? 100 : clamp((state.setpoint - state.roomTemp - 0.5) / 3, 0, 1) * 100;
+      reheatPct = (failHeat || !L.reheatLine) ? 100 : clamp((state.setpoint - state.roomTemp - 0.5) / 3, 0, 1) * 100;
       coldPct = failHeat ? 0 : coolCmd;
       hotPct = 0;
     }
@@ -312,6 +312,9 @@
     } else if (dual && !L.hotLine) {
       cls = "warn";
       msg = "The hot-deck branch is unplugged. The hot-deck damper loses air and fails open \u2014 heating, with reheat-style control lost.";
+    } else if (!dual && !L.reheatLine) {
+      cls = "warn";
+      msg = "The reheat branch is unplugged. The normally-open reheat valve loses air and fails open \u2014 full heat on minimum airflow.";
     } else if (state.resetType === "reverse") {
       cls = "warn";
       msg = "Reverse reset with a direct-acting thermostat controls backwards: a warm room calls for LESS air, so the loop runs away.";
