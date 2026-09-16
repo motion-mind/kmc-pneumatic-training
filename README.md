@@ -1,86 +1,47 @@
-# Pneumatic VAV & Thermostat Training
+# Pneumatic VAV Trainer
 
-A self-contained, zero-build training website for **pneumatic VAV box controllers** and
-**pneumatic thermostats**, built around the KMC Controls **CSC-3000 series** reset volume
-controller and KMC pneumatic thermostats. It teaches fundamentals first, then setup,
-calibration, and troubleshooting, with quizzes and calculators.
+A single-page, interactive visual tutorial for a pneumatic VAV terminal built around a
+KMC **CSC-3000**–style reset volume controller and a pneumatic thermostat. Click any tube
+to **plug or unplug** it, click the air supply to cut main air, and watch the damper,
+airflow, and room temperature respond in real time. No quizzes, no long reading — poke at it.
 
 > Independent training material. Not affiliated with or endorsed by KMC Controls, Inc.
 
 ## Run it
 
-There is no build step, no dependencies, and no server required.
+No build step, no dependencies.
 
 ```sh
-# just open it
-open index.html            # macOS
-xdg-open index.html        # Linux
-
-# or serve it statically (recommended so relative paths behave identically to production)
-python3 -m http.server 8080
-# then visit http://localhost:8080/
+open index.html          # or: python3 -m http.server 8080
 ```
 
-Open `index.html` from the project root. All navigation uses relative paths and works
-from the filesystem or any static host (nginx, GitHub Pages, Caddy, a Proxmox LXC, etc.).
+## What the simulator models
 
-## Contents
+A simplified but physically reasonable loop:
+
+- **Main air** 15–30 psi powers everything (loss of air ⇒ everything fails to its spring position).
+- **Thermostat** is the master: direct-acting, 3–15 psi output proportional to room temperature vs setpoint.
+- **Controller** (ports `M`, `T`, `B`, `H`, `L`, `G`) takes the reset signal at `T` and the
+  velocity pressure from the sensor at `H`/`L`, and drives the damper through branch `B`.
+- **Reset type** direct (`LO STAT` = min, `HI STAT` = max) or reverse (swapped) — flip it
+  to see what a mis-applied reset does.
+- **Velocity pressure** follows `ΔP ≈ 0.5 × (flow/max)²`; the control loop, the duct airflow
+  animation, the damper blade, the thermostat dial, and the live readouts all update continuously.
+
+## Files
 
 ```
-index.html                    Home: who this is for, learning path, quick pressure reference
-pages/
-  fundamentals.html           Unit 01 — air supply, main vs branch, restrictor & nozzle-flapper,
-                              relays, DA/RA, actuators, P-E switches, tools
-  thermostats.html            Unit 02 — thermostat operation, types, installation, calibration,
-                              day/night setback, troubleshooting
-  vav-controllers.html        Unit 03 — KMC CSC-3000: ports, reset type, damper action,
-                              reset start & span, models & cross-references, cautions
-  setup.html                  Unit 04 — pre-checks, thermostat calibration, and the KMC
-                              direct/reverse reset min/max procedures, plus a record sheet
-  troubleshooting.html        Unit 05 — signal-chain method, gauge interpretation, decision
-                              trees by symptom, phantom faults
-  practice.html               Unit 06 — ΔP→CFM calculator, reset-setpoint calculator,
-                              worked field scenarios, mixed quiz
-  reference.html              Printable reference: pressures, port codes, cross-references,
-                              formulas, glossary, sources
-css/style.css                 Theme (light/dark), layout, components, print styles
-js/site.js                    Theme toggle, nav highlighting, auto table of contents,
-                              quiz engine, calculators
-js/quizzes.js                 Question banks (fundamentals, thermostats, vav, setup,
-                              troubleshooting, mixed)
+index.html     Single page: SVG system, controls, readouts, short legend + "try this"
+css/style.css  Theme (light/dark), layout, SVG palette, side panel
+js/sim.js      State, tube build/plug logic, control loop, rendering, controls
 ```
 
-## Editing
+## Deployed
 
-- **Add a question:** append an object to the matching array in `js/quizzes.js`, then the
-  page's `<div class="quiz" data-quiz="...">` picks it up automatically.
-- **Add a calculator:** add a `<div class="calc" data-calc="...">` and a builder function in
-  `js/site.js` (`initCalcs`).
-- **Add a page:** copy the header/footer from an existing page, update the nav, and add the
-  new link to every page's `<nav class="site-nav">`. `site.js` highlights the active link by
-  filename automatically.
-- **Theme colors** live in the `:root` and `body.theme-dark` blocks of `css/style.css`.
+- Homelab: LXC CT 209 on r740, nginx, `https://kmc.mywork.locker` (see `../ps/kmc/`).
+  Update = push here, then `ssh root@192.168.10.74 'git -C /var/www/kmc pull'`.
 
 ## Sources
 
-Primary technical source: KMC Controls, *CSC-3000 Series Pneumatic VAV Reset Volume
-Controllers — Application Guide*, `AG_CSC-3000_SAN1205B-RevH`. Thermostat content also
-references KMC CTC-1600 / CTE-5100 series documentation. General pneumatic practice fills in
-thermostat calibration and day/night methods. The manufacturer's manual and the box's own
-airflow chart always govern over this site.
-
-## Deploying
-
-Any static host works. For the homelab pattern used by the sibling `hvacsim` project, clone
-this directory into an LXC and point nginx at it:
-
-```sh
-git clone <this repo> /var/www/pneumatic-training
-# nginx root /var/www/pneumatic-training;
-# update with: git -C /var/www/pneumatic-training pull
-```
-
-## License
-
-No license is declared. Educational content; verify all procedures against the current
-manufacturer documentation before field use.
+Simplified from the KMC CSC-3000 Series Application Guide (`AN1205B`) and general pneumatic
+control practice. The manufacturer's manual and the tag-specific airflow chart always govern.
