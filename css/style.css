@@ -179,6 +179,13 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 20px 16px 70px; }
 .tc-sticker { fill: #f2f1ea; stroke: #b8b3a4; stroke-width: 0.8; }
 .knob-tick { stroke: #7a6c4c; stroke-width: 1; }
 .fitting { fill: var(--metal); stroke: var(--dev-edge); stroke-width: 1; }
+.coil { fill: var(--panel-2); stroke: var(--border); stroke-width: 1.5; }
+.coil-fin { stroke: var(--cyan); stroke-width: 2; }
+.pipe { stroke: var(--muted); stroke-width: 3; stroke-linecap: round; }
+.valvebar { fill: var(--panel-2); stroke: var(--border); stroke-width: 1; }
+.valvefill { fill: var(--amber); }
+#reheatGroup, #dualGroup { display: none; }
+.wire-heat { stroke: var(--amber); }
 
 .blade { stroke: var(--ink); stroke-width: 9; stroke-linecap: round; }
 .shaft { fill: var(--muted); opacity: 0.45; }

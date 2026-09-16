@@ -6,23 +6,27 @@
   var tubeLayer = document.getElementById("tubeLayer");
 
   var MAX = 1200, MIN = 300, RESET_START = 8, RESET_SPAN = 5;
-  var DEFAULTS = { mainOn: true, resetType: "direct", setpoint: 72, roomTemp: 78 };
+  var DEFAULTS = { mainOn: true, resetType: "direct", setpoint: 72, roomTemp: 78, terminalType: "reheat" };
 
   var state = {
     mainOn: DEFAULTS.mainOn,
     resetType: DEFAULTS.resetType,
     setpoint: DEFAULTS.setpoint,
     roomTemp: DEFAULTS.roomTemp,
+    terminalType: DEFAULTS.terminalType,
     lines: {
       mainToThermostat: true,
       mainToController: true,
       tLine: true,
       bLine: true,
       hLine: true,
-      lLine: true
+      lLine: true,
+      reheatLine: true,
+      hotLine: true
     },
     main: 20, tOut: 9, tAtCtrl: 9, flowSP: 540, bPsi: 6.6, actPsi: 6.6,
-    damper: 45, flow: 540, dp: 0.25, sensorOK: true, ctrlHasAir: true, tHasAir: true
+    damper: 45, coldPct: 45, hotPct: 0, reheatPct: 0, supplyTemp: 55,
+    flow: 540, dp: 0.25, sensorOK: true, ctrlHasAir: true, tHasAir: true, failHeat: false
   };
 
   var TUBES = [
@@ -31,7 +35,9 @@
     { id: "tLine", points: [[678, 332], [678, 282], [880, 282], [880, 320]], cls: "wire-reset", name: "reset signal to controller" },
     { id: "bLine", points: [[556, 372], [450, 372]], cls: "wire-branch", name: "branch to actuator" },
     { id: "hLine", points: [[585, 250], [585, 332]], cls: "wire-sensor", name: "sensor H line" },
-    { id: "lLine", points: [[622, 250], [622, 320]], cls: "wire-sensor", name: "sensor L line" }
+    { id: "lLine", points: [[622, 250], [622, 320]], cls: "wire-sensor", name: "sensor L line" },
+    { id: "reheatLine", points: [[535, 420], [280, 420], [280, 346]], cls: "wire-heat", name: "reheat branch", mode: "reheat" },
+    { id: "hotLine", points: [[725, 340], [786, 340], [786, 130], [465, 130]], cls: "wire-heat", name: "hot deck branch", mode: "dual" }
   ];
 
   var els = {};
@@ -112,7 +118,7 @@
     g.appendChild(port); g.appendChild(wire); g.appendChild(cap); g.appendChild(hit);
     tubeLayer.appendChild(g);
 
-    els[t.id] = { g: g, wire: wire, cap: cap, port: port, pathTo: pathTo, last: last, retract: retract };
+    els[t.id] = { g: g, wire: wire, cap: cap, port: port, pathTo: pathTo, last: last, retract: retract, mode: t.mode || "always" };
 
     function toggle() { setLine(t.id, !state.lines[t.id]); }
     g.addEventListener("click", toggle);
@@ -158,29 +164,60 @@
                                              : MAX - frac * (MAX - MIN);
 
     var sensorOK = L.hLine && L.lLine;
-    var cmd;
-    if (!ctrlHasAir || !sensorOK) cmd = 100;
-    else cmd = clamp(flowSP / MAX * 100, 5, 100);
+    var dual = state.terminalType === "dual";
+    var failHeat = !state.mainOn || !L.mainToController || !L.bLine;
 
-    var bPsi = ctrlHasAir ? 3 + cmd / 100 * 12 : 0;
+    var coolCmd;
+    if (!ctrlHasAir || !sensorOK) coolCmd = 100;
+    else coolCmd = clamp(flowSP / MAX * 100, 5, 100);
+
+    var e = state.roomTemp - state.setpoint;
+    var coldPct, hotPct, reheatPct;
+
+    if (dual) {
+      coldPct = failHeat ? 0 : clamp(0.5 + e * 0.4, 0, 1) * 100;
+      hotPct = failHeat ? 100 : (L.hotLine ? clamp(0.5 - e * 0.4, 0, 1) * 100 : 100);
+      reheatPct = 0;
+    } else {
+      reheatPct = failHeat ? 100 : clamp((state.setpoint - state.roomTemp - 0.5) / 3, 0, 1) * 100;
+      coldPct = failHeat ? 0 : coolCmd;
+      hotPct = 0;
+    }
+
+    var coldFlow = coldPct / 100 * MAX;
+    var hotFlow = hotPct / 100 * MAX;
+    var flow = coldFlow + hotFlow;
+
+    var supplyTemp;
+    if (dual) {
+      supplyTemp = flow > 0 ? (coldFlow * 55 + hotFlow * 95) / flow : 55;
+    } else {
+      supplyTemp = 55 + (reheatPct / 100) * 45;
+    }
+
+    var bPsi = ctrlHasAir ? 3 + coldPct / 100 * 12 : 0;
     var actPsi = L.bLine ? bPsi : 0;
-    var damper = actPsi > 0 ? cmd : 100;
-    var flow = damper / 100 * MAX;
-    var dp = sensorOK ? 0.5 * Math.pow(flow / MAX, 2) : 0;
+    var dp = sensorOK ? 0.5 * Math.pow(clamp(flow / MAX, 0, 1), 2) : 0;
 
-    var target = 85 - (flow / MAX) * 30;
-    state.roomTemp = clamp(state.roomTemp + (target - state.roomTemp) * 1.3 * dt, 45, 95);
+    var target = dual ? 80 + (hotFlow - coldFlow) / MAX * 22
+                      : 85 - (flow / MAX) * 30 + (reheatPct / 100) * 25;
+    state.roomTemp = clamp(state.roomTemp + (target - state.roomTemp) * 1.3 * dt, 45, 98);
 
     state.tHasAir = tHasAir;
     state.ctrlHasAir = ctrlHasAir;
     state.sensorOK = sensorOK;
+    state.failHeat = failHeat;
     state.tOut = tOut;
     state.tAtCtrl = tAtCtrl;
     state.flowSP = flowSP;
     state.bPsi = bPsi;
     state.actPsi = actPsi;
-    state.damper = damper;
+    state.coldPct = coldPct;
+    state.hotPct = hotPct;
+    state.reheatPct = reheatPct;
+    state.damper = coldPct;
     state.flow = flow;
+    state.supplyTemp = supplyTemp;
     state.dp = dp;
 
     paint();
@@ -199,14 +236,25 @@
     setText("rdB", state.bPsi.toFixed(1) + " psi", !state.ctrlHasAir);
     setText("rdAct", state.actPsi.toFixed(1) + " psi", state.actPsi <= 0);
     setText("rdDp", "\u0394P " + state.dp.toFixed(2) + " in wc", !state.sensorOK);
-    setText("rdDamper", Math.round(state.damper) + "%", false);
+    var dual = state.terminalType === "dual";
+
+    setText("rdDamper", Math.round(state.coldPct) + "%", false);
+    setText("rdReheat", Math.round(state.reheatPct) + "%", state.failHeat);
+    setText("rdHot", Math.round(state.hotPct) + "%", state.failHeat);
     setText("rdFlow", Math.round(state.flow) + " CFM", false);
     setText("rdRoom", state.roomTemp.toFixed(1) + "\u00B0F", false);
     setText("rdTSp", "set " + state.setpoint.toFixed(1) + "\u00B0F", false);
     setText("rdRoomSp", "set " + state.setpoint.toFixed(1) + "\u00B0F", false);
 
     document.getElementById("blade").setAttribute("transform",
-      "rotate(" + (90 * (1 - state.damper / 100)).toFixed(1) + " 390 210)");
+      "rotate(" + (90 * (1 - state.coldPct / 100)).toFixed(1) + " 390 210)");
+    document.getElementById("hotBlade").setAttribute("transform",
+      "rotate(" + (90 * (state.hotPct / 100)).toFixed(1) + " 325 130)");
+    document.getElementById("reheatFill").setAttribute("width",
+      (60 * state.reheatPct / 100).toFixed(1));
+
+    document.getElementById("reheatGroup").style.display = dual ? "none" : "";
+    document.getElementById("dualGroup").style.display = dual ? "" : "none";
 
     var needAng = -60 + (state.setpoint - 60) / 20 * 120;
     document.getElementById("tNeedle").setAttribute("transform",
@@ -217,8 +265,9 @@
     zone.style.fill = "hsla(" + (210 - tc * 202).toFixed(0) + ", 72%, 48%, 0.30)";
 
     var fl = document.getElementById("flowLine");
-    fl.style.animationDuration = (1.6 - state.flow / MAX * 1.45).toFixed(2) + "s";
-    fl.style.opacity = (0.22 + state.flow / MAX * 0.7).toFixed(2);
+    var fr = clamp(state.flow / MAX, 0, 1);
+    fl.style.animationDuration = (1.6 - fr * 1.45).toFixed(2) + "s";
+    fl.style.opacity = (0.22 + fr * 0.7).toFixed(2);
 
     document.getElementById("compressor").style.opacity = state.mainOn ? "1" : "0.45";
     document.getElementById("mainHeader").style.opacity = state.mainOn ? "1" : "0.45";
@@ -227,42 +276,56 @@
     setText("roT", state.tOut.toFixed(1) + " psi", !state.tHasAir);
     setText("roTC", state.tAtCtrl.toFixed(1) + " psi", state.tAtCtrl <= 0);
     setText("roB", state.bPsi.toFixed(1) + " psi", !state.ctrlHasAir);
-    setText("roDamper", Math.round(state.damper) + "%", false);
+    setText("roDamper", Math.round(state.coldPct) + "%", false);
+    setText("roHeat", Math.round(dual ? state.hotPct : state.reheatPct) + "%", state.failHeat);
     setText("roFlow", Math.round(state.flow) + " CFM", false);
     setText("roDp", state.dp.toFixed(2) + " in wc", !state.sensorOK);
+    setText("roSupply", state.supplyTemp.toFixed(0) + "\u00B0F", false);
     setText("roRoom", state.roomTemp.toFixed(1) + "\u00B0F", false);
+    document.getElementById("roHeatLabel").textContent = dual ? "Hot damper" : "Reheat";
 
     paintStatus();
   }
 
   function paintStatus() {
     var L = state.lines, cls = "ok", msg;
-    if (!state.mainOn) {
+    var dual = state.terminalType === "dual";
+    var heatName = dual ? "hot-deck damper" : "reheat valve";
+    if (state.failHeat) {
       cls = "bad";
-      msg = "Main air is OFF. Every device loses supply and fails to its spring position \u2014 the normally-open damper swings fully open.";
-    } else if (!L.mainToController) {
-      cls = "bad";
-      msg = "No main air at the controller (port M unplugged). It has no power, so the damper falls to its spring position \u2014 normally open, full flow.";
+      if (!state.mainOn) {
+        msg = "Main air is OFF. The terminal fails to heat \u2014 the cold damper springs closed and the " + heatName + " goes wide open.";
+      } else if (!L.mainToController) {
+        msg = "No main air at the controller (port M). The terminal fails to heat: cold damper closed, " + heatName + " wide open.";
+      } else {
+        msg = "The branch line (port B) is unplugged. The cold damper loses air and springs closed \u2014 the terminal fails to heat.";
+      }
     } else if (!L.mainToThermostat) {
       cls = "warn";
       msg = "The thermostat has no main air, so its output bleeds to 0 psi. The controller reads no reset signal and holds LO STAT.";
     } else if (!L.tLine) {
       cls = "warn";
-      msg = "The reset line (port T) is unplugged. The controller sees 0 psi and holds LO STAT (minimum flow).";
-    } else if (!L.bLine) {
-      cls = "bad";
-      msg = "The branch line (port B) is unplugged. The actuator gets no signal and fails open.";
+      msg = "The reset line (port T) is unplugged. The controller sees 0 psi and holds LO STAT.";
     } else if (!L.hLine || !L.lLine) {
       cls = "bad";
-      msg = "A flow-sensor line (H or L) is unplugged. The controller can\u2019t measure velocity pressure, so it drives the damper wide open chasing a flow it can\u2019t read.";
+      msg = "A flow-sensor line (H or L) is unplugged. The controller can\u2019t measure velocity pressure, so it drives the cold damper wide open chasing a flow it can\u2019t read.";
+    } else if (dual && !L.hotLine) {
+      cls = "warn";
+      msg = "The hot-deck branch is unplugged. The hot-deck damper loses air and fails open \u2014 heating, with reheat-style control lost.";
     } else if (state.resetType === "reverse") {
       cls = "warn";
       msg = "Reverse reset with a direct-acting thermostat controls backwards: a warm room calls for LESS air, so the loop runs away.";
     } else {
       var d = state.roomTemp - state.setpoint;
-      if (d > 0.8) msg = "Normal. The room is above setpoint, so the thermostat resets the box toward maximum flow.";
-      else if (d < -0.8) msg = "Normal. The room is at or below setpoint, so the thermostat resets the box toward minimum flow.";
-      else msg = "Normal. Thermostat, controller, actuator and sensor are all connected; the box is holding the room near setpoint.";
+      if (dual) {
+        if (d > 0.8) msg = "Normal. The room is warm, so the cold damper is opening and the hot deck is closing.";
+        else if (d < -0.8) msg = "Normal. The room is cool, so the hot-deck damper is opening and the cold damper is closing.";
+        else msg = "Normal. The dual-duct terminal is mixing to hold the room near setpoint. Loss of control air will fail it to heat.";
+      } else {
+        if (d > 0.8) msg = "Normal. The room is above setpoint, so the box resets toward maximum cooling flow.";
+        else if (d < -0.8) msg = "Normal. The room is cool, so reheat is taking over on minimum airflow.";
+        else msg = "Normal. The terminal is holding the room near setpoint. Loss of control air will fail it to heat.";
+      }
     }
     var panel = document.getElementById("statusPanel");
     panel.className = "panel status " + cls;
@@ -277,9 +340,29 @@
     document.getElementById("rtHint").textContent = state.resetType === "direct"
       ? "Cooling air + direct-acting thermostat = Direct reset (correct)."
       : "Cooling air + reverse-acting thermostat = Reverse reset. With our direct thermostat this is wrong on purpose.";
+    var dual = state.terminalType === "dual";
+    document.getElementById("ttReheat").classList.toggle("active", !dual);
+    document.getElementById("ttDual").classList.toggle("active", dual);
+    document.getElementById("ttHint").textContent = dual
+      ? "Dual duct: hot + cold decks mix. Loss of control air fails to heat (cold closes, hot opens)."
+      : "Single duct + hot-water reheat coil. Loss of control air fails to heat (damper closes, reheat opens).";
     var mb = document.getElementById("mainBtn");
     mb.textContent = state.mainOn ? "Cut main air" : "Restore main air";
     mb.classList.toggle("on", !state.mainOn);
+  }
+
+  function setTerminal(t) { state.terminalType = t; syncMode(); syncControls(); }
+
+  function syncMode() {
+    var dual = state.terminalType === "dual";
+    for (var id in els) {
+      var m = els[id].mode;
+      els[id].g.style.display = (m === "always" || (m === "dual") === dual) ? "" : "none";
+    }
+    var rg = document.getElementById("reheatGroup");
+    var dg = document.getElementById("dualGroup");
+    if (rg) rg.style.display = dual ? "none" : "";
+    if (dg) dg.style.display = dual ? "" : "none";
   }
 
   function setResetType(t) { state.resetType = t; syncControls(); }
@@ -296,7 +379,9 @@
     state.resetType = DEFAULTS.resetType;
     state.setpoint = DEFAULTS.setpoint;
     state.roomTemp = DEFAULTS.roomTemp;
+    state.terminalType = DEFAULTS.terminalType;
     reconnectAll();
+    syncMode();
     syncControls();
   }
 
@@ -304,6 +389,7 @@
     TUBES.forEach(buildTube);
     syncLines();
     initDeviceArt();
+    syncMode();
 
     document.getElementById("spSl").addEventListener("input", function () {
       state.setpoint = parseFloat(this.value);
@@ -311,6 +397,8 @@
     });
     document.getElementById("rtDirect").addEventListener("click", function () { setResetType("direct"); });
     document.getElementById("rtReverse").addEventListener("click", function () { setResetType("reverse"); });
+    document.getElementById("ttReheat").addEventListener("click", function () { setTerminal("reheat"); });
+    document.getElementById("ttDual").addEventListener("click", function () { setTerminal("dual"); });
     document.getElementById("mainBtn").addEventListener("click", toggleMain);
     document.getElementById("reconnect").addEventListener("click", reconnectAll);
     document.getElementById("resetAll").addEventListener("click", resetAll);

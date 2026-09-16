@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — interactive</title>
 <meta name="description" content="Interactive pneumatic VAV training: plug and unplug the thermostat, KMC box controller, actuator and airflow sensor lines and watch the system respond.">
-<link rel="stylesheet" href="css/style.css?v=6">
+<link rel="stylesheet" href="css/style.css?v=7">
 </head>
 <body>
 <header class="topbar">
@@ -43,9 +43,9 @@
         <rect class="duct" x="200" y="170" width="580" height="80" rx="6"/>
         <text class="eq dim" x="500" y="196" text-anchor="middle">SUPPLY DUCT</text>
         <polygon class="air-arrow" points="780,210 806,196 806,224"/>
-        <text class="lbl" x="792" y="160" text-anchor="end">from AHU</text>
+        <text class="lbl" x="770" y="150" text-anchor="end">from AHU</text>
         <line id="flowLine" class="airflow" x1="780" y1="210" x2="202" y2="210"/>
-        <text id="rdFlow" class="lbl val" x="470" y="156" text-anchor="middle">540 CFM</text>
+        <text id="rdFlow" class="lbl val" x="250" y="144" text-anchor="middle">540 CFM</text>
 
         <line class="sensor-bar" x1="574" y1="210" x2="634" y2="210"/>
         <circle class="sensor-tap" cx="585" cy="250" r="4.5"/>
@@ -95,6 +95,38 @@
           <text id="rdTSp" class="lbl" x="866" y="408">set 72&deg;F</text>
           <rect class="fitting" x="874" y="312" width="12" height="14" rx="2"/>
           <rect class="fitting" x="904" y="450" width="12" height="14" rx="2"/>
+        </g>
+
+        <!-- reheat coil (single duct + reheat) -->
+        <g id="reheatGroup">
+          <rect class="coil" x="266" y="170" width="74" height="80" rx="4"/>
+          <line class="coil-fin" x1="278" y1="176" x2="278" y2="244"/>
+          <line class="coil-fin" x1="290" y1="176" x2="290" y2="244"/>
+          <line class="coil-fin" x1="302" y1="176" x2="302" y2="244"/>
+          <line class="coil-fin" x1="314" y1="176" x2="314" y2="244"/>
+          <line class="coil-fin" x1="326" y1="176" x2="326" y2="244"/>
+          <text class="eq dim" x="303" y="164" text-anchor="middle">REHEAT COIL</text>
+          <line class="pipe" x1="288" y1="250" x2="288" y2="276"/>
+          <line class="pipe" x1="320" y1="250" x2="320" y2="276"/>
+          <rect class="unit" x="215" y="276" width="110" height="70" rx="8"/>
+          <text class="eq" x="270" y="300" text-anchor="middle">REHEAT</text>
+          <text class="eq" x="270" y="316" text-anchor="middle">VALVE</text>
+          <rect class="valvebar" x="240" y="326" width="60" height="8" rx="2"/>
+          <rect id="reheatFill" class="valvefill" x="240" y="326" width="0" height="8" rx="2"/>
+          <text id="rdReheat" class="lbl val" x="270" y="362" text-anchor="middle">0%</text>
+        </g>
+
+        <!-- hot deck (dual duct) -->
+        <g id="dualGroup">
+          <rect class="duct" x="300" y="86" width="50" height="84" rx="4"/>
+          <polygon class="air-arrow" points="325,104 316,88 334,88"/>
+          <text class="eq dim" x="325" y="76" text-anchor="middle">HOT DECK</text>
+          <line id="hotBlade" class="blade" x1="305" y1="130" x2="345" y2="130"/>
+          <rect class="shaft" x="345" y="128" width="20" height="4"/>
+          <rect class="unit" x="365" y="98" width="100" height="66" rx="8"/>
+          <text class="eq" x="415" y="122" text-anchor="middle">HOT DECK</text>
+          <text class="eq" x="415" y="138" text-anchor="middle">ACTUATOR</text>
+          <text id="rdHot" class="lbl val" x="415" y="156" text-anchor="middle">0%</text>
         </g>
 
         <!-- KMC CSC-3000 series reset volume controller (front face) -->
@@ -170,6 +202,14 @@
           <input id="spSl" type="range" min="60" max="80" step="0.5" value="72">
         </label>
         <div class="ctl">
+          <span>Terminal type</span>
+          <div class="seg">
+            <button id="ttReheat" class="segbtn active" type="button">Reheat coil</button>
+            <button id="ttDual" class="segbtn" type="button">Dual duct</button>
+          </div>
+          <p class="hint" id="ttHint">Single duct + hot-water reheat. On air failure the box fails to heat.</p>
+        </div>
+        <div class="ctl">
           <span>Reset type</span>
           <div class="seg">
             <button id="rtDirect" class="segbtn active" type="button">Direct</button>
@@ -199,9 +239,11 @@
           <div><dt>Thermostat output</dt><dd id="roT">9.0 psi</dd></div>
           <div><dt>Signal at T</dt><dd id="roTC">9.0 psi</dd></div>
           <div><dt>Branch at B</dt><dd id="roB">6.6 psi</dd></div>
-          <div><dt>Damper</dt><dd id="roDamper">45%</dd></div>
+          <div><dt id="roColdLabel">Cold damper</dt><dd id="roDamper">45%</dd></div>
+          <div><dt id="roHeatLabel">Reheat</dt><dd id="roHeat">0%</dd></div>
           <div><dt>Airflow</dt><dd id="roFlow">540 CFM</dd></div>
           <div><dt>Velocity &Delta;P</dt><dd id="roDp">0.25 in wc</dd></div>
+          <div><dt>Supply air</dt><dd id="roSupply">55&deg;F</dd></div>
           <div><dt>Room</dt><dd id="roRoom">76.0&deg;F</dd></div>
         </dl>
       </section>
@@ -211,9 +253,9 @@
   <section class="trythis">
     <h2>Try this</h2>
     <ol>
-      <li>Click the <b>main-air line to the controller</b> (port <b>M</b>) &mdash; it loses air and the damper falls to its spring position.</li>
-      <li>Unplug the <b>reset line</b> (port <b>T</b>, top right) &mdash; the controller sees 0 psi and holds LO STAT.</li>
-      <li>Unplug a <b>sensor line</b> (<b>H</b> or <b>L</b>, top) &mdash; the controller can&rsquo;t measure flow, so it drives wide open.</li>
+      <li>Click the <b>main-air line to the controller</b> (port <b>M</b>) &mdash; the terminal <b>fails to heat</b>: the cold damper springs closed and the reheat / hot-deck opens.</li>
+      <li>Switch <b>Terminal type</b> between <b>Reheat coil</b> and <b>Dual duct</b> to see the two box styles.</li>
+      <li>Unplug a <b>sensor line</b> (<b>H</b> or <b>L</b>, top) &mdash; the controller can&rsquo;t measure flow, so it drives the cold damper wide open.</li>
       <li>Switch to <b>Reverse</b> reset while the thermostat is direct-acting &mdash; the loop controls backwards and runs away.</li>
     </ol>
   </section>
@@ -225,6 +267,6 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=6"></script>
+<script src="js/sim.js?v=7"></script>
 </body>
 </html>
