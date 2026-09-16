@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 04 — Setup &amp; Calibration Procedures</title>
+<meta name="description" content="Step-by-step commissioning for pneumatic thermostats and KMC CSC-3000 VAV box controllers, including direct and reverse reset minimum and maximum airflow calibration.">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../index.html">
+      <span class="logo">PV</span>
+      <span>Pneumatic VAV &amp; Thermostat Training<small>KMC controls field guide</small></span>
+    </a>
+    <nav class="site-nav">
+      <a href="../index.html">Home</a>
+      <a href="fundamentals.html">Fundamentals</a>
+      <a href="thermostats.html">Thermostats</a>
+      <a href="vav-controllers.html">VAV Controllers</a>
+      <a href="setup.html">Setup</a>
+      <a href="troubleshooting.html">Troubleshooting</a>
+      <a href="practice.html">Practice</a>
+      <a href="reference.html">Reference</a>
+      <button class="theme-toggle" id="themeToggle" type="button">Dark</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <p class="eyebrow">Unit 04</p>
+  <h1>Setup &amp; calibration procedures</h1>
+  <p class="lead">This unit is the hands-on companion to Units 02 and 03. It walks the pre-checks, the thermostat calibration, and the exact KMC minimum and maximum airflow procedures for direct and reverse reset. Work the sequence in order; skipping the pre-checks is how a two-hour job becomes a two-visit job.</p>
+
+  <div class="toc" data-toc></div>
+
+  <div class="callout danger">
+    <div class="title">Before you open anything</div>
+    <ul>
+      <li>Lock out and tag the AHU, any electric reheat, and the terminal fan before working in or around a box.</li>
+      <li>Release pressure before disconnecting tubing. Keep open tube ends away from your face and skin.</li>
+      <li>Use the correct gauge for the pressure you are reading. A low-range Magnehelic on main air will be destroyed.</li>
+      <li>Follow the manufacturer's manual and the box's airflow chart over anything on this site.</li>
+    </ul>
+  </div>
+
+  <h2>Pre-checks: do these before you calibrate</h2>
+  <p>Every one of these has caused a "defective controller" that was not defective. Spend five minutes here.</p>
+  <ol class="steps">
+    <li><span class="step-title">Air supply</span> — Confirm 15–30 psi at port M and that it holds steady under load. Confirm the building dryer, filters, and main regulator are healthy. This is the number one root cause of pneumatic problems.</li>
+    <li><span class="step-title">Leaks</span> — Leak-test the actuator diaphragm and fittings with a squeeze bulb. Even a small diaphragm leak keeps the actuator from stroking fully.</li>
+    <li><span class="step-title">Tubing</span> — Inspect all 1/4" O.D. FR tubing. Trim stretched ends, replace tubing that is brittle, cracked, or discolored. Seat every tube snugly on its fitting.</li>
+    <li><span class="step-title">Airflow chart</span> — Get the chart affixed to <em>this</em> box and record the design minimum and maximum CFM. Do not use a generic chart.</li>
+    <li><span class="step-title">Reset type</span> — Determine primary air (cooling or heating) and thermostat action (DA/RA), then apply KMC's reset-type table. Write the answer down before you touch a knob.</li>
+    <li><span class="step-title">Damper action and stroke</span> — Confirm N.O. or N.C. selection matches the requirement, and that the actuator drives the damper full open to full close without binding.</li>
+    <li><span class="step-title">Sensor</span> — Confirm the high/total tap goes to H and the low/static tap goes to L, that the pickup is placed correctly, and that it is clean. If it is dirty, disconnect it from the controller before blowing it clean.</li>
+    <li><span class="step-title">Mounting plane</span> — If the controller was removed, mount it in the final plane and calibrate there. Do not calibrate on a bench and then rotate it.</li>
+    <li><span class="step-title">Thermostat signal</span> — Verify the thermostat actually varies pressure at T across roughly 3–15 psi as its setpoint is changed.</li>
+  </ol>
+
+  <h2>Tool and material checklist</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Item</th><th>Use</th></tr></thead>
+      <tbody>
+        <tr><td>0–30 psi pressure gauge</td><td>Main air, thermostat output at T, port G readings.</td></tr>
+        <tr><td>Magnehelic differential gauge, correct range</td><td>Velocity pressure across the box inlet.</td></tr>
+        <tr><td>5/32" tubing for the G port</td><td>Reading start point and span.</td></tr>
+        <tr><td>Small flat-blade screwdriver</td><td>Reset start, reset span adjustments.</td></tr>
+        <tr><td>Test tee</td><td>Reading line pressure without cutting tubing.</td></tr>
+        <tr><td>Squeeze bulb</td><td>Leak testing.</td></tr>
+        <tr><td>Tube cutter and spare 1/4" FR tubing</td><td>Repairing damaged tube ends.</td></tr>
+        <tr><td>Accurate thermometer</td><td>Thermostat calibration.</td></tr>
+        <tr><td>Box airflow chart and commissioning sheet</td><td>Converting ΔP to CFM and recording results.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Procedure A — calibrate a pneumatic thermostat</h2>
+  <ol class="steps">
+    <li><span class="step-title">Confirm main air and let the sensor stabilize.</span> A thermostat that just came off a cold truck will read wrong for a while.</li>
+    <li><span class="step-title">Measure true room temperature</span> near the thermostat with an accurate thermometer.</li>
+    <li><span class="step-title">Connect a gauge to the branch output.</span></li>
+    <li><span class="step-title">Set the dial to the measured room temperature.</span></li>
+    <li><span class="step-title">Adjust the calibration screw</span> until branch reads mid-scale, about 9 psi for a 3–15 signal.</li>
+    <li><span class="step-title">Verify action and range.</span> Confirm the output moves the full range and in the correct direction for DA or RA.</li>
+    <li><span class="step-title">Adjust the setpoint if needed</span> — the dial sets the target; calibration only centers the band.</li>
+    <li><span class="step-title">Record</span> room temperature, dial, branch pressure, action.</li>
+  </ol>
+  <p>Full detail and the day/night variant are in <a href="thermostats.html">Unit 02</a>.</p>
+
+  <h2>Procedure B — CSC-3000 minimum and maximum, DIRECT reset</h2>
+  <p>Use this when KMC's table says direct reset: cooling primary with a DA thermostat, or heating primary with an RA thermostat. Remember: <strong>LO STAT = minimum flow, HI STAT = maximum flow.</strong></p>
+
+  <ol class="steps">
+    <li>
+      <span class="step-title">Remove the thermostat signal</span>
+      <p>On the CSC-3000, disconnect the tubing from port T and leave the port open. Temporarily plug the tubing (but do not plug the port). Alternatively, remove the plug from the controller's G port to relieve the reset pressure.</p>
+    </li>
+    <li>
+      <span class="step-title">Set the minimum airflow on LO STAT ΔP</span>
+      <p>Adjust the center dial one adjustment at a time until the desired minimum airflow is read on the Magnehelic and is stable.</p>
+      <ul>
+        <li>Turn the dial no more than about a half rotation at a time.</li>
+        <li>After each adjustment, wait about ten seconds and watch the damper shaft. If nothing moves, make the next adjustment.</li>
+        <li>If the box starts at a hard end of travel, turn the adjustment a full turn, then wait 20–30 seconds for the flow to change before judging.</li>
+      </ul>
+      <p><strong>Zero minimum:</strong> do not crank LO STAT fully clockwise. Past zero it enters negative reset, which the controller must overcome before resetting, narrowing the effective span. To get a true zero minimum, adjust until the damper just cracks open, then back off about a quarter turn and verify zero airflow. KMC notes this is typically about two and a half knob rotations counterclockwise from fully clockwise.</p>
+    </li>
+    <li><span class="step-title">Restore the thermostat signal</span> by reconnecting the tubing to T, or reinstalling the G port plug.</li>
+    <li><span class="step-title">Call for full flow</span> at the thermostat — 15 psi or more at port T.</li>
+    <li>
+      <span class="step-title">Set the maximum airflow on HI STAT ΔP</span>
+      <p>Adjust the right dial, a quarter to a half rotation at a time, until the desired maximum airflow is read on the Magnehelic and is stable.</p>
+      <p>For better accuracy, relieve the pressure before each dial adjustment: pull the plug from port G, make the estimated adjustment, reinstall the plug, and let the damper stabilize before you read flow.</p>
+    </li>
+    <li><span class="step-title">Verify and fine-tune.</span> Repeat steps 1 through 5 to confirm both settings are repeatable, then adjust as needed.</li>
+  </ol>
+
+  <h2>Procedure C — CSC-3000 minimum and maximum, REVERSE reset</h2>
+  <p>Use this when KMC's table says reverse reset: cooling primary with an RA thermostat, or heating primary with a DA thermostat. Here <strong>LO STAT = maximum flow, HI STAT = minimum flow.</strong> Read that twice; it is the part people get wrong.</p>
+
+  <ol class="steps">
+    <li>
+      <span class="step-title">Remove the thermostat signal</span>
+      <p>Disconnect the tubing from port T and leave the port open, temporarily plugging the tubing (not the port). Or remove the G port plug.</p>
+    </li>
+    <li><span class="step-title">Set the maximum airflow on LO STAT ΔP</span> — adjust the center dial, one adjustment at a time, until the desired <strong>maximum</strong> airflow is read and is stable. Same half-rotation and ten-second rules as before.</li>
+    <li><span class="step-title">Restore the thermostat signal</span> by reconnecting T or reinstalling the G plug.</li>
+    <li><span class="step-title">Call for minimum flow</span> at the thermostat — KMC's procedure has the thermostat put out 15 psi or more at port T for this step.</li>
+    <li>
+      <span class="step-title">Set the minimum airflow on HI STAT ΔP</span> — adjust the right dial, a quarter to a half rotation at a time, until the desired <strong>minimum</strong> airflow is read and is stable. Relieve pressure at G before each adjustment for accuracy.
+      <p>Zero-minimum note: do not turn the HI STAT knob fully clockwise. If a zero minimum is required, adjust until the controller just begins to crack the damper open, then back off slightly and verify zero airflow.</p>
+    </li>
+    <li><span class="step-title">Verify and fine-tune.</span> Repeat steps 1 through 5 and confirm the settings hold.</li>
+  </ol>
+
+  <div class="callout tip">
+    <div class="title">Direct vs reverse, the one-line version</div>
+    <p>Direct reset: LO = min, HI = max. Reverse reset: LO = max, HI = min. Everything else in the procedure is the same.</p>
+  </div>
+
+  <h2>Verify the settings repeat</h2>
+  <p>A calibration that only works once is not a calibration. Before you close up:</p>
+  <ul>
+    <li>Drive the thermostat from minimum to maximum and back, and confirm the box hits the min and max you set each time.</li>
+    <li>Check that the damper is not binding anywhere in its stroke.</li>
+    <li>Confirm the flow reading returns to the same value, within tolerance, on repeat.</li>
+    <li>If you changed the reset start or span, re-verify min and max afterward — changing start or span can require re-tuning the end points.</li>
+    <li>Confirm any sequencing — reheat, a P-E switch — triggers on the <em>reset range</em>, not the actuator spring range.</li>
+  </ul>
+
+  <h2>Commissioning record sheet</h2>
+  <p>Copy this into your job notes or a spreadsheet. A completed record is what turns a technician into a commissioning agent.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Field</th><th>Entry</th></tr></thead>
+      <tbody>
+        <tr><td>Date / technician</td><td></td></tr>
+        <tr><td>Box tag / location</td><td></td></tr>
+        <tr><td>Controller model (e.g. CSC-3011)</td><td></td></tr>
+        <tr><td>Thermostat model and action (DA / RA)</td><td></td></tr>
+        <tr><td>Primary air (cooling / heating)</td><td></td></tr>
+        <tr><td>Reset type (direct / reverse)</td><td></td></tr>
+        <tr><td>Damper action (N.O. / N.C.)</td><td></td></tr>
+        <tr><td>Main air at M (psi)</td><td></td></tr>
+        <tr><td>Thermostat output range at T (psi)</td><td></td></tr>
+        <tr><td>Design minimum / maximum CFM</td><td></td></tr>
+        <tr><td>Measured ΔP and CFM at minimum</td><td></td></tr>
+        <tr><td>Measured ΔP and CFM at maximum</td><td></td></tr>
+        <tr><td>Reset start / span (psi)</td><td></td></tr>
+        <tr><td>Leaks found / tubing replaced</td><td></td></tr>
+        <tr><td>Notes (sequencing, P-E switch, reheat)</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Check your understanding</h2>
+  <div class="quiz" data-quiz="setup"></div>
+
+  <nav class="lesson-nav">
+    <a href="vav-controllers.html">← Unit 03: VAV controllers</a>
+    <a href="troubleshooting.html">Unit 05: Troubleshooting →</a>
+  </nav>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <p><strong>Independent training material.</strong> Not affiliated with or endorsed by KMC Controls, Inc.</p>
+    <p>Procedures summarized from the KMC CSC-3000 Series Application Guide (AN1205B) and general pneumatic control practice. Always follow the manual and the tag-specific airflow chart for the exact device in front of you. Work on pneumatic and electrical systems only if qualified.</p>
+    <p><a href="reference.html">Sources &amp; reference</a></p>
+  </div>
+</footer>
+
+<script src="../js/quizzes.js"></script>
+<script src="../js/site.js"></script>
+</body>
+</html>

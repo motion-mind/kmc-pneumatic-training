@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 02 — Pneumatic Thermostats</title>
+<meta name="description" content="Pneumatic thermostat operation: direct and reverse acting, two-pipe and single-pipe, throttling range, deadband, day/night setback, installation, calibration, and troubleshooting.">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../index.html">
+      <span class="logo">PV</span>
+      <span>Pneumatic VAV &amp; Thermostat Training<small>KMC controls field guide</small></span>
+    </a>
+    <nav class="site-nav">
+      <a href="../index.html">Home</a>
+      <a href="fundamentals.html">Fundamentals</a>
+      <a href="thermostats.html">Thermostats</a>
+      <a href="vav-controllers.html">VAV Controllers</a>
+      <a href="setup.html">Setup</a>
+      <a href="troubleshooting.html">Troubleshooting</a>
+      <a href="practice.html">Practice</a>
+      <a href="reference.html">Reference</a>
+      <button class="theme-toggle" id="themeToggle" type="button">Dark</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <p class="eyebrow">Unit 02</p>
+  <h1>Pneumatic thermostats</h1>
+  <p class="lead">A pneumatic thermostat is the <strong>master controller</strong> of the loop. It senses room temperature and puts out a 3–15 psi branch signal that tells the box controller (or a heating valve) how much to do. Get the thermostat right and the box has a chance; get it wrong and no amount of box calibration will save the zone.</p>
+
+  <div class="toc" data-toc></div>
+
+  <h2>What it does</h2>
+  <p>Inside the thermostat, a temperature-sensing element — a bimetal, a sealed vapor-pressure bellows, or a liquid-filled element — moves a flapper over a bleed nozzle fed through an internal restrictor. Exactly the mechanism from Unit 01. As the element moves, branch pressure varies proportionally. That branch signal leaves the thermostat and becomes the control command for the rest of the loop.</p>
+
+  <div class="flowchart">
+    <div class="fc-node check"><span class="fc-q">Room air temperature</span><div class="fc-actions">moves the sensing element</div></div>
+    <div class="fc-node check"><span class="fc-q">Flapper over bleed nozzle</span><div class="fc-actions">changes how much air escapes</div></div>
+    <div class="fc-node check"><span class="fc-q">Branch output 3–15 psi</span><div class="fc-actions">the proportional command</div></div>
+    <div class="fc-node good"><span class="fc-q">Box controller at port T, or a heating valve</span><div class="fc-actions">acts on the command</div></div>
+  </div>
+
+  <h2>Key properties</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Property</th><th>What it means</th><th>Why it matters in the field</th></tr></thead>
+      <tbody>
+        <tr><td>Action</td><td>Direct (DA) or reverse (RA)</td><td>Wrong action reverses the entire control response. Must match the reset type at the box.</td></tr>
+        <tr><td>Piping</td><td>Single-pipe or two-pipe</td><td>Determines how you read and isolate it with a gauge.</td></tr>
+        <tr><td>Setpoint</td><td>The dial value the thermostat holds</td><td>Calibration aligns the dial with the true sensed temperature.</td></tr>
+        <tr><td>Throttling range</td><td>Temperature change for full 3–15 travel</td><td>Narrow range = tighter but more hunting; wide range = stable but less precise.</td></tr>
+        <tr><td>Output range</td><td>Usually 3–15 psi</td><td>Mid-scale is about 9 psi — the reference point for calibration.</td></tr>
+        <tr><td>Setback</td><td>Day/night (unoccupied) capability</td><td>A second main-air line or adjustment shifts the setpoint.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Types you will meet</h2>
+  <div class="card-grid">
+    <div class="card">
+      <h3>Single-temperature, single-acting</h3>
+      <p>One setpoint, one output. The classic VAV cooling-only thermostat. Direct acting in most cooling applications.</p>
+    </div>
+    <div class="card">
+      <h3>Dual temperature (heating/cooling)</h3>
+      <p>Two outputs, one for heating and one for cooling, sequenced with a deadband between the setpoints. Often used with a heating coil or reheat in the zone.</p>
+    </div>
+    <div class="card">
+      <h3>Day/night (setback) thermostat</h3>
+      <p>Has a second main-air connection. When the night line is energized (usually by a time clock or solenoid), the effective setpoint shifts to the night value.</p>
+    </div>
+    <div class="card">
+      <h3>Aspirating thermostat</h3>
+      <p>Contains a small fan that continuously draws room air across the sensing element for faster, more representative response. Needs its own power or an air-driven aspirator.</p>
+    </div>
+    <div class="card">
+      <h3>Single-pipe</h3>
+      <p>One tube; the restrictor is inside. Common on older installations. Read branch on that same line.</p>
+    </div>
+    <div class="card">
+      <h3>Two-pipe</h3>
+      <p>Separate supply and output. Simpler to diagnose because main and branch can be measured independently at the device.</p>
+    </div>
+  </div>
+
+  <h2>KMC pneumatic thermostats</h2>
+  <p>KMC's pneumatic thermostat families include the <strong>CTC-1600 / CTC-1611 / CTC-1612</strong> series and the <strong>CTE-5100 / CTE-5101</strong> series. Like all pneumatic thermostats they have a setpoint dial and a calibration (zero) adjustment, and their installation guides cover mounting, connections, adjustments, and calibration. Always pull the exact model's installation guide before adjusting — the cover comes off differently and the calibration screw is in a different place from one family to the next.</p>
+
+  <h2>Installation and location</h2>
+  <p>No calibration can compensate for a bad location. The thermostat reads the air <em>at its sensing element</em>.</p>
+  <ul>
+    <li>Mount on an <strong>interior wall</strong>, at roughly breathing height, where room air circulates freely.</li>
+    <li>Avoid exterior walls, direct sunlight, supply diffusers, door drafts, and corners that stagnate.</li>
+    <li>Keep clear of heat sources: copiers, coffee makers, monitors, ballasts, and equipment that cycles on and off.</li>
+    <li>Do not bury a thermostat behind furniture or a partition, and do not box it in with an enclosure that changes how it samples air.</li>
+    <li>Make sure tubing is not kinked at the wall penetration, and leave a service loop.</li>
+  </ul>
+
+  <h2>Calibration</h2>
+  <p>Calibration answers one question: <em>when the room is at the dial value, is the branch at mid-scale?</em> For a 3–15 psi signal, mid-scale is <strong>about 9 psi</strong>.</p>
+
+  <ol class="steps">
+    <li><span class="step-title">Confirm main air</span> before anything else. A thermostat cannot be calibrated against a weak or fluctuating supply.</li>
+    <li><span class="step-title">Let the sensor stabilize</span> in the space. Give it time — a thermostat that just came off a cold truck or a warm hand will lie to you.</li>
+    <li><span class="step-title">Measure true room temperature</span> with an accurate thermometer near the thermostat, at the same height.</li>
+    <li><span class="step-title">Connect a 0–30 psi gauge</span> to the branch output (or tee into the line), so you can watch the signal.</li>
+    <li><span class="step-title">Set the dial</span> to the measured room temperature, so the sensed value and the setpoint agree.</li>
+    <li><span class="step-title">Adjust the calibration screw</span> until the branch reads mid-scale (about 9 psi). This is the zero adjustment — it shifts the whole curve without changing its slope.</li>
+    <li><span class="step-title">Verify the action and range.</span> Warm the sensor (or set the dial lower) and confirm the branch moves the full range in the correct direction. If DA is expected, output should rise as temperature rises; if RA, it should fall.</li>
+    <li><span class="step-title">Check the throttling range.</span> Confirm the thermostat is not so narrow that it hunts or so wide that it responds sluggishly. Match the device's stated range.</li>
+    <li><span class="step-title">Record the result</span> on the commissioning sheet: room temperature, dial setting, branch pressure, action, date, technician.</li>
+  </ol>
+
+  <div class="callout tip">
+    <div class="title">Why mid-scale?</div>
+    <p>At mid-scale the thermostat has equal authority to increase or decrease, so it can respond to a disturbance in either direction without running out of signal. Calibrating at an extreme cripples half the control band.</p>
+  </div>
+
+  <div class="callout warn">
+    <div class="title">Calibration vs setpoint</div>
+    <p>The calibration screw moves the <em>curve</em>. The dial moves the <em>setpoint</em>. If you are tempted to crank calibration just to change the temperature the space holds, stop — that is the setpoint's job, and using calibration to make up for a location or load problem hides the real fault.</p>
+  </div>
+
+  <h2>Day/night (setback) adjustment</h2>
+  <p>On a day/night thermostat there are effectively two setpoints. To set it up:</p>
+  <ol class="steps">
+    <li><span class="step-title">Calibrate in day mode first.</span> Verify the day setpoint and branch mid-scale with the night line at its day pressure.</li>
+    <li><span class="step-title">Energize the night line</span> as the time clock would (or apply the night main pressure per the device).</li>
+    <li><span class="step-title">Adjust the night setpoint</span> using the night calibration or the night adjustment screw until the space would hold the desired unoccupied temperature.</li>
+    <li><span class="step-title">Verify changeover.</span> Confirm the shift happens cleanly, and that a failed night line fails to the safe (usually occupied) setpoint rather than driving the space to an extreme.</li>
+  </ol>
+
+  <h2>Thermostat troubleshooting at a glance</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Symptom</th><th>Likely causes</th><th>Checks</th></tr></thead>
+      <tbody>
+        <tr><td>No branch output (0 psi) with good main air</td><td>Blocked nozzle or restrictor, stuck flapper, calibration run to an extreme</td><td>Confirm main air; check the sensor element moves; inspect/clean the nozzle; verify calibration. Remember 0 psi can also be a valid full-load command.</td></tr>
+        <tr><td>Branch pinned at main air</td><td>Nozzle fully covered, blocked bleed, stuck flapper</td><td>Check for a jammed flapper or a blocked bleed path; confirm the element has not failed closed.</td></tr>
+        <tr><td>Zone holds wrong temperature, branch mid-scale</td><td>Bad location or a load problem, not a calibration problem</td><td>Re-read true room temperature at the element; inspect for drafts, sun, or nearby heat sources.</td></tr>
+        <tr><td>Output moves the wrong way</td><td>Wrong action for the application, or wrong reset type at the box</td><td>Verify DA/RA against the reset-type table in Unit 03.</td></tr>
+        <tr><td>Output drifts or hunts</td><td>Unstable main air, moisture/oil contamination, a leak in the line, or a very narrow throttling range</td><td>Watch main air under load; leak-test; check contamination; confirm the throttling range.</td></tr>
+        <tr><td>Night setback never happens</td><td>Time clock, solenoid, or night main line fault; night calibration way off</td><td>Verify the night line pressure changes on schedule; then re-check the night setpoint.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Check your understanding</h2>
+  <div class="quiz" data-quiz="thermostats"></div>
+
+  <nav class="lesson-nav">
+    <a href="fundamentals.html">← Unit 01: Fundamentals</a>
+    <a href="vav-controllers.html">Unit 03: VAV box controllers →</a>
+  </nav>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <p><strong>Independent training material.</strong> Not affiliated with or endorsed by KMC Controls, Inc.</p>
+    <p>Procedures summarized from the KMC CSC-3000 Series Application Guide (AN1205B) and general pneumatic control practice. Always follow the manual and the tag-specific airflow chart for the exact device in front of you. Work on pneumatic and electrical systems only if qualified.</p>
+    <p><a href="reference.html">Sources &amp; reference</a></p>
+  </div>
+</footer>
+
+<script src="../js/quizzes.js"></script>
+<script src="../js/site.js"></script>
+</body>
+</html>

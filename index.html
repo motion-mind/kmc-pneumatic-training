@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pneumatic VAV &amp; Thermostat Training — Fundamentals and Field Practice</title>
+<meta name="description" content="A self-paced field guide to pneumatic control fundamentals, KMC CSC-3000 VAV box controllers, and pneumatic thermostats: setup, calibration, and troubleshooting.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="index.html">
+      <span class="logo">PV</span>
+      <span>Pneumatic VAV &amp; Thermostat Training<small>KMC controls field guide</small></span>
+    </a>
+    <nav class="site-nav">
+      <a href="index.html">Home</a>
+      <a href="pages/fundamentals.html">Fundamentals</a>
+      <a href="pages/thermostats.html">Thermostats</a>
+      <a href="pages/vav-controllers.html">VAV Controllers</a>
+      <a href="pages/setup.html">Setup</a>
+      <a href="pages/troubleshooting.html">Troubleshooting</a>
+      <a href="pages/practice.html">Practice</a>
+      <a href="pages/reference.html">Reference</a>
+      <button class="theme-toggle" id="themeToggle" type="button">Dark</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow">Self-paced field training</p>
+    <h1>Pneumatic VAV box controllers &amp; pneumatic thermostats</h1>
+    <p class="lead">Learn how pneumatic control actually works, then how to set up and troubleshoot the two devices you meet on almost every legacy VAV terminal: the <strong>room thermostat</strong> and the <strong>box controller</strong>. Built around the KMC CSC-3000 series reset volume controller and KMC pneumatic thermostats.</p>
+    <div class="badges">
+      <span class="badge accent">Fundamentals first</span>
+      <span class="badge green">Hands-on procedures</span>
+      <span class="badge amber">Symptom → cause</span>
+      <span class="badge cyan">Quizzes &amp; calculators</span>
+    </div>
+  </section>
+
+  <div class="callout note">
+    <div class="title">How to use this site</div>
+    <p>Work through the lessons in order, or jump straight to a task. Every procedure is written to be followed at the box with gauges in hand. The <a href="pages/practice.html">Practice</a> page has quizzes, troubleshooting scenarios, and a reset-setpoint calculator; the <a href="pages/reference.html">Reference</a> page is a printable lookup with sources.</p>
+  </div>
+
+  <h2>What you will be able to do</h2>
+  <div class="card-grid">
+    <div class="card">
+      <h3>Read the air</h3>
+      <p>Tell main air from branch pressure, explain what a restrictor and nozzle do, and know why clean, dry air is the whole ballgame.</p>
+    </div>
+    <div class="card">
+      <h3>Set up a thermostat</h3>
+      <p>Verify direct/reverse action, calibrate at mid-scale, set day/night setback, and confirm the reset signal at the box.</p>
+    </div>
+    <div class="card">
+      <h3>Commission a VAV box</h3>
+      <p>Choose the right reset type, set damper action, and calibrate minimum and maximum airflow on a CSC-3000 with a Magnehelic.</p>
+    </div>
+    <div class="card">
+      <h3>Troubleshoot by signal chain</h3>
+      <p>Isolate air supply, thermostat, controller, actuator, and airflow sensor in the right order instead of swapping parts.</p>
+    </div>
+  </div>
+
+  <h2>Learning path</h2>
+  <div class="card-grid">
+    <a class="card link" href="pages/fundamentals.html">
+      <span class="num">UNIT 01</span>
+      <h3>Pneumatic control fundamentals</h3>
+      <p>Air supply, main vs branch, 3–15 psi, restrictors, nozzle-flapper, relays, P-E switches, actuators, and the tools of the trade.</p>
+    </a>
+    <a class="card link" href="pages/thermostats.html">
+      <span class="num">UNIT 02</span>
+      <h3>Pneumatic thermostats</h3>
+      <p>Direct vs reverse acting, two-pipe vs single-pipe, throttling range, deadband, day/night setback, and calibration.</p>
+    </a>
+    <a class="card link" href="pages/vav-controllers.html">
+      <span class="num">UNIT 03</span>
+      <h3>VAV box controllers — KMC CSC-3000</h3>
+      <p>Ports, reset type, damper action, reset start and span, and how the controller turns a thermostat signal plus velocity pressure into airflow.</p>
+    </a>
+    <a class="card link" href="pages/setup.html">
+      <span class="num">UNIT 04</span>
+      <h3>Setup &amp; calibration</h3>
+      <p>Pre-checks, a universal box commissioning workflow, thermostat calibration, min/max airflow procedure for direct and reverse reset, and a record sheet.</p>
+    </a>
+    <a class="card link" href="pages/troubleshooting.html">
+      <span class="num">UNIT 05</span>
+      <h3>Troubleshooting</h3>
+      <p>Signal-chain isolation, symptom-based decision trees, a quick-cause table, and the mistakes that create phantom faults.</p>
+    </a>
+    <a class="card link" href="pages/practice.html">
+      <span class="num">UNIT 06</span>
+      <h3>Practice &amp; tools</h3>
+      <p>Quizzes with explanations, worked field scenarios, a ΔP→CFM calculator, and a reset-setpoint calculator.</p>
+    </a>
+  </div>
+
+  <h2>Quick pressure reference</h2>
+  <p>Memorize this table before anything else. Nearly every diagnostic starts by confirming one of these values.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Signal</th><th>Typical value</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Building main air (control air)</td><td><strong>15–30 psi</strong></td><td>KMC CSC-3000 spec at port <code>M</code>. Often near 20 psi in the field.</td></tr>
+        <tr><td>Branch / proportional signal</td><td><strong>3–15 psi</strong></td><td>The universal control signal from thermostats and controllers.</td></tr>
+        <tr><td>No air / loss of air</td><td>0 psi</td><td>Devices go to their spring-fail position.</td></tr>
+        <tr><td>Full command</td><td>15 psi or more</td><td>Fully one direction; main air is higher and must never reach a low-range gauge.</td></tr>
+        <tr><td>Velocity pressure (VAV inlet)</td><td>well under 1 in w.c.</td><td>Read on a Magnehelic with the box's own airflow chart.</td></tr>
+        <tr><td>Reset start point (CSC-3000)</td><td>3, 8, or 10 psi</td><td>Factory; field adjustable 0–10 psi.</td></tr>
+        <tr><td>Reset span (CSC-3000)</td><td>5 psi</td><td>Factory; leave it alone in almost every application.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Before you touch anything</h2>
+  <div class="callout danger">
+    <div class="title">Safety and scope</div>
+    <ul>
+      <li>Pneumatic work usually sits beside line voltage, starters, and electric reheat. Lock out the equipment before opening a control panel or reaching into a box.</li>
+      <li>Control air is compressed. Release pressure before disconnecting tubing, and never point an open tube at your face or skin.</li>
+      <li>Never connect a low-range Magnehelic (for example 0–0.5 in w.c.) to main air at ~20 psi — it will destroy the gauge.</li>
+      <li>This site is training material. The device's own manual and the box's airflow chart always win over anything written here.</li>
+    </ul>
+  </div>
+
+  <h2>About the equipment this teaches</h2>
+  <p>KMC Controls builds the <strong>CSC-3000 series</strong> pneumatic VAV reset volume controllers (CSC-3011, CSC-3016, CSC-3021, CSC-3023, CSC-3025, CSC-3026 and related), which are the direct replacements for a long line of older KMC and competitor controllers. KMC also builds the <strong>CTC-1600</strong> and <strong>CTE-5100</strong> series pneumatic thermostats. The procedures here reflect KMC's CSC-3000 Application Guide, with thermostat practice from general pneumatic control methods.</p>
+  <p class="disclaimer-inline">Independent training material. Not affiliated with or endorsed by KMC Controls, Inc. KMC and its product names are trademarks of their owners.</p>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <p><strong>Independent training material.</strong> Not affiliated with or endorsed by KMC Controls, Inc.</p>
+    <p>Procedures summarized from the KMC CSC-3000 Series Application Guide (AN1205B) and general pneumatic control practice. Always follow the manual and the tag-specific airflow chart for the exact device in front of you. Work on pneumatic and electrical systems only if qualified.</p>
+    <p><a href="pages/reference.html">Sources &amp; reference</a></p>
+  </div>
+</footer>
+
+<script src="js/quizzes.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

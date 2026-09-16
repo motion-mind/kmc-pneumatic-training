@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reference — Pressures, Ports, Glossary &amp; Sources</title>
+<meta name="description" content="Printable quick reference for pneumatic VAV and thermostat work: pressure ranges, port codes, reset type table, model cross-references, glossary, and sources.">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../index.html">
+      <span class="logo">PV</span>
+      <span>Pneumatic VAV &amp; Thermostat Training<small>KMC controls field guide</small></span>
+    </a>
+    <nav class="site-nav">
+      <a href="../index.html">Home</a>
+      <a href="fundamentals.html">Fundamentals</a>
+      <a href="thermostats.html">Thermostats</a>
+      <a href="vav-controllers.html">VAV Controllers</a>
+      <a href="setup.html">Setup</a>
+      <a href="troubleshooting.html">Troubleshooting</a>
+      <a href="practice.html">Practice</a>
+      <a href="reference.html">Reference</a>
+      <button class="theme-toggle" id="themeToggle" type="button">Dark</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <p class="eyebrow">Reference</p>
+  <h1>Reference &amp; sources</h1>
+  <p class="lead">Everything on this page is designed to be printed and carried. Numbers, port codes, the reset-type decision, cross-references, and where the information came from.</p>
+
+  <div class="toc" data-toc></div>
+
+  <h2>Master pressure reference</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Signal</th><th>Value</th><th>Source / note</th></tr></thead>
+      <tbody>
+        <tr><td>Main air at CSC-3000 port M</td><td>15–30 psi</td><td>KMC CSC-3000 Application Guide</td></tr>
+        <tr><td>Branch / proportional control signal</td><td>3–15 psi</td><td>Industry-standard proportional signal</td></tr>
+        <tr><td>Mid-scale calibration reference</td><td>about 9 psi</td><td>Center of 3–15</td></tr>
+        <tr><td>Full-flow call at port T</td><td>15 psi or more</td><td>KMC min/max procedure</td></tr>
+        <tr><td>Reset start point, factory</td><td>3, 8, or 10 psi</td><td>KMC; field adjustable 0–10 psi</td></tr>
+        <tr><td>Reset span, factory</td><td>5 psi</td><td>KMC; field adjustable 0–10 psi; leave at 5 unless necessary</td></tr>
+        <tr><td>Velocity pressure at a VAV inlet</td><td>well under 1 in w.c.</td><td>Read the box chart; ranges often 0–0.5 or 0–1 in w.c.</td></tr>
+        <tr><td>Standard control tubing</td><td>1/4" (5 mm) O.D. FR</td><td>KMC push-on fittings</td></tr>
+        <tr><td>Port G test tubing</td><td>5/32" O.D.</td><td>KMC reset start/span procedure</td></tr>
+        <tr><td>Damper selection screw torque</td><td>2–4 in-lb</td><td>KMC; do not overtighten (strips plastic)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Port codes — KMC CSC-3000</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Port</th><th>Name</th><th>Connects to</th></tr></thead>
+      <tbody>
+        <tr><td><code>M</code></td><td>Main air</td><td>Main air supply, 15–30 psi</td></tr>
+        <tr><td><code>B</code></td><td>Branch</td><td>Damper actuator</td></tr>
+        <tr><td><code>T</code></td><td>Thermostat</td><td>Thermostat reset output, 3–15 psi</td></tr>
+        <tr><td><code>H</code></td><td>High / total</td><td>Airflow sensor high (total) pressure tap</td></tr>
+        <tr><td><code>L</code></td><td>Low / static</td><td>Airflow sensor low (static) pressure tap</td></tr>
+        <tr><td><code>G</code></td><td>Test / relief (plugged)</td><td>Used to read reset start/span; relieving it removes reset pressure</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Reset type decision</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Primary air</th><th>Thermostat</th><th>Reset type</th><th>LO STAT</th><th>HI STAT</th></tr></thead>
+      <tbody>
+        <tr><td>Cooling</td><td>Direct (DA)</td><td>Direct</td><td>Minimum flow</td><td>Maximum flow</td></tr>
+        <tr><td>Cooling</td><td>Reverse (RA)</td><td>Reverse</td><td>Maximum flow</td><td>Minimum flow</td></tr>
+        <tr><td>Heating</td><td>Direct (DA)</td><td>Reverse</td><td>Maximum flow</td><td>Minimum flow</td></tr>
+        <tr><td>Heating</td><td>Reverse (RA)</td><td>Direct</td><td>Minimum flow</td><td>Maximum flow</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="disclaimer-inline">Below the reset start point the controller holds LO STAT. Above the start point, over the reset span, it moves to HI STAT.</p>
+
+  <h2>KMC model cross-reference</h2>
+  <p>The CSC-3000 "universal" models replace older KMC controllers. KMC requires recalibration after any replacement.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Replacement</th><th>Replaces</th></tr></thead>
+      <tbody>
+        <tr><td>CSC-3011</td><td>CSC-1001, CSC-2001, CSC-2003, CSC-2007, CSC-2011, CSC-2013, CSC-3014, CSC-3017, CSC-3501</td></tr>
+        <tr><td>CSC-3021</td><td>CSC-2002, CSC-2004, CSC-2008, CSC-2012, CSC-2014</td></tr>
+        <tr><td>CSC-3016</td><td>CSC-2009, CSC-2015, CSC-2017, CSC-3505</td></tr>
+        <tr><td>CSC-3026</td><td>CSC-2010, CSC-2016, CSC-2018</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Notes from KMC: the CSC-3014 also requires a thermostat replacement with no limits at the thermostat. The CSC-3017 is identical to the CSC-3011 but ships without a mounting bracket or KMC logo. There is no direct replacement for the CSC-3501/3505 if the linear feature is required. All Titus CSC-2000 controllers are the same as KMC CSC-2000 units.</p>
+
+  <h2>Competitor cross-reference (into the CSC-3000 family)</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>KMC</th><th>Honeywell</th><th>Johnson Controls</th><th>Invensys / Barber-Colman</th><th>TAC / Staefa</th></tr></thead>
+      <tbody>
+        <tr><td>CSC-3011</td><td>CP980C/D/E/F</td><td>P-3800-1, P-3800-2</td><td>R77 / R78 series</td><td>PPR-9100, HYUR-2700</td></tr>
+        <tr><td>CSC-3025</td><td>—</td><td>P-3800 (Trane units)</td><td>VCV2500 (Trane units)</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="disclaimer-inline">For Honeywell CSP980 replacement, the existing velocity pressure pickup must be replaced with a KMC SSS-1000 series sensor. For Trane terminal units, use CSC-3025. Always confirm against the current KMC Master Cross-Reference before ordering.</p>
+
+  <h2>Formulas and rules</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Rule</th><th>Expression / statement</th></tr></thead>
+      <tbody>
+        <tr><td>Flow from velocity pressure</td><td><code>CFM = K × √ΔP</code>, where K is specific to the box and chart</td></tr>
+        <tr><td>Reset position</td><td>Direct: LO = min, HI = max. Reverse: LO = max, HI = min</td></tr>
+        <tr><td>Reset band</td><td><code>start psi</code> to <code>start + span psi</code> at port T</td></tr>
+        <tr><td>Flapper closer to nozzle</td><td>Branch pressure rises</td></tr>
+        <tr><td>Flapper away from nozzle</td><td>Branch pressure falls</td></tr>
+        <tr><td>Sequencing</td><td>Use the controller's reset range, never the actuator's spring range</td></tr>
+        <tr><td>Adjustment pacing</td><td>1/4 to 1/2 knob rotation at a time; wait 20–30 s for flow to stabilize</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Glossary</h2>
+  <dl class="kv">
+    <dt>Branch pressure</dt><dd>The variable output of a pneumatic device — the control signal, typically 3–15 psi.</dd>
+    <dt>DA / RA</dt><dd>Direct acting (output rises with the sensed variable) and reverse acting (output falls with it).</dd>
+    <dt>Deadband</dt><dd>The neutral zone between heating and cooling setpoints on a dual thermostat where neither output calls.</dd>
+    <dt>ΔP</dt><dd>Differential pressure. At a VAV inlet it is the velocity pressure that indicates airflow.</dd>
+    <dt>EP transducer</dt><dd>Electric-to-pneumatic: converts a 0–10 V or 4–20 mA command into a 3–15 psi output.</dd>
+    <dt>FR tubing</dt><dd>Flame-retardant control tubing, specified as 1/4" (5 mm) O.D. for CSC-3000 fittings.</dd>
+    <dt>HI STAT</dt><dd>The high-limit setpoint dial on the CSC-3000 (right dial). Min or max depending on reset type.</dd>
+    <dt>LO STAT</dt><dd>The low-limit setpoint dial on the CSC-3000 (center dial). Min or max depending on reset type.</dd>
+    <dt>Main air</dt><dd>The steady supply that powers pneumatic devices, 15–30 psi at CSC-3000 port M.</dd>
+    <dt>Magnehelic</dt><dd>A differential pressure gauge used to read velocity pressure. Match the range to the box.</dd>
+    <dt>Master / sub-master</dt><dd>The room thermostat is the master; the CSC-3000 reset volume controller is the sub-master.</dd>
+    <dt>N.O. / N.C.</dt><dd>Normally open and normally closed — the position at 0 psi. Also a selectable damper action on the controller.</dd>
+    <dt>Nozzle-flapper</dt><dd>The bleed mechanism where a flapper partly covers a nozzle to set branch pressure.</dd>
+    <dt>P-E switch</dt><dd>Pneumatic-to-electric: closes electrical contacts at an adjustable pressure setpoint.</dd>
+    <dt>Reset span</dt><dd>The thermostat pressure change above the start point that moves the flow setpoint from one extreme to the other.</dd>
+    <dt>Reset start point</dt><dd>The thermostat pressure at which the controller begins resetting between LO STAT and HI STAT.</dd>
+    <dt>Restrictor</dt><dd>A tiny fixed orifice that limits supply airflow so the nozzle can modulate branch pressure.</dd>
+    <dt>Spring range</dt><dd>The branch pressure span over which an actuator strokes from one end to the other.</dd>
+    <dt>Throttling range</dt><dd>The temperature change required to move a thermostat's output through its full range.</dd>
+  </dl>
+
+  <h2>Sources</h2>
+  <ul>
+    <li>KMC Controls, <em>CSC-3000 Series Pneumatic VAV Reset Volume Controllers — Application Guide</em>, document <code>AG_CSC-3000_SAN1205B-RevH</code>. Primary source for ports, reset type, damper action, reset start, reset span, min/max procedures, cautions, and cross-references.</li>
+    <li>KMC Controls, <em>CSC-3011/16/17/21/23/25/26 Reset Volume Controllers Installation Guide</em>. Mounting, connections, and troubleshooting.</li>
+    <li>KMC Controls product documentation — CSC-3000 data sheets and installation guides, and CTC-1600 / CTE-5100 series pneumatic thermostat installation guides, available from the KMC Controls support downloads library.</li>
+    <li>General pneumatic control practice for thermostat calibration, day/night setback, and throttling range. Verify model-specific procedures against each device's own installation guide.</li>
+  </ul>
+
+  <div class="callout warn">
+    <div class="title">Scope and liability</div>
+    <p>This is independent training material and is not affiliated with, authorized by, or endorsed by KMC Controls, Inc. KMC and its product names are trademarks of their respective owners. Procedures are summarized and may omit steps or caveats in the original documents. The manufacturer's manual and the tag-specific airflow chart always govern. Work on pneumatic, electrical, and mechanical systems only if you are qualified and authorized, and follow all lockout/tagout and site safety rules.</p>
+  </div>
+
+  <nav class="lesson-nav">
+    <a href="practice.html">← Unit 06: Practice</a>
+    <a href="../index.html">Home →</a>
+  </nav>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <p><strong>Independent training material.</strong> Not affiliated with or endorsed by KMC Controls, Inc.</p>
+    <p>Procedures summarized from the KMC CSC-3000 Series Application Guide (AN1205B) and general pneumatic control practice. Always follow the manual and the tag-specific airflow chart for the exact device in front of you. Work on pneumatic and electrical systems only if qualified.</p>
+    <p><a href="reference.html">Sources &amp; reference</a></p>
+  </div>
+</footer>
+
+<script src="../js/quizzes.js"></script>
+<script src="../js/site.js"></script>
+</body>
+</html>

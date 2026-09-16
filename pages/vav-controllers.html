@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 03 — KMC CSC-3000 VAV Box Controllers</title>
+<meta name="description" content="KMC CSC-3000 series pneumatic VAV reset volume controllers: ports, reset type, damper action, reset start and span, minimum and maximum airflow, models and cross-references.">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../index.html">
+      <span class="logo">PV</span>
+      <span>Pneumatic VAV &amp; Thermostat Training<small>KMC controls field guide</small></span>
+    </a>
+    <nav class="site-nav">
+      <a href="../index.html">Home</a>
+      <a href="fundamentals.html">Fundamentals</a>
+      <a href="thermostats.html">Thermostats</a>
+      <a href="vav-controllers.html">VAV Controllers</a>
+      <a href="setup.html">Setup</a>
+      <a href="troubleshooting.html">Troubleshooting</a>
+      <a href="practice.html">Practice</a>
+      <a href="reference.html">Reference</a>
+      <button class="theme-toggle" id="themeToggle" type="button">Dark</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <p class="eyebrow">Unit 03</p>
+  <h1>VAV box controllers — KMC CSC-3000 series</h1>
+  <p class="lead">The KMC CSC-3000 is a <strong>sub-master reset volume controller</strong>. It takes two inputs — a 3–15 psi reset signal from the room thermostat and a velocity pressure from the airflow sensor in the box inlet — and positions a damper to hold a flow setpoint. Separate knobs set the minimum and maximum airflow, and the thermostat signal resets the flow between them.</p>
+
+  <div class="toc" data-toc></div>
+
+  <h2>The control loop in one picture</h2>
+  <p>A VAV box controller is really a flow-control loop. The thermostat does not command a damper position directly; it commands a <em>flow setpoint</em>. The controller continuously measures actual flow and drives the damper until measured flow matches the setpoint.</p>
+
+  <div class="flowchart">
+    <div class="fc-node check"><span class="fc-q">Room thermostat → port T</span><div class="fc-actions">3–15 psi reset signal sets where the flow target sits between minimum and maximum</div></div>
+    <div class="fc-node check"><span class="fc-q">Velocity sensor in the inlet → ports H and L</span><div class="fc-actions">differential pressure proportional to airflow</div></div>
+    <div class="fc-node check"><span class="fc-q">CSC-3000 compares the two</span><div class="fc-actions">sets a flow target and modulates the branch output</div></div>
+    <div class="fc-node good"><span class="fc-q">Port B → damper actuator</span><div class="fc-actions">damper moves until measured flow equals the target</div></div>
+  </div>
+
+  <h2>Ports and connections</h2>
+  <p>KMC specifies 1/4" (5 mm) O.D. FR tubing on the push-on fittings. Learn these six ports; every calibration and most diagnostics reference them.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 470" role="img" aria-label="KMC CSC-3000 port connections">
+      <rect class="svg-panel" x="8" y="8" width="704" height="454" rx="12"/>
+
+      <rect class="svg-box" x="300" y="185" width="170" height="130" rx="12"/>
+      <text class="svg-ink" x="322" y="244" font-size="15" font-weight="700">KMC CSC-3000</text>
+      <text class="svg-muted" x="322" y="264" font-size="12">reset volume controller</text>
+
+      <circle class="svg-ink" cx="322" cy="185" r="5"/>
+      <circle class="svg-ink" cx="448" cy="185" r="5"/>
+      <circle class="svg-ink" cx="470" cy="250" r="5"/>
+      <circle class="svg-ink" cx="342" cy="315" r="5"/>
+      <circle class="svg-ink" cx="428" cy="315" r="5"/>
+      <circle class="svg-ink" cx="300" cy="250" r="5"/>
+
+      <text class="svg-ink" x="300" y="176" font-size="13" font-weight="700">M</text>
+      <text class="svg-ink" x="452" y="176" font-size="13" font-weight="700">T</text>
+      <text class="svg-ink" x="478" y="254" font-size="13" font-weight="700">B</text>
+      <text class="svg-ink" x="322" y="332" font-size="13" font-weight="700">H</text>
+      <text class="svg-ink" x="432" y="332" font-size="13" font-weight="700">L</text>
+      <text class="svg-ink" x="282" y="231" font-size="13" font-weight="700">G</text>
+
+      <line class="svg-air" x1="322" y1="185" x2="322" y2="70"/>
+      <line class="svg-air" x1="322" y1="70" x2="150" y2="70"/>
+      <text class="svg-ink" x="30" y="60" font-size="14" font-weight="700">Main air 15–30 psi</text>
+      <text class="svg-muted" x="30" y="78" font-size="12">clean, dry, oil-free</text>
+
+      <line class="svg-sig" x1="448" y1="185" x2="448" y2="105"/>
+      <line class="svg-sig" x1="448" y1="105" x2="540" y2="105"/>
+      <rect class="svg-panel" x="540" y="72" width="162" height="66" rx="10"/>
+      <text class="svg-ink" x="556" y="100" font-size="13" font-weight="700">Room thermostat</text>
+      <text class="svg-muted" x="556" y="118" font-size="12">master, 3–15 psi</text>
+
+      <line class="svg-sig" x1="470" y1="250" x2="590" y2="250"/>
+      <path class="svg-ink" d="M590 250 l-11 -6 v12 z" fill="currentColor"/>
+      <rect class="svg-panel" x="592" y="214" width="112" height="72" rx="10"/>
+      <text class="svg-ink" x="606" y="245" font-size="13" font-weight="700">Damper</text>
+      <text class="svg-ink" x="606" y="263" font-size="13" font-weight="700">actuator</text>
+
+      <line class="svg-air" x1="342" y1="315" x2="342" y2="378"/>
+      <line class="svg-air" x1="428" y1="315" x2="428" y2="378"/>
+      <rect class="svg-panel" x="250" y="378" width="280" height="62" rx="10"/>
+      <text class="svg-ink" x="292" y="404" font-size="13" font-weight="700">Velocity sensor in box inlet</text>
+      <text class="svg-muted" x="278" y="424" font-size="12">H = total (high) · L = static (low)</text>
+
+      <line class="svg-line" x1="300" y1="250" x2="236" y2="250" stroke-width="2"/>
+      <circle class="svg-ink" cx="230" cy="250" r="7"/>
+      <text class="svg-ink" x="120" y="246" font-size="13" font-weight="700">G test port</text>
+      <text class="svg-muted" x="120" y="264" font-size="12">rubber plug, used in calibration</text>
+    </svg>
+    <figcaption>CSC-3000 connections. The thermostat resets the flow target; the velocity sensor tells the controller what the box is actually delivering.</figcaption>
+  </figure>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Port</th><th>Connects to</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>M</code></td><td>Main air supply</td><td>Powers the controller. Specified 15–30 psi.</td></tr>
+        <tr><td><code>B</code></td><td>Damper actuator</td><td>The branch output that strokes the damper.</td></tr>
+        <tr><td><code>T</code></td><td>Thermostat output</td><td>The 3–15 psi reset signal from the master controller.</td></tr>
+        <tr><td><code>H</code></td><td>Airflow sensor, high/total tap</td><td>One side of the velocity pressure differential.</td></tr>
+        <tr><td><code>L</code></td><td>Airflow sensor, low/static tap</td><td>The other side of the velocity pressure differential.</td></tr>
+        <tr><td><code>G</code></td><td>Plugged test port</td><td>Read pressure here during reset start/span calibration; removing the plug also relieves pressure at T.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Reset type: the decision that comes first</h2>
+  <p>Before you touch a knob, decide whether the application needs <strong>direct reset</strong> or <strong>reverse reset</strong>. It depends on the temperature of the primary air entering the box and on whether the room thermostat is direct or reverse acting. KMC's table is the authority:</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Primary air</th><th>Thermostat</th><th>Reset type</th></tr></thead>
+      <tbody>
+        <tr><td>Cooling</td><td>Direct acting (DA)</td><td><strong>Direct reset</strong></td></tr>
+        <tr><td>Cooling</td><td>Reverse acting (RA)</td><td><strong>Reverse reset</strong></td></tr>
+        <tr><td>Heating</td><td>Direct acting (DA)</td><td><strong>Reverse reset</strong></td></tr>
+        <tr><td>Heating</td><td>Reverse acting (RA)</td><td><strong>Direct reset</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Get this wrong and the box controls backwards — more airflow on a heating call, less on a cooling call. It is one of the most common "failed controller" calls that turns out to be a configuration error.</p>
+
+  <h3>What direct and reverse reset look like</h3>
+  <ul>
+    <li><strong>Direct reset:</strong> below the reset start point the controller holds <strong>LO STAT = minimum flow</strong>. Above the start point, over the reset span, it resets from minimum <strong>up to HI STAT = maximum flow</strong>.</li>
+    <li><strong>Reverse reset:</strong> below the reset start point the controller holds <strong>LO STAT = maximum flow</strong>. Above the start point, over the reset span, it resets from maximum <strong>down to HI STAT = minimum flow</strong>.</li>
+  </ul>
+
+  <h2>Reset start point</h2>
+  <p>The reset start point is the thermostat pressure at which the controller <em>begins</em> to reset from LO STAT toward HI STAT.</p>
+  <ul>
+    <li><strong>Factory settings:</strong> models ship with a reset start of <strong>3, 8, or 10 psi</strong>.</li>
+    <li><strong>Field adjustable:</strong> 0–10 psi on all models.</li>
+    <li><strong>Usually leave it alone.</strong> KMC notes the standard settings are correct for most applications.</li>
+  </ul>
+
+  <h3>Adjusting the reset start point</h3>
+  <ol class="steps">
+    <li><span class="step-title">Set the thermostat pressure to the desired start point</span> (for example 3 psi) at port T.</li>
+    <li><span class="step-title">Remove the rubber plug at port G</span> and read pressure there with a 0–30 psi gauge (needs 5/32" O.D. tubing).</li>
+    <li><span class="step-title">Turn the reset start control</span> at the top of the controller with a small flat-blade screwdriver — <strong>counterclockwise to increase, clockwise to decrease</strong> — until the pressure at G is just beginning to move off zero.</li>
+    <li><span class="step-title">If it will not come in, revisit the reset span</span> before condemning the controller.</li>
+  </ol>
+
+  <h2>Reset span</h2>
+  <p>The reset span is the thermostat pressure change <em>above</em> the start point that moves the flow setpoint from one extreme to the other.</p>
+  <ul>
+    <li><strong>Factory setting: 5 psi.</strong></li>
+    <li><strong>Field adjustable:</strong> 0–10 psi.</li>
+    <li><strong>KMC's advice is firm:</strong> leave it at 5 psi unless genuinely necessary. Changing it may force you to redo the min/max calibration.</li>
+  </ul>
+
+  <h3>Adjusting the reset span</h3>
+  <ol class="steps">
+    <li><span class="step-title">Drive the thermostat above its working range</span> — 20 psi is best.</li>
+    <li><span class="step-title">Attach a pressure gauge to port G</span> (5/32" O.D. tubing).</li>
+    <li><span class="step-title">Turn the reset span control</span> at the bottom of the controller — counterclockwise to increase, clockwise to decrease — until the pressure at G equals the desired span.</li>
+  </ol>
+
+  <div class="callout note">
+    <div class="title">Start point and span, together</div>
+    <p>Think of it as a window on the thermostat's 3–15 psi signal. The start point is where the window opens; the span is how wide it is. With a start of 8 and a span of 5, the box resets between 8 and 13 psi. The reset-setpoint calculator on the <a href="practice.html">Practice</a> page lets you play with these numbers.</p>
+  </div>
+
+  <h2>Damper action</h2>
+  <p>The CSC-3000's damper action is <strong>factory set at Normally Open (N.O.)</strong>. To change to Normally Closed (N.C.):</p>
+  <ol class="steps">
+    <li><span class="step-title">Loosen the damper selection screw.</span></li>
+    <li><span class="step-title">Turn the selection dial clockwise</span> until the "NC" arrow aligns with the "DAMPER" arrow. Alignment accuracy matters — make it exact.</li>
+    <li><span class="step-title">Tighten the selection screw.</span> About 2–4 in-lb; snug but not enough to strip the plastic.</li>
+  </ol>
+  <p>The controller's damper action must agree with the physical damper so that increasing flow always means the same direction of travel.</p>
+
+  <h2>Minimum and maximum airflow</h2>
+  <p>Two knobs set the flow envelope: <strong>LO STAT ΔP</strong> (center dial) and <strong>HI STAT ΔP</strong> (right dial). They are set in terms of the sensor's velocity pressure, read on a Magnehelic gauge and converted to CFM with the box's chart. Which one is minimum and which is maximum depends on the reset type — see the table above.</p>
+
+  <div class="callout warn">
+    <div class="title">Do not skip the reset-type decision</div>
+    <p>Roughly half of all "the min and max are backwards" calls are simply a direct/reset mismatch. Deciding the reset type first tells you unambiguously whether LO STAT is the minimum or the maximum. See <a href="setup.html">Unit 04</a> for the full step-by-step procedure.</p>
+  </div>
+
+  <h2>Models and cross-references</h2>
+  <p>The "universal" CSC-3000 models replace a long list of older KMC controllers. After any replacement, KMC requires that adjustments and calibration be redone.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Replacement model</th><th>Replaces (older KMC)</th></tr></thead>
+      <tbody>
+        <tr><td>CSC-3011</td><td>CSC-1001, CSC-2001, CSC-2003, CSC-2007, CSC-2011, CSC-2013, CSC-3014, CSC-3017, CSC-3501</td></tr>
+        <tr><td>CSC-3021</td><td>CSC-2002, CSC-2004, CSC-2008, CSC-2012, CSC-2014</td></tr>
+        <tr><td>CSC-3016</td><td>CSC-2009, CSC-2015, CSC-2017, CSC-3505</td></tr>
+        <tr><td>CSC-3026</td><td>CSC-2010, CSC-2016, CSC-2018</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>KMC also publishes a competitor cross-reference: Honeywell VCV2100/VCV2200/VCV2500 series, Johnson Controls P-3800, Barber-Colman/Invensys R77 and R78 series, and TAC/Staefa PPR-9100 and HYUR-2700 series map into the CSC-3000 family. Note that all Titus CSC-2000 controllers are the same as KMC CSC-2000 units.</p>
+
+  <h2>Dual-duct applications</h2>
+  <p>The CSC-3000 works on single- and dual-duct systems. On dual duct, it may be necessary to work on one duct at a time. KMC's published examples:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Application</th><th>Model</th><th>Damper</th><th>LO STAT</th><th>HI STAT</th><th>Reset</th></tr></thead>
+      <tbody>
+        <tr><td>Dual duct — cold deck</td><td>CSC-3011-10</td><td>N.C.</td><td>Min flow</td><td>Max flow</td><td>8–13 psi</td></tr>
+        <tr><td>Dual duct — hot deck</td><td>CSC-3021-10</td><td>N.O.</td><td>Max flow</td><td>Min flow</td><td>3–8 psi</td></tr>
+        <tr><td>Dual duct, constant volume — cold deck / common discharge</td><td>CSC-3011-10</td><td>N.C.</td><td>Constant volume flow</td><td>—</td><td>8–13 psi</td></tr>
+        <tr><td>Dual duct, constant volume — hot deck</td><td>CSC-3011-10</td><td>N.O.</td><td>Min flow</td><td>Max flow</td><td>13–8 psi</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Cautions that prevent callbacks</h2>
+  <ul>
+    <li><strong>Position sensitive.</strong> Mount and calibrate in the same horizontal or vertical plane. Calibrating on a bench and installing vertically throws off min and max.</li>
+    <li><strong>Sequence on the reset range, not the spring range.</strong> KMC is explicit: any sequencing with other controllers, valves, or pneumatic-electric relays must use the controller's reset range, not the actuator's spring range.</li>
+    <li><strong>Zero minimum.</strong> Do not turn the LO STAT knob fully clockwise. Past zero it goes into negative reset, which the controller must overcome before reset begins, narrowing the effective span. To get zero, adjust until the damper just cracks open, then back off about a quarter turn.</li>
+    <li><strong>Patience.</strong> The output responds slowly. Wait 20–30 seconds after each adjustment for the flow to stabilize.</li>
+    <li><strong>Control air only.</strong> Oil or moisture contamination leads to eventual failure.</li>
+    <li><strong>Never blow out a connected sensor</strong> — disconnect it from the controller first.</li>
+  </ul>
+
+  <h2>Check your understanding</h2>
+  <div class="quiz" data-quiz="vav"></div>
+
+  <nav class="lesson-nav">
+    <a href="thermostats.html">← Unit 02: Thermostats</a>
+    <a href="setup.html">Unit 04: Setup &amp; calibration →</a>
+  </nav>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <p><strong>Independent training material.</strong> Not affiliated with or endorsed by KMC Controls, Inc.</p>
+    <p>Procedures summarized from the KMC CSC-3000 Series Application Guide (AN1205B) and general pneumatic control practice. Always follow the manual and the tag-specific airflow chart for the exact device in front of you. Work on pneumatic and electrical systems only if qualified.</p>
+    <p><a href="reference.html">Sources &amp; reference</a></p>
+  </div>
+</footer>
+
+<script src="../js/quizzes.js"></script>
+<script src="../js/site.js"></script>
+</body>
+</html>

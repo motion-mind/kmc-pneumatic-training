@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 01 — Pneumatic Control Fundamentals</title>
+<meta name="description" content="How pneumatic control works: air supply, main vs branch pressure, restrictors, the nozzle-flapper principle, relays, actuators, and P-E switches.">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../index.html">
+      <span class="logo">PV</span>
+      <span>Pneumatic VAV &amp; Thermostat Training<small>KMC controls field guide</small></span>
+    </a>
+    <nav class="site-nav">
+      <a href="../index.html">Home</a>
+      <a href="fundamentals.html">Fundamentals</a>
+      <a href="thermostats.html">Thermostats</a>
+      <a href="vav-controllers.html">VAV Controllers</a>
+      <a href="setup.html">Setup</a>
+      <a href="troubleshooting.html">Troubleshooting</a>
+      <a href="practice.html">Practice</a>
+      <a href="reference.html">Reference</a>
+      <button class="theme-toggle" id="themeToggle" type="button">Dark</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <p class="eyebrow">Unit 01</p>
+  <h1>Pneumatic control fundamentals</h1>
+  <p class="lead">Pneumatic control uses compressed air as its signal. A thermostat or controller varies a small air pressure, and that pressure physically moves a damper or valve. There is no electronics at the device, which is exactly why this technology survived for a century and why so much of it is still in service.</p>
+
+  <div class="toc" data-toc></div>
+
+  <h2>Why air, and why it lasted</h2>
+  <p>A pneumatic control loop is elegant: a sensor moves a flapper, the flapper modulates a tiny bleed of air, and the resulting pressure strokes an actuator. The advantages are real:</p>
+  <ul>
+    <li><strong>Intrinsically safe.</strong> The signal at the device is air, not electricity. That matters in hazardous or wet locations.</li>
+    <li><strong>Fail-safe.</strong> If control air is lost, every actuator goes to a known spring position. The behavior is predictable without a battery or a UPS.</li>
+    <li><strong>Survives time and outages.</strong> No firmware, no network, no licensing. Many 40-year-old systems still run.</li>
+    <li><strong>Proportional and smooth.</strong> A 3–15 psi signal is naturally analog and drifts gently rather than stepping.</li>
+  </ul>
+  <p>The trade-offs are equally real: it needs a clean, dry air supply; it is mechanical and therefore needs periodic calibration; it cannot be networked without a transducer; and it responds slowly compared with DDC. Those trade-offs are the source of nearly every pneumatic fault you will chase.</p>
+
+  <h2>The air supply chain</h2>
+  <p>Every device on the system depends on the same supply. Understanding the chain tells you why a single air problem can take out a whole floor of boxes at once.</p>
+  <ol class="steps">
+    <li><span class="step-title">Compressor</span> — produces the air, typically at 60–100 psi. It also produces heat, moisture, and oil carryover.</li>
+    <li><span class="step-title">Aftercooler and receiver tank</span> — cools the air so much of the water condenses out, and stores pressure to smooth demand.</li>
+    <li><span class="step-title">Dryer</span> — refrigerated or desiccant, removes the remaining moisture. Wet air is the enemy of every restrictor and nozzle.</li>
+    <li><span class="step-title">Filters and separators</span> — coalescing and particulate elements remove oil aerosol and dirt.</li>
+    <li><span class="step-title">Main regulator</span> — drops the pressure to the control-air main, commonly near 20 psi but specified as <strong>15–30 psi</strong> at a KMC CSC-3000 port M.</li>
+    <li><span class="step-title">Distribution</span> — a network of tubing feeds each device. This is <strong>main air</strong>.</li>
+    <li><span class="step-title">At each device</span> — a restrictor and nozzle turn that steady main air into a varying <strong>branch</strong> pressure: the 3–15 psi control signal.</li>
+  </ol>
+
+  <div class="callout warn">
+    <div class="title">The rule that explains most faults</div>
+    <p>KMC states it plainly: pneumatic devices must be supplied with clean, dry control air, and any other medium — oil or moisture — will cause the device to fail. If several devices act strange at once, suspect the air supply, not the devices.</p>
+  </div>
+
+  <h2>Main air vs branch pressure</h2>
+  <p>These two pressures are constantly confused, and confusing them will send you down the wrong diagnostic path every time.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th>Main air</th><th>Branch pressure</th></tr></thead>
+      <tbody>
+        <tr><td>Also called</td><td>Supply air, control air, port <code>M</code></td><td>Output, signal, port <code>B</code> or <code>T</code></td></tr>
+        <tr><td>Typical value</td><td>15–30 psi</td><td>3–15 psi</td></tr>
+        <tr><td>Behavior</td><td>Steady; the source of power</td><td>Varies with the sensed condition</td></tr>
+        <tr><td>What it does</td><td>Runs the device</td><td>Commands the actuator</td></tr>
+        <tr><td>Gauge to use</td><td>0–30 psi</td><td>0–30 psi, or a Magnehelic for very small differentials</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>A pneumatic device does not create pressure from nothing. It takes steady high-pressure main air and <em>throttles it down</em> to a varying branch pressure. That is why loss of main air always means loss of control.</p>
+
+  <h2>Two-pipe vs single-pipe</h2>
+  <div class="grid-2">
+    <div class="card">
+      <h3>Two-pipe</h3>
+      <p>Two tubes run to the device: one carries continuous main air, the other carries the branch output to the actuator (or to the next device). Cleanest and easiest to troubleshoot, because you can read main and branch independently at the device.</p>
+    </div>
+    <div class="card">
+      <h3>Single-pipe</h3>
+      <p>One tube carries both. The device contains its own restrictor in the inlet and bleeds through its nozzle; branch pressure appears on the same line that feeds it. Fewer tubes, but harder to isolate because main and branch share the line.</p>
+    </div>
+  </div>
+  <p>When you put a gauge on a single-pipe device, remember you are reading the branch. To confirm supply, you have to go upstream of the restrictor.</p>
+
+  <h2>The restrictor and the nozzle-flapper principle</h2>
+  <p>This is the single most important mechanism in pneumatic control. Learn it once and every device makes sense.</p>
+  <p>Main air enters through a <strong>restrictor</strong> — a fixed, tiny orifice. A restrictor alone would eventually fill everything to main pressure. So the air also has a path to escape: a <strong>nozzle</strong> that is partly covered by a <strong>flapper</strong>. The flapper is moved by the sensor. The gap between nozzle and flapper decides how fast air bleeds away, and that sets the equilibrium pressure in the chamber between the restrictor and the nozzle. That chamber pressure is the <strong>branch output</strong>.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 340" role="img" aria-label="Schematic of the restrictor and nozzle-flapper bleed principle">
+      <rect class="svg-panel" x="8" y="8" width="704" height="324" rx="12"/>
+      <text class="svg-ink" x="26" y="38" font-size="15" font-weight="700">Main air 15–30 psi</text>
+      <line class="svg-air" x1="26" y1="62" x2="140" y2="62"/>
+      <path class="svg-air" d="M140 62 h18 l8 -14 l8 28 l8 -28 l8 28 l8 -14 h16"/>
+      <text class="svg-ink" x="146" y="112" font-size="13" font-weight="700">restrictor</text>
+      <text class="svg-muted" x="146" y="130" font-size="12">fixed tiny orifice</text>
+      <line class="svg-air" x1="234" y1="62" x2="380" y2="62"/>
+      <rect class="svg-box" x="300" y="92" width="170" height="86" rx="10"/>
+      <text class="svg-ink" x="330" y="128" font-size="14" font-weight="700">branch chamber</text>
+      <text class="svg-muted" x="330" y="148" font-size="12">equilibrium pressure</text>
+      <line class="svg-air" x1="380" y1="62" x2="380" y2="92"/>
+      <line class="svg-sig" x1="470" y1="135" x2="660" y2="135"/>
+      <path class="svg-sig" d="M660 135 l-10 -6 v12 z" fill="currentColor"/>
+      <text class="svg-ink" x="478" y="122" font-size="14" font-weight="700">Branch 3–15 psi</text>
+      <text class="svg-muted" x="478" y="158" font-size="12">to actuator</text>
+
+      <line class="svg-air" x1="380" y1="178" x2="380" y2="238"/>
+      <path class="svg-ink" d="M370 238 h20 l-10 14 z"/>
+      <text class="svg-ink" x="392" y="252" font-size="13" font-weight="700">nozzle</text>
+      <line class="svg-ink" x1="250" y1="286" x2="470" y2="264" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <circle class="svg-ink" cx="250" cy="286" r="7"/>
+      <text class="svg-ink" x="120" y="292" font-size="13" font-weight="700">flapper</text>
+      <text class="svg-muted" x="120" y="310" font-size="12">moved by the sensor</text>
+      <path class="svg-air" d="M380 300 q0 18 22 18" stroke-dasharray="4 4"/>
+      <text class="svg-muted" x="410" y="322" font-size="12">bleed</text>
+    </svg>
+    <figcaption>Restrictor in, nozzle out. The flapper position controls how much air escapes, which sets the branch pressure.</figcaption>
+  </figure>
+
+  <ul>
+    <li>Flapper moves <strong>closer</strong> to the nozzle → less air escapes → branch pressure <strong>rises</strong>.</li>
+    <li>Flapper moves <strong>away</strong> from the nozzle → more air escapes → branch pressure <strong>falls</strong>.</li>
+    <li>Flapper fully covering the nozzle → branch approaches main pressure (but never usefully exceeds about 15 psi in a control signal).</li>
+    <li>Flapper fully clear → branch bleeds to near 0 psi.</li>
+  </ul>
+  <p>The moving part is often called a <em>bleed nozzle</em> or <em>pilot</em>. A device that "bleeds" branch pressure is using this exact mechanism.</p>
+
+  <h2>Relays, pilots, and volume amplifiers</h2>
+  <p>A nozzle can only pass a tiny amount of air, far too little to stroke a damper actuator quickly. Two fixes exist:</p>
+  <ul>
+    <li><strong>Pilot / relay.</strong> A small bleed signal operates a larger valve or diaphragm so a small pressure change switches or amplifies a bigger flow. You will see relays used for on/off or two-position logic.</li>
+    <li><strong>Volume amplifier / volume booster.</strong> The branch signal drives a relay that supplies a greater volume of air at the same pressure, so the actuator strokes fast while the output remains proportional. This is what keeps a proportional signal responsive.</li>
+  </ul>
+  <p>KMC's name for the VAV flow controller — <em>reset volume controller</em> — is about a different kind of "volume": it controls the <em>volume of air through the box</em>, not the volume of control air to an actuator. Keep those two meanings separate.</p>
+
+  <h2>Direct acting and reverse acting</h2>
+  <p>This convention appears on thermostats, controllers, and actuators, and it must be consistent through the whole loop.</p>
+  <ul>
+    <li><strong>Direct acting (DA):</strong> output pressure <strong>increases</strong> as the sensed variable increases.</li>
+    <li><strong>Reverse acting (RA):</strong> output pressure <strong>decreases</strong> as the sensed variable increases.</li>
+  </ul>
+
+  <figure>
+    <svg viewBox="0 0 620 330" role="img" aria-label="Graph comparing direct acting and reverse acting output">
+      <rect class="svg-panel" x="8" y="8" width="604" height="314" rx="12"/>
+      <line class="svg-line" x1="80" y1="270" x2="560" y2="270" stroke-width="2"/>
+      <line class="svg-line" x1="80" y1="270" x2="80" y2="50" stroke-width="2"/>
+      <text class="svg-ink" x="520" y="298" font-size="13" font-weight="700">sensed temperature</text>
+      <text class="svg-ink" x="24" y="52" font-size="13" font-weight="700">branch psi</text>
+      <text class="svg-muted" x="44" y="74" font-size="12">15</text>
+      <text class="svg-muted" x="52" y="266" font-size="12">3</text>
+      <line class="svg-line" x1="74" y1="70" x2="82" y2="70"/>
+      <line class="svg-air" x1="90" y1="250" x2="540" y2="85" stroke-width="3"/>
+      <text class="svg-ink" x="330" y="150" font-size="14" font-weight="700">Direct acting (DA)</text>
+      <text class="svg-muted" x="330" y="170" font-size="12">output rises with temperature</text>
+      <line class="svg-sig" x1="90" y1="85" x2="540" y2="250" stroke-width="3"/>
+      <text class="svg-ink" x="330" y="240" font-size="14" font-weight="700">Reverse acting (RA)</text>
+      <text class="svg-muted" x="330" y="260" font-size="12">output falls with temperature</text>
+    </svg>
+    <figcaption>Direct vs reverse acting. Cooling applications commonly use DA; heating commonly uses RA — but always confirm the actual device.</figcaption>
+  </figure>
+
+  <p>An actuator has the same idea, expressed as a <strong>spring range</strong>: the branch pressure span over which the actuator strokes from one end of travel to the other. A 3–13 psi spring range actuator begins moving near 3 psi and reaches full stroke near 13 psi.</p>
+
+  <h2>Actuators, N.O. and N.C.</h2>
+  <p>Actuators are diaphragm or piston devices. Two properties matter when you troubleshoot:</p>
+  <ul>
+    <li><strong>Spring range</strong> — where in the branch span the actuator strokes. Different ranges let you sequence two actuators on one signal.</li>
+    <li><strong>Fail position</strong> — what it does at 0 psi. A <em>normally open</em> (N.O.) damper is open with no air and closes as pressure rises; a <em>normally closed</em> (N.C.) damper does the opposite.</li>
+  </ul>
+  <p>Separately, many VAV controllers (including the KMC CSC-3000) have their own internally selectable <em>damper action</em>, factory set to Normally Open and switchable to Normally Closed. The controller's selection must match the physical damper so that "more airflow" always means the correct direction.</p>
+
+  <h2>P-E switches and EP transducers</h2>
+  <div class="grid-2">
+    <div class="card">
+      <h3>P-E switch (pneumatic to electric)</h3>
+      <p>Closes or opens electrical contacts at an adjustable pressure setpoint. Typical setpoints fall across 3–15 psi. Used to start fans, enable electric reheat, or hand a status to a DDC system.</p>
+    </div>
+    <div class="card">
+      <h3>EP transducer (electric to pneumatic)</h3>
+      <p>Takes a 0–10 V or 4–20 mA command from a digital controller and produces a proportional 3–15 psi output. This is the bridge used when a DDC system controls an old pneumatic actuator or box.</p>
+    </div>
+  </div>
+
+  <h2>Tools of the trade</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tool</th><th>Used for</th></tr></thead>
+      <tbody>
+        <tr><td>0–30 psi pressure gauge</td><td>Main air, branch pressure, thermostat output, port <code>G</code> readings.</td></tr>
+        <tr><td>Magnehelic differential gauge</td><td>Velocity pressure across a VAV inlet. Match the range to the box: often 0–0.5 or 0–1 in w.c.</td></tr>
+        <tr><td>Test tee</td><td>Reading pressure in a line without cutting it.</td></tr>
+        <tr><td>Squeeze bulb</td><td>Leak-testing a section, actuator diaphragm, or fittings.</td></tr>
+        <tr><td>Tube cutter and spare 1/4" tubing</td><td>Trimming stretched or cracked ends; replacing brittle or discolored tube.</td></tr>
+        <tr><td>Small flat-blade screwdriver</td><td>Reset start, reset span, and calibration adjustments.</td></tr>
+        <tr><td>Airflow chart for the specific box</td><td>Converting velocity pressure to CFM. Never use a generic chart.</td></tr>
+        <tr><td>Accurate thermometer</td><td>Thermostat calibration against true room temperature.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout tip">
+    <div class="title">The mental model to carry forward</div>
+    <p>Signal flows in one direction: <strong>sensor → thermostat → controller → actuator → damper</strong>, powered by a steady main air supply and expressed as a varying branch pressure. When something misbehaves, walk that chain and measure at each junction.</p>
+  </div>
+
+  <h2>Check your understanding</h2>
+  <div class="quiz" data-quiz="fundamentals"></div>
+
+  <nav class="lesson-nav">
+    <a href="../index.html">← Home</a>
+    <a href="thermostats.html">Unit 02: Pneumatic thermostats →</a>
+  </nav>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <p><strong>Independent training material.</strong> Not affiliated with or endorsed by KMC Controls, Inc.</p>
+    <p>Procedures summarized from the KMC CSC-3000 Series Application Guide (AN1205B) and general pneumatic control practice. Always follow the manual and the tag-specific airflow chart for the exact device in front of you. Work on pneumatic and electrical systems only if qualified.</p>
+    <p><a href="reference.html">Sources &amp; reference</a></p>
+  </div>
+</footer>
+
+<script src="../js/quizzes.js"></script>
+<script src="../js/site.js"></script>
+</body>
+</html>
