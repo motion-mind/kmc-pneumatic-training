@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — interactive</title>
 <meta name="description" content="Interactive pneumatic VAV training: click to plug and unplug the thermostat, box controller, actuator, and airflow sensor lines and watch the system respond.">
-<link rel="stylesheet" href="css/style.css?v=2">
+<link rel="stylesheet" href="css/style.css?v=3">
 </head>
 <body>
 <header class="topbar">
@@ -57,28 +57,61 @@
         </g>
         <line id="headerLine" class="wire wire-main" x1="134" y1="46" x2="350" y2="46"/>
 
-        <g>
-          <rect class="unit" x="40" y="320" width="210" height="140" rx="10"/>
-          <circle class="dial" cx="100" cy="378" r="26"/>
-          <line id="tNeedle" class="needle" x1="100" y1="378" x2="100" y2="358"/>
+        <g class="dev-shadow">
+          <rect class="tstat-plate" x="44" y="324" width="206" height="132" rx="15"/>
+          <rect class="tstat-recess" x="54" y="334" width="186" height="112" rx="11"/>
+          <line class="tstat-louvre" x1="64" y1="431" x2="238" y2="431"/>
+          <line class="tstat-louvre" x1="64" y1="438" x2="238" y2="438"/>
+          <circle class="tstat-dial" cx="100" cy="378" r="31"/>
+          <g id="tstatScale"></g>
+          <line id="tNeedle" class="needle" x1="100" y1="378" x2="100" y2="351"/>
           <circle class="dial-hub" cx="100" cy="378" r="3.5"/>
-          <text class="eq" x="140" y="352">THERMOSTAT</text>
-          <text class="eq dim" x="140" y="368">master signal</text>
-          <text id="rdTOut" class="lbl val" x="140" y="398">9.0 psi</text>
-          <text id="rdTSp" class="lbl" x="140" y="418">set 72&deg;F</text>
+          <polygon class="tstat-idx" points="100,341 95,332 105,332"/>
+          <text class="eq" x="150" y="348">THERMOSTAT</text>
+          <text class="eq dim" x="150" y="362">master &middot; 3&ndash;15 psi</text>
+          <text id="rdTOut" class="lbl val" x="150" y="392">9.0 psi</text>
+          <text id="rdTSp" class="lbl" x="150" y="412">set 72&deg;F</text>
+          <rect class="fitting" x="144" y="314" width="12" height="14" rx="2"/>
+          <rect class="fitting" x="245" y="384" width="15" height="12" rx="2"/>
         </g>
 
-        <g>
-          <rect class="unit" x="330" y="320" width="230" height="140" rx="10"/>
-          <text class="eq" x="445" y="346" text-anchor="middle">VAV CONTROLLER</text>
-          <text class="eq dim" x="445" y="362" text-anchor="middle">CSC-3000 style &middot; 3&ndash;15 psi</text>
-          <text class="portlbl" x="358" y="338">M</text>
-          <text class="portlbl" x="446" y="338">H</text>
-          <text class="portlbl" x="486" y="338">L</text>
-          <text class="portlbl" x="342" y="398">T</text>
-          <text class="portlbl" x="342" y="352">G</text>
-          <text class="portlbl" x="552" y="398">B</text>
+        <g class="dev-shadow">
+          <rect class="ctrl-body" x="330" y="318" width="230" height="142" rx="13"/>
+          <rect class="ctrl-face" x="340" y="328" width="210" height="122" rx="10"/>
+          <text class="ctrl-head" x="360" y="349">RESET VOLUME</text>
+          <text class="ctrl-tiny" x="360" y="362">pneumatic &middot; 3&ndash;15 psi</text>
+
+          <circle class="knob" cx="388" cy="392" r="25"/>
+          <g id="knobLoScale"></g>
+          <line class="knob-ptr" x1="388" y1="392" x2="401" y2="378"/>
+          <text class="ctrl-label" x="388" y="434" text-anchor="middle">LO STAT &Delta;P</text>
+
+          <circle class="knob" cx="500" cy="392" r="25"/>
+          <g id="knobHiScale"></g>
+          <line class="knob-ptr" x1="500" y1="392" x2="513" y2="378"/>
+          <text class="ctrl-label" x="500" y="434" text-anchor="middle">HI STAT &Delta;P</text>
+
+          <rect class="ctrl-scale" x="425" y="375" width="42" height="44" rx="5"/>
+          <g id="ctrlScaleMarks"></g>
+          <text class="ctrl-tiny" x="446" y="401" text-anchor="middle">&Delta;P</text>
+
+          <circle class="ctrl-mini" cx="533" cy="347" r="9"/>
+          <line class="knob-ptr" x1="533" y1="347" x2="539" y2="341"/>
+          <text class="ctrl-tiny" x="533" y="371" text-anchor="middle">N.O.</text>
+
+          <rect class="fitting" x="344" y="311" width="12" height="14" rx="2"/>
+          <rect class="fitting" x="444" y="311" width="12" height="14" rx="2"/>
+          <rect class="fitting" x="484" y="311" width="12" height="14" rx="2"/>
+          <rect class="fitting" x="324" y="339" width="14" height="12" rx="2"/>
+          <rect class="fitting" x="324" y="384" width="14" height="12" rx="2"/>
+          <rect class="fitting" x="552" y="384" width="14" height="12" rx="2"/>
         </g>
+        <text class="portlbl" x="361" y="313">M</text>
+        <text class="portlbl" x="461" y="313">H</text>
+        <text class="portlbl" x="501" y="313">L</text>
+        <text class="portlbl end" x="321" y="333">G</text>
+        <text class="portlbl end" x="321" y="382">T</text>
+        <text class="portlbl" x="571" y="382">B</text>
 
         <g>
           <circle class="gport" cx="330" cy="345" r="4"/>
@@ -115,7 +148,7 @@
         <h2>Controls</h2>
         <label class="ctl">
           <span>Room setpoint <output id="spOut">72&deg;F</output></span>
-          <input id="spSl" type="range" min="62" max="84" step="0.5" value="72">
+          <input id="spSl" type="range" min="60" max="80" step="0.5" value="72">
         </label>
         <div class="ctl">
           <span>Reset type</span>
@@ -173,6 +206,6 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=2"></script>
+<script src="js/sim.js?v=3"></script>
 </body>
 </html>

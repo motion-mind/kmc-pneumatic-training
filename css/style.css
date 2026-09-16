@@ -13,6 +13,18 @@
   --red: #c63a30;
   --red-soft: #fbe7e4;
   --cyan: #0a7f8f;
+  --dev-body: #333d4b;
+  --dev-face: #3d4858;
+  --dev-edge: #1d232c;
+  --dev-plate: #f1ede3;
+  --dev-recess: #e4ddcf;
+  --dev-plate-edge: #c9c0ae;
+  --knob: #59647a;
+  --knob-edge: #262d38;
+  --knob-hi: #808da0;
+  --scale: #f5f7fa;
+  --scale-line: #55637a;
+  --metal: #c2a45f;
   --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   --shadow: 0 1px 2px rgba(15, 26, 38, 0.06), 0 8px 22px rgba(15, 26, 38, 0.07);
@@ -35,6 +47,18 @@ body.theme-dark {
   --red: #ef7a70;
   --red-soft: #3a1c1a;
   --cyan: #4fc4d4;
+  --dev-body: #1e2734;
+  --dev-face: #27323f;
+  --dev-edge: #0c1219;
+  --dev-plate: #c9d2dc;
+  --dev-recess: #b9c4d0;
+  --dev-plate-edge: #8794a3;
+  --knob: #3f4a5b;
+  --knob-edge: #141b24;
+  --knob-hi: #5d6a7c;
+  --scale: #e8edf2;
+  --scale-line: #46556b;
+  --metal: #d6b974;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 26px rgba(0, 0, 0, 0.35);
 }
 
@@ -130,6 +154,31 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 20px 16px 70px; }
 .dial { fill: var(--panel-2); stroke: var(--border); stroke-width: 1.5; }
 .dial-hub { fill: var(--ink); }
 .needle { stroke: var(--red); stroke-width: 3; stroke-linecap: round; }
+
+/* ---- stylized devices ---- */
+.dev-shadow { filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.28)); }
+
+.tstat-plate { fill: var(--dev-plate); stroke: var(--dev-plate-edge); stroke-width: 1.5; }
+.tstat-recess { fill: var(--dev-recess); }
+.tstat-louvre { stroke: var(--dev-plate-edge); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 5 6; opacity: 0.75; }
+.tstat-dial { fill: var(--scale); stroke: var(--dev-plate-edge); stroke-width: 1.5; }
+.tstat-tick { stroke: var(--scale-line); stroke-width: 1.4; stroke-linecap: round; }
+.tstat-tick.major { stroke-width: 2.2; }
+.tstat-num { fill: var(--scale-line); font-size: 8px; font-weight: 750; text-anchor: middle; }
+.tstat-idx { fill: var(--accent); }
+
+.ctrl-body { fill: var(--dev-body); stroke: var(--dev-edge); stroke-width: 1.5; }
+.ctrl-face { fill: var(--dev-face); stroke: var(--dev-edge); stroke-width: 1; }
+.knob { fill: var(--knob); stroke: var(--knob-edge); stroke-width: 1.5; }
+.knob-tick { stroke: var(--knob-hi); stroke-width: 1.1; }
+.knob-ptr { stroke: #ffffff; stroke-width: 2; stroke-linecap: round; }
+.ctrl-scale { fill: var(--scale); stroke: var(--dev-edge); stroke-width: 1; }
+.ctrl-tick { stroke: var(--scale-line); stroke-width: 1.1; }
+.ctrl-mini { fill: var(--scale); stroke: var(--dev-edge); stroke-width: 1; }
+.ctrl-head { fill: #eef3f8; font-size: 10px; font-weight: 800; letter-spacing: 0.05em; }
+.ctrl-label { fill: #dbe3ec; font-size: 9px; font-weight: 750; letter-spacing: 0.03em; }
+.ctrl-tiny { fill: #b9c4d1; font-size: 7px; font-weight: 750; letter-spacing: 0.04em; }
+.fitting { fill: var(--metal); stroke: var(--dev-edge); stroke-width: 1; }
 
 .blade { stroke: var(--ink); stroke-width: 9; stroke-linecap: round; }
 .shaft { fill: var(--muted); opacity: 0.45; }

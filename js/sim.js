@@ -38,6 +38,62 @@
 
   function clamp(v, a, b) { return Math.min(b, Math.max(a, v)); }
 
+  function polar(cx, cy, r, deg) {
+    var a = deg * Math.PI / 180;
+    return [cx + r * Math.sin(a), cy - r * Math.cos(a)];
+  }
+
+  function seg(cls, x1, y1, x2, y2) {
+    var l = document.createElementNS(NS, "line");
+    l.setAttribute("class", cls);
+    l.setAttribute("x1", x1.toFixed(1)); l.setAttribute("y1", y1.toFixed(1));
+    l.setAttribute("x2", x2.toFixed(1)); l.setAttribute("y2", y2.toFixed(1));
+    return l;
+  }
+
+  function initDeviceArt() {
+    var i, a, p1, p2, p;
+
+    var gs = document.getElementById("tstatScale");
+    if (gs) {
+      for (a = -60; a <= 60; a += 15) {
+        var major = (a % 30 === 0);
+        p1 = polar(100, 378, 26, a);
+        p2 = polar(100, 378, major ? 31.5 : 30, a);
+        gs.appendChild(seg("tstat-tick" + (major ? " major" : ""), p1[0], p1[1], p2[0], p2[1]));
+      }
+      [-60, -30, 0, 30, 60].forEach(function (ang) {
+        var pt = polar(100, 378, 20.5, ang);
+        var t = document.createElementNS(NS, "text");
+        t.setAttribute("class", "tstat-num");
+        t.setAttribute("x", pt[0].toFixed(1));
+        t.setAttribute("y", (pt[1] + 2.8).toFixed(1));
+        t.textContent = String(60 + (ang + 60) / 120 * 20);
+        gs.appendChild(t);
+      });
+    }
+
+    [["knobLoScale", 388], ["knobHiScale", 500]].forEach(function (spec) {
+      var gk = document.getElementById(spec[0]);
+      if (!gk) return;
+      for (var ang = 0; ang < 360; ang += 30) {
+        p1 = polar(spec[1], 392, 17, ang);
+        p2 = polar(spec[1], 392, 24, ang);
+        gk.appendChild(seg("knob-tick", p1[0], p1[1], p2[0], p2[1]));
+      }
+    });
+
+    var gc = document.getElementById("ctrlScaleMarks");
+    if (gc) {
+      for (i = 0; i < 7; i++) {
+        var x = 431 + i * 5.2;
+        var long = (i % 2 === 0);
+        gc.appendChild(seg("ctrl-tick", x, 378, x, long ? 386 : 383));
+        gc.appendChild(seg("ctrl-tick", x, 416, x, long ? 408 : 411));
+      }
+    }
+  }
+
   function buildTube(t) {
     var fx = t.from[0], fy = t.from[1], tx = t.to[0], ty = t.to[1];
     var dx = tx - fx, dy = ty - fy, len = Math.hypot(dx, dy) || 1;
@@ -162,7 +218,7 @@
     document.getElementById("blade").setAttribute("transform",
       "rotate(" + (90 * (1 - state.damper / 100)).toFixed(1) + " 740 220)");
 
-    var needAng = -62 + (state.setpoint - 62) / (84 - 62) * 124;
+    var needAng = -60 + (state.setpoint - 60) / 20 * 120;
     document.getElementById("tNeedle").setAttribute("transform",
       "rotate(" + needAng.toFixed(1) + " 100 378)");
 
@@ -257,6 +313,7 @@
   function init() {
     TUBES.forEach(buildTube);
     syncLines();
+    initDeviceArt();
 
     document.getElementById("spSl").addEventListener("input", function () {
       state.setpoint = parseFloat(this.value);
