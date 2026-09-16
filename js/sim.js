@@ -73,25 +73,15 @@
       });
     }
 
-    [["knobLoScale", 388], ["knobHiScale", 500]].forEach(function (spec) {
+    [["knobLoScale", 526, 376], ["knobHiScale", 526, 402]].forEach(function (spec) {
       var gk = document.getElementById(spec[0]);
       if (!gk) return;
       for (var ang = 0; ang < 360; ang += 30) {
-        p1 = polar(spec[1], 392, 17, ang);
-        p2 = polar(spec[1], 392, 24, ang);
+        p1 = polar(spec[1], spec[2], 6.2, ang);
+        p2 = polar(spec[1], spec[2], 9, ang);
         gk.appendChild(seg("knob-tick", p1[0], p1[1], p2[0], p2[1]));
       }
     });
-
-    var gc = document.getElementById("ctrlScaleMarks");
-    if (gc) {
-      for (i = 0; i < 7; i++) {
-        var x = 431 + i * 5.2;
-        var long = (i % 2 === 0);
-        gc.appendChild(seg("ctrl-tick", x, 378, x, long ? 386 : 383));
-        gc.appendChild(seg("ctrl-tick", x, 416, x, long ? 408 : 411));
-      }
-    }
   }
 
   function buildTube(t) {

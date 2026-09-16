@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — interactive</title>
 <meta name="description" content="Interactive pneumatic VAV training: click to plug and unplug the thermostat, box controller, actuator, and airflow sensor lines and watch the system respond.">
-<link rel="stylesheet" href="css/style.css?v=3">
+<link rel="stylesheet" href="css/style.css?v=4">
 </head>
 <body>
 <header class="topbar">
@@ -25,6 +25,25 @@
   <div class="stage-wrap">
     <div class="stage">
       <svg id="sim" viewBox="0 0 1000 520" role="img" aria-label="Interactive pneumatic VAV system diagram">
+        <defs>
+          <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#d9cba9"/>
+            <stop offset="1" stop-color="#b9a67d"/>
+          </linearGradient>
+          <linearGradient id="plateauGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#e2d3ae"/>
+            <stop offset="1" stop-color="#cbb992"/>
+          </linearGradient>
+          <linearGradient id="panelGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#c9b791"/>
+            <stop offset="1" stop-color="#b4a179"/>
+          </linearGradient>
+          <linearGradient id="bracketGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#bdb277"/>
+            <stop offset="0.5" stop-color="#e7ddb0"/>
+            <stop offset="1" stop-color="#a99f6c"/>
+          </linearGradient>
+        </defs>
         <rect class="duct" x="390" y="180" width="430" height="80" rx="6"/>
         <text class="eq dim" x="596" y="206" text-anchor="middle">SUPPLY DUCT</text>
 
@@ -75,49 +94,79 @@
           <rect class="fitting" x="245" y="384" width="15" height="12" rx="2"/>
         </g>
 
+        <!-- KMC CSC-3000 style reset volume controller -->
         <g class="dev-shadow">
-          <rect class="ctrl-body" x="330" y="318" width="230" height="142" rx="13"/>
-          <rect class="ctrl-face" x="340" y="328" width="210" height="122" rx="10"/>
-          <text class="ctrl-head" x="360" y="349">RESET VOLUME</text>
-          <text class="ctrl-tiny" x="360" y="362">pneumatic &middot; 3&ndash;15 psi</text>
+          <rect class="tc-bracket" x="286" y="346" width="20" height="88" rx="4"/>
+          <rect class="tc-slot" x="291" y="381" width="10" height="18" rx="5"/>
+          <rect class="tc-bracket" x="582" y="346" width="20" height="88" rx="4"/>
+          <rect class="tc-slot" x="587" y="381" width="10" height="18" rx="5"/>
 
-          <circle class="knob" cx="388" cy="392" r="25"/>
+          <g>
+            <rect class="tc-port" x="343.5" y="304" width="13" height="26" rx="2"/>
+            <rect class="tc-barb" x="341.5" y="307" width="17" height="4" rx="2"/>
+            <circle class="tc-hole" cx="350" cy="305" r="2.6"/>
+          </g>
+          <g>
+            <rect class="tc-port" x="443.5" y="304" width="13" height="26" rx="2"/>
+            <rect class="tc-barb" x="441.5" y="307" width="17" height="4" rx="2"/>
+            <circle class="tc-hole" cx="450" cy="305" r="2.6"/>
+          </g>
+          <g>
+            <rect class="tc-port" x="483.5" y="304" width="13" height="26" rx="2"/>
+            <rect class="tc-barb" x="481.5" y="307" width="17" height="4" rx="2"/>
+            <circle class="tc-hole" cx="490" cy="305" r="2.6"/>
+          </g>
+          <g>
+            <rect class="tc-port" x="310" y="338.5" width="22" height="13" rx="2"/>
+            <rect class="tc-barb" x="313" y="336.5" width="4" height="17" rx="2"/>
+            <circle class="tc-hole" cx="311" cy="345" r="2.6"/>
+          </g>
+          <g>
+            <rect class="tc-port" x="310" y="383.5" width="22" height="13" rx="2"/>
+            <rect class="tc-barb" x="313" y="381.5" width="4" height="17" rx="2"/>
+            <circle class="tc-hole" cx="311" cy="390" r="2.6"/>
+          </g>
+          <g>
+            <rect class="tc-port" x="556" y="383.5" width="22" height="13" rx="2"/>
+            <rect class="tc-barb" x="571" y="381.5" width="4" height="17" rx="2"/>
+            <circle class="tc-hole" cx="577" cy="390" r="2.6"/>
+          </g>
+
+          <polygon class="tc-body" points="360,318 530,318 560,348 560,430 530,460 360,460 330,430 330,348"/>
+          <polygon class="tc-plateau" points="382,342 508,342 534,366 534,412 508,436 382,436 356,412 356,366"/>
+
+          <circle class="tc-plug" cx="308" cy="345" r="6.5"/>
+
+          <circle class="tc-dial" cx="396" cy="388" r="24"/>
+          <text class="tc-note" x="374" y="372" text-anchor="end">N.O.</text>
+          <text class="tc-note" x="418" y="372" text-anchor="start">N.C.</text>
+          <circle class="tc-screw" cx="396" cy="388" r="5"/>
+          <line class="tc-knobptr" x1="396" y1="388" x2="396" y2="379"/>
+          <text class="tc-note" x="396" y="424" text-anchor="middle">DAMPER</text>
+
+          <rect class="tc-panel" x="444" y="346" width="104" height="88" rx="6"/>
+          <text class="tc-paneltext" x="452" y="360">RESET START</text>
+          <text class="tc-paneltext" x="452" y="379">LO STAT &Delta;P</text>
+          <text class="tc-paneltext" x="452" y="405">HI STAT &Delta;P</text>
+          <text class="tc-paneltext" x="452" y="424">RESET SPAN</text>
+          <circle class="tc-screw" cx="526" cy="357" r="4.5"/>
+          <circle class="tc-knob" cx="526" cy="376" r="9"/>
           <g id="knobLoScale"></g>
-          <line class="knob-ptr" x1="388" y1="392" x2="401" y2="378"/>
-          <text class="ctrl-label" x="388" y="434" text-anchor="middle">LO STAT &Delta;P</text>
-
-          <circle class="knob" cx="500" cy="392" r="25"/>
+          <line class="tc-knobptr" x1="526" y1="376" x2="526" y2="369"/>
+          <circle class="tc-knob" cx="526" cy="402" r="9"/>
           <g id="knobHiScale"></g>
-          <line class="knob-ptr" x1="500" y1="392" x2="513" y2="378"/>
-          <text class="ctrl-label" x="500" y="434" text-anchor="middle">HI STAT &Delta;P</text>
+          <line class="tc-knobptr" x1="526" y1="402" x2="526" y2="395"/>
+          <circle class="tc-screw" cx="526" cy="421" r="4.5"/>
 
-          <rect class="ctrl-scale" x="425" y="375" width="42" height="44" rx="5"/>
-          <g id="ctrlScaleMarks"></g>
-          <text class="ctrl-tiny" x="446" y="401" text-anchor="middle">&Delta;P</text>
-
-          <circle class="ctrl-mini" cx="533" cy="347" r="9"/>
-          <line class="knob-ptr" x1="533" y1="347" x2="539" y2="341"/>
-          <text class="ctrl-tiny" x="533" y="371" text-anchor="middle">N.O.</text>
-
-          <rect class="fitting" x="344" y="311" width="12" height="14" rx="2"/>
-          <rect class="fitting" x="444" y="311" width="12" height="14" rx="2"/>
-          <rect class="fitting" x="484" y="311" width="12" height="14" rx="2"/>
-          <rect class="fitting" x="324" y="339" width="14" height="12" rx="2"/>
-          <rect class="fitting" x="324" y="384" width="14" height="12" rx="2"/>
-          <rect class="fitting" x="552" y="384" width="14" height="12" rx="2"/>
+          <rect class="tc-brandplate" x="404" y="441" width="86" height="12" rx="2"/>
+          <text class="tc-brand" x="447" y="450" text-anchor="middle">KMC Controls, Inc.</text>
         </g>
-        <text class="portlbl" x="361" y="313">M</text>
-        <text class="portlbl" x="461" y="313">H</text>
-        <text class="portlbl" x="501" y="313">L</text>
-        <text class="portlbl end" x="321" y="333">G</text>
-        <text class="portlbl end" x="321" y="382">T</text>
-        <text class="portlbl" x="571" y="382">B</text>
-
-        <g>
-          <circle class="gport" cx="330" cy="345" r="4"/>
-          <line class="wire wire-plug" x1="330" y1="345" x2="316" y2="345"/>
-          <circle class="plug-cap" cx="313" cy="345" r="5"/>
-        </g>
+        <text class="portlbl" x="350" y="338" text-anchor="middle">M</text>
+        <text class="portlbl" x="450" y="334" text-anchor="middle">H</text>
+        <text class="portlbl" x="490" y="334" text-anchor="middle">L</text>
+        <text class="portlbl" x="346" y="358">G</text>
+        <text class="portlbl" x="346" y="398">T</text>
+        <text class="portlbl end" x="545" y="398">B</text>
 
         <g>
           <rect class="unit" x="680" y="330" width="120" height="80" rx="8"/>
@@ -206,6 +255,6 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=3"></script>
+<script src="js/sim.js?v=4"></script>
 </body>
 </html>

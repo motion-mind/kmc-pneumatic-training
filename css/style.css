@@ -136,7 +136,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 20px 16px 70px; }
 .unit { fill: var(--panel); stroke: var(--border); stroke-width: 1.5; }
 .eq { fill: var(--ink); font-size: 12.5px; font-weight: 750; letter-spacing: 0.02em; pointer-events: none; }
 .eq.dim { fill: var(--muted); font-weight: 600; font-size: 11px; letter-spacing: 0.04em; }
-.portlbl { fill: var(--accent); font-size: 11.5px; font-weight: 850; pointer-events: none; }
+.portlbl { fill: #5b4d34; font-size: 10px; font-weight: 850; pointer-events: none; }
 .clickable { cursor: pointer; }
 .clickable:focus-visible { outline: none; }
 .clickable:hover .unit { stroke: var(--accent); }
@@ -167,17 +167,24 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 20px 16px 70px; }
 .tstat-num { fill: var(--scale-line); font-size: 8px; font-weight: 750; text-anchor: middle; }
 .tstat-idx { fill: var(--accent); }
 
-.ctrl-body { fill: var(--dev-body); stroke: var(--dev-edge); stroke-width: 1.5; }
-.ctrl-face { fill: var(--dev-face); stroke: var(--dev-edge); stroke-width: 1; }
-.knob { fill: var(--knob); stroke: var(--knob-edge); stroke-width: 1.5; }
-.knob-tick { stroke: var(--knob-hi); stroke-width: 1.1; }
-.knob-ptr { stroke: #ffffff; stroke-width: 2; stroke-linecap: round; }
-.ctrl-scale { fill: var(--scale); stroke: var(--dev-edge); stroke-width: 1; }
-.ctrl-tick { stroke: var(--scale-line); stroke-width: 1.1; }
-.ctrl-mini { fill: var(--scale); stroke: var(--dev-edge); stroke-width: 1; }
-.ctrl-head { fill: #eef3f8; font-size: 10px; font-weight: 800; letter-spacing: 0.05em; }
-.ctrl-label { fill: #dbe3ec; font-size: 9px; font-weight: 750; letter-spacing: 0.03em; }
-.ctrl-tiny { fill: #b9c4d1; font-size: 7px; font-weight: 750; letter-spacing: 0.04em; }
+.tc-bracket { fill: url(#bracketGrad); stroke: #8f8560; stroke-width: 1; }
+.tc-slot { fill: #6f6647; opacity: 0.5; }
+.tc-port { fill: #c6b489; stroke: #8a7b58; stroke-width: 1; }
+.tc-barb { fill: #c6b489; stroke: #8a7b58; stroke-width: 1; }
+.tc-hole { fill: #5b5140; }
+.tc-body { fill: url(#bodyGrad); stroke: #8a7b58; stroke-width: 1.5; }
+.tc-plateau { fill: url(#plateauGrad); stroke: #a89670; stroke-opacity: 0.35; stroke-width: 1; }
+.tc-plug { fill: #1c1d1e; stroke: #000000; stroke-width: 1; }
+.tc-dial { fill: #cdbb96; stroke: #8a7b58; stroke-width: 1.2; }
+.tc-screw { fill: #b9ae96; stroke: #6f6450; stroke-width: 1; }
+.tc-panel { fill: url(#panelGrad); stroke: #8a7b58; stroke-width: 1.2; }
+.tc-knob { fill: #bfae8c; stroke: #6f6450; stroke-width: 1.2; }
+.tc-knobptr { stroke: #4a4130; stroke-width: 1.4; stroke-linecap: round; }
+.tc-note { fill: #6d5f42; font-size: 7px; font-weight: 800; letter-spacing: 0.02em; }
+.tc-paneltext { fill: #6b5d40; font-size: 6.5px; font-weight: 800; letter-spacing: 0.02em; }
+.tc-brandplate { fill: #f2f1ea; stroke: #b8b3a4; stroke-width: 0.8; }
+.tc-brand { fill: #2a2a2a; font-size: 5.5px; font-weight: 750; }
+.knob-tick { stroke: #7a6c4c; stroke-width: 1; }
 .fitting { fill: var(--metal); stroke: var(--dev-edge); stroke-width: 1; }
 
 .blade { stroke: var(--ink); stroke-width: 9; stroke-linecap: round; }
