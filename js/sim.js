@@ -26,12 +26,12 @@
   };
 
   var TUBES = [
-    { id: "mainToThermostat", from: [150, 46], to: [150, 320], cls: "wire-main", name: "main air to thermostat" },
-    { id: "mainToController", from: [350, 46], to: [350, 320], cls: "wire-main", name: "main air to controller" },
-    { id: "tLine", from: [250, 390], to: [330, 390], cls: "wire-reset", name: "reset signal to controller" },
-    { id: "bLine", from: [560, 390], to: [680, 390], cls: "wire-branch", name: "branch to actuator" },
-    { id: "hLine", from: [450, 260], to: [450, 320], cls: "wire-sensor", name: "sensor H line" },
-    { id: "lLine", from: [490, 260], to: [490, 320], cls: "wire-sensor", name: "sensor L line" }
+    { id: "mainToThermostat", points: [[190, 510], [190, 456]], cls: "wire-main", name: "main air to thermostat" },
+    { id: "mainToController", points: [[490, 510], [490, 420]], cls: "wire-main", name: "main air to controller" },
+    { id: "tLine", points: [[110, 456], [110, 530], [635, 530], [635, 478]], cls: "wire-reset", name: "reset signal to controller" },
+    { id: "bLine", points: [[490, 352], [450, 352]], cls: "wire-branch", name: "branch to actuator" },
+    { id: "hLine", points: [[640, 250], [640, 300]], cls: "wire-sensor", name: "sensor H line" },
+    { id: "lLine", points: [[680, 250], [680, 300]], cls: "wire-sensor", name: "sensor L line" }
   ];
 
   var els = {};
@@ -58,12 +58,12 @@
     if (gs) {
       for (a = -60; a <= 60; a += 15) {
         var major = (a % 30 === 0);
-        p1 = polar(100, 378, 26, a);
-        p2 = polar(100, 378, major ? 31.5 : 30, a);
+        p1 = polar(86, 376, 26, a);
+        p2 = polar(86, 376, major ? 31.5 : 30, a);
         gs.appendChild(seg("tstat-tick" + (major ? " major" : ""), p1[0], p1[1], p2[0], p2[1]));
       }
       [-60, -30, 0, 30, 60].forEach(function (ang) {
-        var pt = polar(100, 378, 20.5, ang);
+        var pt = polar(86, 376, 20.5, ang);
         var t = document.createElementNS(NS, "text");
         t.setAttribute("class", "tstat-num");
         t.setAttribute("x", pt[0].toFixed(1));
@@ -73,7 +73,7 @@
       });
     }
 
-    [["knobLoScale", 526, 376], ["knobHiScale", 526, 402]].forEach(function (spec) {
+    [["knobLoScale", 716, 376], ["knobHiScale", 716, 402]].forEach(function (spec) {
       var gk = document.getElementById(spec[0]);
       if (!gk) return;
       for (var ang = 0; ang < 360; ang += 30) {
@@ -85,17 +85,26 @@
   }
 
   function buildTube(t) {
-    var fx = t.from[0], fy = t.from[1], tx = t.to[0], ty = t.to[1];
-    var dx = tx - fx, dy = ty - fy, len = Math.hypot(dx, dy) || 1;
+    var pts = t.points;
+    var n = pts.length;
+    var last = pts[n - 1];
+    var prev = pts[n - 2] || pts[0];
+    var dx = last[0] - prev[0], dy = last[1] - prev[1];
+    var len = Math.hypot(dx, dy) || 1;
     var ux = dx / len, uy = dy / len;
-    var off = [tx - ux * 22, ty - uy * 22];
+    var retract = [last[0] - ux * 22, last[1] - uy * 22];
+
+    function pathTo(endPt) {
+      var d = "M" + pts[0][0] + " " + pts[0][1];
+      for (var i = 1; i < n - 1; i++) d += " L" + pts[i][0] + " " + pts[i][1];
+      return d + " L" + endPt[0] + " " + endPt[1];
+    }
 
     var g = document.createElementNS(NS, "g");
     g.setAttribute("class", "tube " + t.cls);
     g.setAttribute("tabindex", "0");
     g.setAttribute("role", "button");
     g.setAttribute("aria-label", "Plug or unplug " + t.name);
-    g.setAttribute("aria-pressed", "true");
 
     function mk(tag, cls, attrs) {
       var e = document.createElementNS(NS, tag);
@@ -104,15 +113,15 @@
       return e;
     }
 
-    var port = mk("circle", "port", { cx: tx, cy: ty, r: 5 });
-    var wire = mk("path", "wire", { d: "M" + fx + " " + fy + " L" + tx + " " + ty });
-    var cap = mk("circle", "plug-cap", { cx: tx, cy: ty, r: 5.5 });
-    var hit = mk("path", "hit", { d: "M" + fx + " " + fy + " L" + tx + " " + ty });
+    var port = mk("circle", "port", { cx: last[0], cy: last[1], r: 5 });
+    var wire = mk("path", "wire", { d: pathTo(last) });
+    var cap = mk("circle", "plug-cap", { cx: last[0], cy: last[1], r: 5.5 });
+    var hit = mk("path", "hit", { d: pathTo(last) });
 
     g.appendChild(port); g.appendChild(wire); g.appendChild(cap); g.appendChild(hit);
     tubeLayer.appendChild(g);
 
-    els[t.id] = { g: g, wire: wire, cap: cap, port: port, from: [fx, fy], to: [tx, ty], off: off };
+    els[t.id] = { g: g, wire: wire, cap: cap, port: port, pathTo: pathTo, last: last, retract: retract };
 
     function toggle() { setLine(t.id, !state.lines[t.id]); }
     g.addEventListener("click", toggle);
@@ -124,8 +133,8 @@
   function setLine(id, on) {
     state.lines[id] = on;
     var T = els[id];
-    var end = on ? T.to : T.off;
-    T.wire.setAttribute("d", "M" + T.from[0] + " " + T.from[1] + " L" + end[0] + " " + end[1]);
+    var end = on ? T.last : T.retract;
+    T.wire.setAttribute("d", T.pathTo(end));
     T.cap.setAttribute("cx", end[0]);
     T.cap.setAttribute("cy", end[1]);
     T.g.classList.toggle("off", !on);
@@ -206,11 +215,11 @@
     setText("rdRoomSp", "set " + state.setpoint.toFixed(1) + "\u00B0F", false);
 
     document.getElementById("blade").setAttribute("transform",
-      "rotate(" + (90 * (1 - state.damper / 100)).toFixed(1) + " 740 220)");
+      "rotate(" + (90 * (1 - state.damper / 100)).toFixed(1) + " 390 210)");
 
     var needAng = -60 + (state.setpoint - 60) / 20 * 120;
     document.getElementById("tNeedle").setAttribute("transform",
-      "rotate(" + needAng.toFixed(1) + " 100 378)");
+      "rotate(" + needAng.toFixed(1) + " 86 376)");
 
     var zone = document.getElementById("zoneRect");
     var tc = clamp((state.roomTemp - 55) / 30, 0, 1);
@@ -221,7 +230,7 @@
     fl.style.opacity = (0.22 + state.flow / MAX * 0.7).toFixed(2);
 
     document.getElementById("compressor").style.opacity = state.mainOn ? "1" : "0.45";
-    document.getElementById("headerLine").style.opacity = state.mainOn ? "1" : "0.45";
+    document.getElementById("mainHeader").style.opacity = state.mainOn ? "1" : "0.45";
 
     setText("roMain", mainPSI, !state.mainOn);
     setText("roT", state.tOut.toFixed(1) + " psi", !state.tHasAir);
