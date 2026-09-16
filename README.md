@@ -40,6 +40,9 @@ js/sim.js      State, tube build/plug logic, control loop, rendering, controls
 
 - Homelab: LXC CT 209 on r740, nginx, `https://kmc.mywork.locker` (see `../ps/kmc/`).
   Update = push here, then `ssh root@192.168.10.74 'git -C /var/www/kmc pull'`.
+- **Cache note:** Cloudflare serves `index.html` dynamically (always fresh) but caches
+  `js`/`css` for 4h regardless of origin headers. The asset URLs carry a `?v=N` version —
+  **bump `?v=` in `index.html` whenever you change `js` or `css`** so clients pull the new files.
 
 ## Sources
 
