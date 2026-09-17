@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — interactive</title>
 <meta name="description" content="Interactive pneumatic VAV training: plug and unplug the thermostat, KMC box controller, actuator and airflow sensor lines and watch the system respond.">
-<link rel="stylesheet" href="css/style.css?v=11">
+<link rel="stylesheet" href="css/style.css?v=12">
 </head>
 <body>
 <header class="topbar">
@@ -20,7 +20,8 @@
 
 <main>
   <p class="intro">Click any tube to <b>unplug</b> it &mdash; click again to reconnect. Click the air supply to cut main air.
-  The controller is drawn from the front of a KMC CSC-3000 series device, so the lines land on the ports exactly as they do on the real face.</p>
+  Every box is <b>dual duct</b>: the branch signal is <b>teed</b> to the cold and hot deck actuators. The hot deck actuator is
+  <b>normally open</b> and the cold deck actuator is <b>normally closed</b>, so the box always fails to heat.</p>
 
   <div class="stage-wrap">
     <div class="stage">
@@ -41,7 +42,7 @@
         </defs>
 
         <rect class="duct" x="200" y="170" width="580" height="80" rx="6"/>
-        <text id="ductLabel" class="eq dim" x="500" y="196" text-anchor="middle">SUPPLY DUCT</text>
+        <text id="ductLabel" class="eq dim" x="500" y="196" text-anchor="middle">COLD DECK</text>
         <polygon class="air-arrow" points="780,210 806,196 806,224"/>
         <text class="lbl" x="770" y="74" text-anchor="end">from AHU</text>
         <line id="flowLine" class="airflow" x1="780" y1="210" x2="202" y2="210"/>
@@ -95,22 +96,6 @@
           <text id="rdTSp" class="lbl" x="866" y="408">set 72&deg;F</text>
           <rect class="fitting" x="874" y="312" width="12" height="14" rx="2"/>
           <rect class="fitting" x="904" y="450" width="12" height="14" rx="2"/>
-        </g>
-
-        <!-- reheat coil + valve (single duct + reheat) -->
-        <g id="reheatGroup">
-          <rect class="coil" x="266" y="170" width="74" height="80" rx="4"/>
-          <path class="coil-serp" d="M278 182 H328 V196 H278 V210 H328 V224 H278 V238"/>
-          <text class="eq dim" x="303" y="164" text-anchor="middle">HEATING COIL</text>
-          <line class="pipe" x1="285" y1="250" x2="285" y2="330"/>
-          <line class="pipe" x1="321" y1="250" x2="321" y2="330"/>
-          <line class="pipe" x1="236" y1="330" x2="340" y2="330"/>
-          <polygon class="valve-body" points="276,321 300,339 276,339 300,321"/>
-          <line class="valve-stem" x1="288" y1="321" x2="288" y2="300"/>
-          <rect class="unit" x="250" y="262" width="76" height="38" rx="8"/>
-          <text class="eq" x="288" y="278" text-anchor="middle">REHEAT</text>
-          <text class="eq" x="288" y="292" text-anchor="middle">ACTUATOR</text>
-          <text id="rdReheat" class="lbl val" x="260" y="358" text-anchor="middle">0%</text>
         </g>
 
         <!-- hot deck (dual duct) -->
@@ -196,6 +181,11 @@
         <text id="rdDp" class="lbl val" x="480" y="286" text-anchor="middle">&Delta;P 0.25 in wc</text>
 
         <g id="tubeLayer"></g>
+
+        <g id="teeMark">
+          <circle id="signalTee" class="tee" cx="500" cy="372" r="4.5"/>
+          <text class="lbl" x="500" y="398" text-anchor="middle">tee</text>
+        </g>
       </svg>
 
       <div class="legend">
@@ -213,18 +203,10 @@
           <span>Room setpoint <output id="spOut">72&deg;F</output></span>
           <input id="spSl" type="range" min="60" max="80" step="0.5" value="72">
         </label>
-        <div class="ctl">
-          <span>Terminal type</span>
-          <div class="seg">
-            <button id="ttReheat" class="segbtn active" type="button">Reheat coil</button>
-            <button id="ttDual" class="segbtn" type="button">Dual duct</button>
-          </div>
-          <p class="hint" id="ttHint">Single duct + hot-water reheat. On air failure the box fails to heat.</p>
-        </div>
         <div class="ctl" id="dualActCtl">
           <span>Deck dampers</span>
           <div class="seg">
-            <button id="daDual" class="segbtn active" type="button">2 actuators</button>
+            <button id="daDual" class="segbtn active" type="button">2 actuators (teed)</button>
             <button id="daSingle" class="segbtn" type="button">1 actuator (opposed)</button>
           </div>
         </div>
@@ -259,7 +241,7 @@
           <div><dt>Signal at T</dt><dd id="roTC">9.0 psi</dd></div>
           <div><dt>Branch at B</dt><dd id="roB">6.6 psi</dd></div>
           <div><dt id="roColdLabel">Cold damper</dt><dd id="roDamper">45%</dd></div>
-          <div><dt id="roHeatLabel">Reheat</dt><dd id="roHeat">0%</dd></div>
+          <div><dt id="roHeatLabel">Hot damper</dt><dd id="roHeat">0%</dd></div>
           <div><dt>Airflow</dt><dd id="roFlow">540 CFM</dd></div>
           <div><dt>Velocity &Delta;P</dt><dd id="roDp">0.25 in wc</dd></div>
           <div><dt>Supply air</dt><dd id="roSupply">55&deg;F</dd></div>
@@ -273,10 +255,10 @@
   <section class="trythis">
     <h2>Try this</h2>
     <ol>
-      <li>Click the <b>main-air line to the controller</b> (port <b>M</b>) &mdash; the terminal <b>fails to heat</b>: the cold damper springs closed and the reheat / hot-deck opens.</li>
-      <li>Switch <b>Terminal type</b> between <b>Reheat coil</b> and <b>Dual duct</b> to see the two box styles.</li>
-      <li>Unplug a <b>sensor line</b> (<b>H</b> or <b>L</b>, top) &mdash; the controller can&rsquo;t measure flow, so it drives the cold damper wide open.</li>
-      <li>Switch to <b>Reverse</b> reset while the thermostat is direct-acting &mdash; the loop controls backwards and runs away.</li>
+      <li>Click the <b>teed branch line</b> (port <b>B</b>) &mdash; the signal is lost and the box <b>fails to heat</b>: cold deck closes, hot deck opens.</li>
+      <li>Unplug only the <b>hot-deck leg</b> &mdash; that actuator loses air and springs open to heat.</li>
+      <li>Switch <b>Deck dampers</b> between <b>2 actuators (teed)</b> and <b>1 actuator (opposed)</b>.</li>
+      <li>Click the <b>DAMPER</b> dial on the controller to change its N.O./N.C. action; unplug a <b>sensor line</b> to watch the loop drive wide open.</li>
     </ol>
   </section>
 </main>
@@ -287,6 +269,6 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=11"></script>
+<script src="js/sim.js?v=12"></script>
 </body>
 </html>

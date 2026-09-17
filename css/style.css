@@ -184,8 +184,9 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 20px 16px 70px; }
 .pipe { stroke: var(--muted); stroke-width: 3; stroke-linecap: round; }
 .valvebar { fill: var(--panel-2); stroke: var(--border); stroke-width: 1; }
 .valvefill { fill: var(--amber); }
-#reheatGroup, #dualGroup { display: none; }
+#dualGroup { display: none; }
 .wire-heat { stroke: var(--amber); }
+.tee { fill: var(--cyan); stroke: var(--panel); stroke-width: 1.5; }
 
 .blade { stroke: var(--ink); stroke-width: 9; stroke-linecap: round; }
 .shaft { fill: var(--muted); opacity: 0.45; }
