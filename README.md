@@ -27,11 +27,12 @@ A simplified but physically reasonable loop:
   - **CSC-2000** (CSC-2003, ports `X`/`Y` velocity, `M` main, `B` branch, `T` thermostat) —
     **direct acting only**. Because both decks are then direct acting, the hot deck's 3–15 psi
     branch signal is inverted by an **RCC-1012 reversing relay** before it reaches the actuator.
-    The drawing shows the controller's **port side** in the stylized layout: hexagonal mounting
-    frame with six bolt bosses, the main and lower diaphragm circles, velocity ports `X`/`Y` at
-    the top, `M` and `B` across the mid face, and `T` at the bottom. Because those ports sit on
-    the face rather than the rim, the tubing is re-routed to tuck behind the controller body; the
-    LO/HI/SETPOINT calibration face is on the reverse side.
+    The drawing shows the controller's **port side** per KMC's CSC-2000 datasheet
+    (`DS_CSC-2000_S20503501G.pdf`, "Connections" detail): a single velocity port `X` at the top,
+    `Y` below it, `M`/`B` side by side at mid-body, and a larger `T` port at the bottom — drawn
+    with the same body/boss/bore styling as the CSC-3000 so both controllers read consistently.
+    Because those ports sit on the face rather than the rim, the tubing tucks behind the
+    controller body to reach them; the LO/HI/SETPOINT calibration face is on the reverse side.
   Either way the controller takes the reset signal at `T` and drives the damper through branch `B`.
 - **Reset type** direct (`LO STAT` = min, `HI STAT` = max) or reverse (swapped) — flip it
   to see what a mis-applied reset does.

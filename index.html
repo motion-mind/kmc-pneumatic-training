@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=44">
+<link rel="stylesheet" href="css/style.css?v=45">
 </head>
 <body>
 <header class="topbar">
@@ -35,11 +35,6 @@
             <stop offset="0" stop-color="#d5c5a0"/>
             <stop offset="1" stop-color="#bda984"/>
           </linearGradient>
-          <radialGradient id="maniGrad" cx="0.35" cy="0.3" r="0.85">
-            <stop offset="0" stop-color="#eef1f2"/>
-            <stop offset="0.55" stop-color="#cfd5d8"/>
-            <stop offset="1" stop-color="#a7aeb2"/>
-          </radialGradient>
           <linearGradient id="panelGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stop-color="#cebd98"/>
             <stop offset="1" stop-color="#b9a67f"/>
@@ -242,60 +237,50 @@
         <!-- RCC-1012 reversing relay on the hot deck branch -->
         <g id="relayHot">
           <line class="wire wire-branch" x1="500" y1="237" x2="498" y2="252"/>
-          <circle class="tc2-tap" cx="500" cy="237" r="3.5"/>
-          <circle class="tc2-relay" cx="498" cy="266" r="14"/>
-          <text class="tc2-rlbl" x="498" y="269" text-anchor="middle">RCC</text>
-          <text class="tc2-mod" x="498" y="299" text-anchor="middle">RCC-1012</text>
-          <text class="tc2-mod" x="498" y="308" text-anchor="middle">REV. RELAY</text>
+          <circle class="tc-boss" cx="498" cy="266" r="13"/>
+          <circle class="tc-bore" cx="498" cy="266" r="5"/>
+          <text class="tc-paneltext" x="498" y="288" text-anchor="middle">RCC-1012</text>
+          <text class="tc-paneltext" x="498" y="297" text-anchor="middle">REV. RELAY</text>
         </g>
           <g id="ctrlHot2">
-            <polygon class="tc2-hex" points="571,184 633,184 670,240 639,289 565,289 534,240"/>
-            <circle class="tc2-dia" cx="602" cy="236" r="50"/>
-            <circle class="tc2-dia" cx="602" cy="289" r="34"/>
-            <circle class="tc2-nub" cx="571" cy="184" r="8"/>
-            <circle class="tc2-nub" cx="633" cy="184" r="8"/>
-            <circle class="tc2-nub" cx="670" cy="240" r="8"/>
-            <circle class="tc2-nub" cx="639" cy="289" r="8"/>
-            <circle class="tc2-nub" cx="565" cy="289" r="8"/>
-            <circle class="tc2-nub" cx="534" cy="240" r="8"/>
-            <rect class="tc2-nubx" x="591" y="166" width="22" height="20" rx="10"/>
-            <text class="eq dim" x="635" y="344" text-anchor="middle">HOT DECK CONTROLLER</text>
+            <polygon class="tc-body" points="567,170 637,170 667,200 667,290 637,320 567,320 537,290 537,200"/>
+            <circle class="tc-boss" cx="602" cy="190" r="8"/>
+            <circle class="tc-bore" cx="602" cy="190" r="3"/>
+            <circle class="tc-boss" cx="602" cy="225" r="8"/>
+            <circle class="tc-bore" cx="602" cy="225" r="3"/>
+            <circle class="tc-boss" cx="586" cy="255" r="8"/>
+            <circle class="tc-bore" cx="586" cy="255" r="3"/>
+            <circle class="tc-boss" cx="618" cy="255" r="8"/>
+            <circle class="tc-bore" cx="618" cy="255" r="3"/>
+            <circle class="tc-boss" cx="602" cy="295" r="12"/>
+            <circle class="tc-bore" cx="602" cy="295" r="5"/>
+            <text class="portlbl" x="602" y="178" text-anchor="middle">X</text>
+            <text class="portlbl" x="602" y="239" text-anchor="middle">Y</text>
+            <text class="portlbl end" x="572" y="258">M</text>
+            <text class="portlbl" x="632" y="258">B</text>
+            <text class="portlbl" x="602" y="317" text-anchor="middle">T</text>
+            <text class="eq dim" x="635" y="335" text-anchor="middle">HOT DECK CONTROLLER</text>
           </g>
           <g id="ctrlCold2">
-            <polygon class="tc2-hex" points="571,480 633,480 670,536 639,585 565,585 534,536"/>
-            <circle class="tc2-dia" cx="602" cy="532" r="50"/>
-            <circle class="tc2-dia" cx="602" cy="585" r="34"/>
-            <circle class="tc2-nub" cx="571" cy="480" r="8"/>
-            <circle class="tc2-nub" cx="633" cy="480" r="8"/>
-            <circle class="tc2-nub" cx="670" cy="536" r="8"/>
-            <circle class="tc2-nub" cx="639" cy="585" r="8"/>
-            <circle class="tc2-nub" cx="565" cy="585" r="8"/>
-            <circle class="tc2-nub" cx="534" cy="536" r="8"/>
-            <rect class="tc2-nubx" x="591" y="462" width="22" height="20" rx="10"/>
-            <text class="eq dim" x="635" y="640" text-anchor="middle">COLD DECK CONTROLLER</text>
+            <polygon class="tc-body" points="567,464 637,464 667,494 667,584 637,614 567,614 537,584 537,494"/>
+            <circle class="tc-boss" cx="602" cy="484" r="8"/>
+            <circle class="tc-bore" cx="602" cy="484" r="3"/>
+            <circle class="tc-boss" cx="602" cy="519" r="8"/>
+            <circle class="tc-bore" cx="602" cy="519" r="3"/>
+            <circle class="tc-boss" cx="586" cy="549" r="8"/>
+            <circle class="tc-bore" cx="586" cy="549" r="3"/>
+            <circle class="tc-boss" cx="618" cy="549" r="8"/>
+            <circle class="tc-bore" cx="618" cy="549" r="3"/>
+            <circle class="tc-boss" cx="602" cy="589" r="12"/>
+            <circle class="tc-bore" cx="602" cy="589" r="5"/>
+            <text class="portlbl" x="602" y="472" text-anchor="middle">X</text>
+            <text class="portlbl" x="602" y="533" text-anchor="middle">Y</text>
+            <text class="portlbl end" x="572" y="552">M</text>
+            <text class="portlbl" x="632" y="552">B</text>
+            <text class="portlbl" x="602" y="611" text-anchor="middle">T</text>
+            <text class="eq dim" x="635" y="629" text-anchor="middle">COLD DECK CONTROLLER</text>
           </g>
-        <g id="csc2Front">
-            <circle class="tc2-fport" cx="602" cy="180" r="6" style="stroke-width:5"/>
-            <text class="tc2-flbl" x="584" y="178" text-anchor="end">X</text>
-            <circle class="tc2-fport" cx="602" cy="199" r="5" style="stroke-width:5"/>
-            <text class="tc2-flbl" x="602" y="219" text-anchor="middle">Y</text>
-            <circle class="tc2-fport" cx="589" cy="240" r="7" style="stroke-width:6"/>
-            <text class="tc2-flbl" x="573" y="245" text-anchor="end">M</text>
-            <circle class="tc2-fport" cx="615" cy="240" r="7" style="stroke-width:6"/>
-            <text class="tc2-flbl" x="631" y="245" text-anchor="start">B</text>
-            <circle class="tc2-fport" cx="602" cy="294" r="9" style="stroke-width:6"/>
-            <text class="tc2-flbl" x="584" y="286" text-anchor="end">T</text>
-            <circle class="tc2-fport" cx="602" cy="476" r="6" style="stroke-width:5"/>
-            <text class="tc2-flbl" x="584" y="474" text-anchor="end">X</text>
-            <circle class="tc2-fport" cx="602" cy="495" r="5" style="stroke-width:5"/>
-            <text class="tc2-flbl" x="602" y="515" text-anchor="middle">Y</text>
-            <circle class="tc2-fport" cx="589" cy="536" r="7" style="stroke-width:6"/>
-            <text class="tc2-flbl" x="573" y="541" text-anchor="end">M</text>
-            <circle class="tc2-fport" cx="615" cy="536" r="7" style="stroke-width:6"/>
-            <text class="tc2-flbl" x="631" y="541" text-anchor="start">B</text>
-            <circle class="tc2-fport" cx="602" cy="590" r="9" style="stroke-width:6"/>
-            <text class="tc2-flbl" x="584" y="582" text-anchor="end">T</text>
-        </g>
+
         <!-- room thermostat (remote) -->
         <g class="dev-shadow">
           <rect class="tstat-plate" x="1020" y="240" width="170" height="140" rx="15"/>
@@ -433,6 +418,6 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=44"></script>
+<script src="js/sim.js?v=45"></script>
 </body>
 </html>

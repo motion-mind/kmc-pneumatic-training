@@ -39,18 +39,18 @@
   // face (X/Y velocity at the top, M and B mid-face, T at the bottom), so those
   // runs tuck behind the controller body; the CSC-3000 uses perimeter ports.
   var TUBES = [
-    { id: "hotH", points: [[570, 150], [570, 197]], p2000: [[570, 150], [570, 180], [602, 180]], cls: "wire-sensor", name: "hot deck sensor H", mode: "ctrl" },
-    { id: "hotL", points: [[607, 150], [607, 185]], p2000: [[607, 150], [607, 199], [602, 199]], cls: "wire-sensor", name: "hot deck sensor L", mode: "ctrl" },
-    { id: "coldH", points: [[570, 440], [570, 487]], p2000: [[570, 440], [570, 476], [602, 476]], cls: "wire-sensor", name: "cold deck sensor H", mode: "ctrl" },
-    { id: "coldL", points: [[607, 440], [607, 475]], p2000: [[607, 440], [607, 495], [602, 495]], cls: "wire-sensor", name: "cold deck sensor L", mode: "ctrl" },
-    { id: "hotB", points: [[541, 237], [460, 237]], p2000: [[615, 240], [460, 237]], cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
-    { id: "coldB", points: [[541, 527], [460, 527]], p2000: [[615, 536], [460, 527]], cls: "wire-branch", name: "cold deck branch", mode: "ctrl" },
-    { id: "mainHot", points: [[240, 285], [543, 285]], p2000: [[240, 285], [589, 285], [589, 240]], cls: "wire-main", name: "main air to hot controller", mode: "ctrl" },
-    { id: "mainCold", points: [[240, 575], [543, 575]], p2000: [[240, 575], [589, 575], [589, 536]], cls: "wire-main", name: "main air to cold controller", mode: "ctrl" },
+    { id: "hotH", points: [[570, 150], [570, 197]], p2000: [[570, 150], [570, 182], [602, 182], [602, 190]], cls: "wire-sensor", name: "hot deck sensor H", mode: "ctrl" },
+    { id: "hotL", points: [[607, 150], [607, 185]], p2000: [[607, 150], [607, 217], [602, 217], [602, 225]], cls: "wire-sensor", name: "hot deck sensor L", mode: "ctrl" },
+    { id: "coldH", points: [[570, 440], [570, 487]], p2000: [[570, 440], [570, 476], [602, 476], [602, 484]], cls: "wire-sensor", name: "cold deck sensor H", mode: "ctrl" },
+    { id: "coldL", points: [[607, 440], [607, 475]], p2000: [[607, 440], [607, 511], [602, 511], [602, 519]], cls: "wire-sensor", name: "cold deck sensor L", mode: "ctrl" },
+    { id: "hotB", points: [[541, 237], [460, 237]], p2000: [[618, 255], [460, 237]], cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
+    { id: "coldB", points: [[541, 527], [460, 527]], p2000: [[618, 549], [460, 527]], cls: "wire-branch", name: "cold deck branch", mode: "ctrl" },
+    { id: "mainHot", points: [[240, 285], [543, 285]], p2000: [[240, 285], [586, 285], [586, 255]], cls: "wire-main", name: "main air to hot controller", mode: "ctrl" },
+    { id: "mainCold", points: [[240, 575], [543, 575]], p2000: [[240, 575], [586, 575], [586, 549]], cls: "wire-main", name: "main air to cold controller", mode: "ctrl" },
     { id: "mainTstat", points: [[1165, 645], [1165, 380]], cls: "wire-main", name: "main air to thermostat" },
     { id: "tMain", points: [[1105, 380], [1105, 400], [1000, 400]], cls: "wire-reset", name: "thermostat output", mode: "ctrl" },
-    { id: "tHot", points: [[1000, 400], [1000, 197], [663, 197]], p2000: [[1000, 400], [1000, 294], [602, 294]], cls: "wire-reset", name: "teed signal to hot controller", mode: "ctrl" },
-    { id: "tCold", points: [[1000, 400], [1000, 487], [663, 487]], p2000: [[1000, 400], [1000, 590], [602, 590]], cls: "wire-reset", name: "teed signal to cold controller", mode: "ctrl" },
+    { id: "tHot", points: [[1000, 400], [1000, 197], [663, 197]], p2000: [[1000, 400], [1000, 295], [602, 295]], cls: "wire-reset", name: "teed signal to hot controller", mode: "ctrl" },
+    { id: "tCold", points: [[1000, 400], [1000, 487], [663, 487]], p2000: [[1000, 400], [1000, 589], [602, 589]], cls: "wire-reset", name: "teed signal to cold controller", mode: "ctrl" },
     { id: "tDirect", points: [[1105, 380], [1105, 400], [1000, 400], [1000, 490], [460, 490]], cls: "wire-reset", name: "thermostat to linked actuator", mode: "opposed" }
   ];
 
@@ -408,7 +408,6 @@
     document.getElementById("ctrlCold2").style.display = (two && csc2) ? "block" : "none";
     document.getElementById("ctrlHot2").style.display = (two && csc2) ? "block" : "none";
     document.getElementById("relayHot").style.display = (two && csc2) ? "block" : "none";
-    document.getElementById("csc2Front").style.display = (two && csc2) ? "block" : "none";
     // The teed-signal readouts ride the tube, whose y depends on the series.
     document.getElementById("rdTHot").setAttribute("y", csc2 ? "282" : "188");
     document.getElementById("rdTCold").setAttribute("y", csc2 ? "578" : "478");
