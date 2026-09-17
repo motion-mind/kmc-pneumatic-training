@@ -351,30 +351,37 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .tc-screw { fill: #c3c7ca; stroke: #7d8388; stroke-width: 1; }
 .tc-screw-x { stroke: #7d8388; stroke-width: 1.6; stroke-linecap: round; }
 
-.tc2-bracket { fill: #cbbf8d; stroke: #8f8560; stroke-width: 1; }
-.tc2-body { fill: url(#bodyGrad); stroke: #9c8a63; stroke-width: 2; }
-.tc2-rim { fill: url(#bossGrad); stroke: #9c8a63; stroke-width: 1.2; }
-.tc2-label { fill: #f6f4ee; stroke: #c9c2ac; stroke-width: 1; }
-.tc2-lo { fill: #3a3530; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; }
-.tc2-inc { fill: #6b6558; font-size: 6.5px; font-weight: 700; letter-spacing: 0.05em; }
-.tc2-tiny { fill: #6b6558; font-size: 6.5px; font-weight: 700; }
-.tc2-screw { fill: #c3c7ca; stroke: #7d8388; stroke-width: 1; }
-.tc2-slot { stroke: #7d8388; stroke-width: 1.4; stroke-linecap: round; }
-.tc2-knob { fill: url(#bossGrad); stroke: #8f8560; stroke-width: 1.2; }
-.tc2-port { fill: #c6b489; stroke: #8a7b58; stroke-width: 1; }
+.__drop_tc2-bracket { fill: #cbbf8d; stroke: #8f8560; stroke-width: 1; }
+.__drop_tc2-body { fill: url(#bodyGrad); stroke: #9c8a63; stroke-width: 2; }
+.__drop_tc2-rim { fill: url(#bossGrad); stroke: #9c8a63; stroke-width: 1.2; }
+.__drop_tc2-label { fill: #f6f4ee; stroke: #c9c2ac; stroke-width: 1; }
+.__drop_tc2-lo { fill: #3a3530; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; }
+.__drop_tc2-inc { fill: #6b6558; font-size: 6.5px; font-weight: 700; letter-spacing: 0.05em; }
+.__drop_tc2-tiny { fill: #6b6558; font-size: 6.5px; font-weight: 700; }
+.__drop_tc2-screw { fill: #c3c7ca; stroke: #7d8388; stroke-width: 1; }
+.__drop_tc2-slot { stroke: #7d8388; stroke-width: 1.4; stroke-linecap: round; }
+.__drop_tc2-knob { fill: url(#bossGrad); stroke: #8f8560; stroke-width: 1.2; }
+.__drop_tc2-port { fill: #c6b489; stroke: #8a7b58; stroke-width: 1; }
 .tc2-relay { fill: url(#bossGrad); stroke: #8a7b58; stroke-width: 1.6; }
 #ctrlCold2, #ctrlHot2, #relayHot { display: none; }
-.tc2-mic { fill: #8a8375; font-size: 5.5px; font-weight: 700; letter-spacing: 0.02em; }
+.__drop_tc2-mic { fill: #8a8375; font-size: 5.5px; font-weight: 700; letter-spacing: 0.02em; }
 .tc2-mod { fill: #8a8375; font-size: 5.5px; font-weight: 700; letter-spacing: 0.01em; }
 
 .tc2-tap { fill: #3f6f7a; }
 .tc2-rlbl { fill: #4a5a60; font-size: 8px; font-weight: 800; letter-spacing: 0.04em; }
 
-.tc2-mani { fill: url(#maniGrad); stroke: #828a8e; stroke-width: 1.2; }
-.tc2-inner { fill: none; stroke: #b3babd; stroke-width: 1; }
-.tc2-nut { fill: #b9c0c3; stroke: #7d8588; stroke-width: 1; }
-.tc2-boss { fill: url(#bossGrad); stroke: #7d8588; stroke-width: 1; }
-.tc2-hole { fill: #4a5155; }
-.tc2-plate { fill: #dfe4e5; stroke: #8d9498; stroke-width: 1; }
-.tc2-ptxt { fill: #4c5457; font-size: 5.5px; font-weight: 700; }
-.tc2-etch { fill: #7c8488; font-size: 5.5px; font-weight: 700; letter-spacing: 0.12em; }
+.__drop_tc2-mani { fill: url(#maniGrad); stroke: #828a8e; stroke-width: 1.2; }
+.__drop_tc2-inner { fill: none; stroke: #b3babd; stroke-width: 1; }
+.__drop_tc2-nut { fill: #b9c0c3; stroke: #7d8588; stroke-width: 1; }
+.__drop_tc2-boss { fill: url(#bossGrad); stroke: #7d8588; stroke-width: 1; }
+.__drop_tc2-hole { fill: #4a5155; }
+.__drop_tc2-plate { fill: #dfe4e5; stroke: #8d9498; stroke-width: 1; }
+.__drop_tc2-ptxt { fill: #4c5457; font-size: 5.5px; font-weight: 700; }
+.__drop_tc2-etch { fill: #7c8488; font-size: 5.5px; font-weight: 700; letter-spacing: 0.12em; }
+
+.tc2-hex { fill: #d8bf8a; stroke: #16181a; stroke-width: 6; stroke-linejoin: round; }
+.tc2-nub { fill: #e4cda4; stroke: #16181a; stroke-width: 5; }
+.tc2-dia { fill: #d3b87a; stroke: #16181a; stroke-width: 6; }
+.tc2-nubx { fill: #e4cda4; stroke: #16181a; stroke-width: 5; }
+.tc2-fport { fill: #ffffff; stroke: #16181a; stroke-width: 5; }
+.tc2-flbl { fill: #16181a; font-size: 14px; font-weight: 800; }

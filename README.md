@@ -24,12 +24,14 @@ A simplified but physically reasonable loop:
 - **Controller series** — pick `CSC-3000` or `CSC-2000` in the controls:
   - **CSC-3000** (ports `M`, `T`, `B`, `H`, `L`, `G`) — universal reset volume controller,
     direct *or* reverse acting, differential velocity input at `H`/`L`.
-  - **CSC-2000** (CSC-2003, ports `M`, `T`, `B`, `Y`) — **direct acting only** with a single
-    velocity port at `Y`. Because both decks are then direct acting, the hot deck's 3–15 psi
+  - **CSC-2000** (CSC-2003, ports `X`/`Y` velocity, `M` main, `B` branch, `T` thermostat) —
+    **direct acting only**. Because both decks are then direct acting, the hot deck's 3–15 psi
     branch signal is inverted by an **RCC-1012 reversing relay** before it reaches the actuator.
-    The `L` sensor taps are unused (hidden) in this mode. The drawing shows the controller's
-    **connections face** (port manifold, Y/M/B/T barbed fittings); the LO/HI/SETPOINT calibration
-    face is on the reverse side.
+    The drawing shows the controller's **port side** in the stylized layout: hexagonal mounting
+    frame with six bolt bosses, the main and lower diaphragm circles, velocity ports `X`/`Y` at
+    the top, `M` and `B` across the mid face, and `T` at the bottom. Because those ports sit on
+    the face rather than the rim, the tubing is re-routed to tuck behind the controller body; the
+    LO/HI/SETPOINT calibration face is on the reverse side.
   Either way the controller takes the reset signal at `T` and drives the damper through branch `B`.
 - **Reset type** direct (`LO STAT` = min, `HI STAT` = max) or reverse (swapped) — flip it
   to see what a mis-applied reset does.

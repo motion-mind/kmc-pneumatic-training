@@ -28,27 +28,29 @@
     coldFlow: 50, hotFlow: 0, supplyTemp: 55, flow: 50, failHeat: false
   };
 
-  // The CSC-3000 reads a differential velocity signal (H + L taps). The
-  // CSC-2000 (CSC-2003) has a single velocity port (Y), so only the H tap is
-  // used in that mode.
+  // Both series take a differential velocity signal (two sensor taps), so the
+  // same two leads must be landed for either controller.
   function sensorOK(deck) {
     var L = state.lines;
-    return state.series === "2000" ? L[deck + "H"] : (L[deck + "H"] && L[deck + "L"]);
+    return L[deck + "H"] && L[deck + "L"];
   }
 
+  // Tube routing differs by controller series: the CSC-2000's ports sit on its
+  // face (X/Y velocity at the top, M and B mid-face, T at the bottom), so those
+  // runs tuck behind the controller body; the CSC-3000 uses perimeter ports.
   var TUBES = [
-    { id: "hotH", points: [[570, 150], [570, 197]], cls: "wire-sensor", name: "hot deck sensor H", mode: "ctrl" },
-    { id: "hotL", points: [[607, 150], [607, 185]], cls: "wire-sensor", name: "hot deck sensor L", mode: "ctrl" },
-    { id: "coldH", points: [[570, 440], [570, 487]], cls: "wire-sensor", name: "cold deck sensor H", mode: "ctrl" },
-    { id: "coldL", points: [[607, 440], [607, 475]], cls: "wire-sensor", name: "cold deck sensor L", mode: "ctrl" },
-    { id: "hotB", points: [[541, 237], [460, 237]], cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
-    { id: "coldB", points: [[541, 527], [460, 527]], cls: "wire-branch", name: "cold deck branch", mode: "ctrl" },
-    { id: "mainHot", points: [[240, 285], [543, 285]], cls: "wire-main", name: "main air to hot controller", mode: "ctrl" },
-    { id: "mainCold", points: [[240, 575], [543, 575]], cls: "wire-main", name: "main air to cold controller", mode: "ctrl" },
+    { id: "hotH", points: [[570, 150], [570, 197]], p2000: [[570, 150], [570, 174], [603, 174]], cls: "wire-sensor", name: "hot deck sensor H", mode: "ctrl" },
+    { id: "hotL", points: [[607, 150], [607, 185]], p2000: [[607, 150], [607, 198]], cls: "wire-sensor", name: "hot deck sensor L", mode: "ctrl" },
+    { id: "coldH", points: [[570, 440], [570, 487]], p2000: [[570, 440], [570, 467], [603, 467]], cls: "wire-sensor", name: "cold deck sensor H", mode: "ctrl" },
+    { id: "coldL", points: [[607, 440], [607, 475]], p2000: [[607, 440], [607, 491]], cls: "wire-sensor", name: "cold deck sensor L", mode: "ctrl" },
+    { id: "hotB", points: [[541, 237], [460, 237]], p2000: [[616, 237], [460, 237]], cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
+    { id: "coldB", points: [[541, 527], [460, 527]], p2000: [[616, 527], [460, 527]], cls: "wire-branch", name: "cold deck branch", mode: "ctrl" },
+    { id: "mainHot", points: [[240, 285], [543, 285]], p2000: [[240, 285], [588, 285], [588, 236]], cls: "wire-main", name: "main air to hot controller", mode: "ctrl" },
+    { id: "mainCold", points: [[240, 575], [543, 575]], p2000: [[240, 575], [588, 575], [588, 530]], cls: "wire-main", name: "main air to cold controller", mode: "ctrl" },
     { id: "mainTstat", points: [[1165, 645], [1165, 380]], cls: "wire-main", name: "main air to thermostat" },
     { id: "tMain", points: [[1105, 380], [1105, 400], [1000, 400]], cls: "wire-reset", name: "thermostat output", mode: "ctrl" },
-    { id: "tHot", points: [[1000, 400], [1000, 197], [663, 197]], cls: "wire-reset", name: "teed signal to hot controller", mode: "ctrl" },
-    { id: "tCold", points: [[1000, 400], [1000, 487], [663, 487]], cls: "wire-reset", name: "teed signal to cold controller", mode: "ctrl" },
+    { id: "tHot", points: [[1000, 400], [1000, 197], [663, 197]], p2000: [[1000, 400], [1000, 292], [596, 292]], cls: "wire-reset", name: "teed signal to hot controller", mode: "ctrl" },
+    { id: "tCold", points: [[1000, 400], [1000, 487], [663, 487]], p2000: [[1000, 400], [1000, 588], [596, 588]], cls: "wire-reset", name: "teed signal to cold controller", mode: "ctrl" },
     { id: "tDirect", points: [[1105, 380], [1105, 400], [1000, 400], [1000, 490], [460, 490]], cls: "wire-reset", name: "thermostat to linked actuator", mode: "opposed" }
   ];
 
@@ -88,7 +90,8 @@
   }
 
   function buildTube(t) {
-    var pts = t.points, n = pts.length;
+    var pts = (state.series === "2000" && t.p2000) ? t.p2000 : t.points;
+    var n = pts.length;
     var last = pts[n - 1], prev = pts[n - 2] || pts[0];
     var dx = last[0] - prev[0], dy = last[1] - prev[1];
     var len = Math.hypot(dx, dy) || 1;
@@ -140,6 +143,14 @@
   }
 
   function syncLines() { for (var id in els) setLine(id, state.lines[id]); }
+
+  // Series changes move the port positions, so the tube geometry is rebuilt.
+  function rebuildTubes() {
+    while (tubeLayer.firstChild) tubeLayer.removeChild(tubeLayer.firstChild);
+    els = {};
+    TUBES.forEach(buildTube);
+    syncLines();
+  }
 
   function setText(id, txt, bad) {
     var e = document.getElementById(id);
@@ -372,7 +383,7 @@
     document.getElementById("cs2000").classList.toggle("active", state.series === "2000");
     document.getElementById("csHint").textContent = state.series === "3000"
       ? "CSC-3000 \u2014 universal reset volume controller (direct / reverse acting, H + L sensor ports)."
-      : "CSC-2000 (CSC-2003) \u2014 direct acting only, single Y velocity port. The hot deck needs the RCC-1012 reversing relay to invert its 3\u201315 psi branch signal.";
+      : "CSC-2000 (CSC-2003) \u2014 direct acting only, with the velocity sensor landed at X/Y. The hot deck needs the RCC-1012 reversing relay to invert its 3\u201315 psi branch signal.";
     document.getElementById("roMainLabel").textContent = state.twoControllers ? "Main air at M" : "Main air";
     var mb = document.getElementById("mainBtn");
     mb.textContent = state.mainOn ? "Cut main air" : "Restore main air";
@@ -390,8 +401,6 @@
       var m = els[id].mode, show = true;
       if (m === "ctrl") show = two;
       else if (m === "opposed") show = !two;
-      // The CSC-2000 uses a single velocity port (Y), so the L taps are unused.
-      if (csc2 && (id === "hotL" || id === "coldL")) show = false;
       els[id].g.style.display = show ? "" : "none";
     }
     document.getElementById("ctrlCold").style.display = (two && !csc2) ? "block" : "none";
@@ -399,20 +408,25 @@
     document.getElementById("ctrlCold2").style.display = (two && csc2) ? "block" : "none";
     document.getElementById("ctrlHot2").style.display = (two && csc2) ? "block" : "none";
     document.getElementById("relayHot").style.display = (two && csc2) ? "block" : "none";
-    updateTubeStyle();
+    document.getElementById("csc2Front").style.display = (two && csc2) ? "block" : "none";
+    // The teed-signal readouts ride the tube, whose y depends on the series.
+    document.getElementById("rdTHot").setAttribute("y", csc2 ? "282" : "188");
+    document.getElementById("rdTCold").setAttribute("y", csc2 ? "578" : "478");
   }
 
   function updateTubeStyle() {}
 
-  function setSeries(v) { state.series = v; syncMode(); syncControls(); }
+  function setSeries(v) { state.series = v; rebuildTubes(); syncMode(); syncControls(); }
 
   function toggleMain() { state.mainOn = !state.mainOn; syncControls(); }
   function reconnectAll() { for (var id in state.lines) state.lines[id] = true; syncLines(); }
   function resetAll() {
     state.mainOn = DEFAULTS.mainOn; state.setpoint = DEFAULTS.setpoint;
     state.roomTemp = DEFAULTS.roomTemp; state.oat = DEFAULTS.oat; state.twoControllers = DEFAULTS.twoControllers;
-    state.coldAction = DEFAULTS.coldAction; state.hotAction = DEFAULTS.hotAction; state.series = DEFAULTS.series;
-    reconnectAll(); syncMode(); syncControls();
+    state.coldAction = DEFAULTS.coldAction; state.hotAction = DEFAULTS.hotAction;
+    if (state.series !== DEFAULTS.series) { state.series = DEFAULTS.series; reconnectAll(); rebuildTubes(); }
+    else reconnectAll();
+    syncMode(); syncControls();
   }
 
   function init() {
