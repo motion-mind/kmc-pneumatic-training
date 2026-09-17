@@ -326,3 +326,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .sensor-probe { stroke: var(--green); stroke-width: 6; stroke-linecap: round; }
 .sensor-port { fill: var(--panel); stroke: var(--green); stroke-width: 1.6; }
 .sensor-lead { fill: none; stroke: var(--green); stroke-width: 3; stroke-linejoin: round; }
+
+.tc-wheel { fill: url(#bossGrad); stroke: #9c8a63; stroke-width: 2.4; }
+.tc-spoke { stroke: #b8a67f; stroke-width: 3; stroke-linecap: round; }
+.tc-screw { fill: #c3c7ca; stroke: #7d8388; stroke-width: 1; }
+.tc-screw-x { stroke: #7d8388; stroke-width: 1.6; stroke-linecap: round; }
