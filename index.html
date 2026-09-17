@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=43">
+<link rel="stylesheet" href="css/style.css?v=44">
 </head>
 <body>
 <header class="topbar">
@@ -239,102 +239,6 @@
 
         <g id="tubeLayer"></g>
 
-        <!-- room thermostat (remote) -->
-        <g class="dev-shadow">
-          <rect class="tstat-plate" x="1020" y="240" width="170" height="140" rx="15"/>
-          <rect class="tstat-recess" x="1030" y="250" width="150" height="120" rx="11"/>
-          <line class="tstat-louvre" x1="1040" y1="355" x2="1170" y2="355"/>
-          <line class="tstat-louvre" x1="1040" y1="362" x2="1170" y2="362"/>
-          <g id="tstatDial" class="clickable" tabindex="0" role="slider" aria-label="Thermostat setpoint" aria-valuemin="60" aria-valuemax="80">
-            <circle class="tstat-dial" cx="1058" cy="292" r="24"/>
-            <g id="tstatScale"></g>
-            <line id="tNeedle" class="needle" x1="1058" y1="292" x2="1058" y2="270"/>
-            <circle class="dial-hub" cx="1058" cy="292" r="3.5"/>
-            <circle class="dial-hit" cx="1058" cy="292" r="34"/>
-          </g>
-          <polygon class="tstat-idx" points="1058,260 1053,252 1063,252"/>
-          <text class="eq" x="1090" y="266">THERMOSTAT</text>
-          <text class="eq dim" x="1090" y="280">remote &middot; 3&ndash;15 psi</text>
-          <text id="rdTOut" class="lbl val" x="1090" y="308">9.0 psi</text>
-          <text id="rdTSp" class="lbl" x="1090" y="326">set 72&deg;F</text>
-          <text id="rdRoomT" class="lbl val" x="1090" y="346">room 76.0&deg;F</text>
-          <rect class="fitting" x="1099" y="374" width="12" height="14" rx="2"/>
-          <rect class="fitting" x="1159" y="374" width="12" height="14" rx="2"/>
-        </g>
-
-        <!-- main air -->
-        <g id="compressor" class="clickable" tabindex="0" role="button" aria-label="Toggle main air supply" transform="translate(0,15)">
-          <rect class="unit" x="40" y="600" width="120" height="60" rx="8"/>
-          <circle class="fan" cx="68" cy="630" r="13"/>
-          <path class="fan" d="M68 617 A13 13 0 0 1 68 643"/>
-          <text class="eq" x="120" y="626" text-anchor="middle">MAIN</text>
-          <text class="eq" x="120" y="644" text-anchor="middle">AIR</text>
-          <text id="rdComp" class="lbl val" x="100" y="676" text-anchor="middle">20 psi</text>
-        </g>
-        <line id="mainHeader" class="wire wire-main" x1="160" y1="645" x2="1170" y2="645"/>
-        <line id="mainTrunk" class="wire wire-main" x1="240" y1="645" x2="240" y2="285"/>
-        <g id="teeMark">
-          <circle class="tee" cx="1000" cy="400" r="4.5"/>
-          <text class="lbl" x="1015" y="420" text-anchor="middle">tee</text>
-        </g>
-
-        <g id="ctrlReadouts">
-        <text id="rdMainHot" class="lbl val" x="420" y="275" text-anchor="middle">20 psi</text>
-        <text id="rdMainCold" class="lbl val" x="420" y="565" text-anchor="middle">20 psi</text>
-        <text id="rdTHot" class="lbl val" x="850" y="188" text-anchor="middle">9.0 psi</text>
-        <text id="rdTCold" class="lbl val" x="850" y="478" text-anchor="middle">9.0 psi</text>
-        <text id="rdBHot" class="lbl val" x="500" y="228" text-anchor="middle">0%</text>
-        <text id="rdBCold" class="lbl val" x="500" y="518" text-anchor="middle">45%</text>
-        </g>
-
-        <!-- room thermostat (remote) -->
-        <g class="dev-shadow">
-          <rect class="tstat-plate" x="1020" y="240" width="170" height="140" rx="15"/>
-          <rect class="tstat-recess" x="1030" y="250" width="150" height="120" rx="11"/>
-          <line class="tstat-louvre" x1="1040" y1="355" x2="1170" y2="355"/>
-          <line class="tstat-louvre" x1="1040" y1="362" x2="1170" y2="362"/>
-          <g id="tstatDial" class="clickable" tabindex="0" role="slider" aria-label="Thermostat setpoint" aria-valuemin="60" aria-valuemax="80">
-            <circle class="tstat-dial" cx="1058" cy="292" r="24"/>
-            <g id="tstatScale"></g>
-            <line id="tNeedle" class="needle" x1="1058" y1="292" x2="1058" y2="270"/>
-            <circle class="dial-hub" cx="1058" cy="292" r="3.5"/>
-            <circle class="dial-hit" cx="1058" cy="292" r="34"/>
-          </g>
-          <polygon class="tstat-idx" points="1058,260 1053,252 1063,252"/>
-          <text class="eq" x="1090" y="266">THERMOSTAT</text>
-          <text class="eq dim" x="1090" y="280">remote &middot; 3&ndash;15 psi</text>
-          <text id="rdTOut" class="lbl val" x="1090" y="308">9.0 psi</text>
-          <text id="rdTSp" class="lbl" x="1090" y="326">set 72&deg;F</text>
-          <text id="rdRoomT" class="lbl val" x="1090" y="346">room 76.0&deg;F</text>
-          <rect class="fitting" x="1099" y="374" width="12" height="14" rx="2"/>
-          <rect class="fitting" x="1159" y="374" width="12" height="14" rx="2"/>
-        </g>
-
-        <!-- main air -->
-        <g id="compressor" class="clickable" tabindex="0" role="button" aria-label="Toggle main air supply" transform="translate(0,15)">
-          <rect class="unit" x="40" y="600" width="120" height="60" rx="8"/>
-          <circle class="fan" cx="68" cy="630" r="13"/>
-          <path class="fan" d="M68 617 A13 13 0 0 1 68 643"/>
-          <text class="eq" x="120" y="626" text-anchor="middle">MAIN</text>
-          <text class="eq" x="120" y="644" text-anchor="middle">AIR</text>
-          <text id="rdComp" class="lbl val" x="100" y="676" text-anchor="middle">20 psi</text>
-        </g>
-        <line id="mainHeader" class="wire wire-main" x1="160" y1="645" x2="1170" y2="645"/>
-        <line id="mainTrunk" class="wire wire-main" x1="240" y1="645" x2="240" y2="285"/>
-        <g id="teeMark">
-          <circle class="tee" cx="1000" cy="400" r="4.5"/>
-          <text class="lbl" x="1015" y="420" text-anchor="middle">tee</text>
-        </g>
-
-        <g id="ctrlReadouts">
-        <text id="rdMainHot" class="lbl val" x="420" y="275" text-anchor="middle">20 psi</text>
-        <text id="rdMainCold" class="lbl val" x="420" y="565" text-anchor="middle">20 psi</text>
-        <text id="rdTHot" class="lbl val" x="850" y="188" text-anchor="middle">9.0 psi</text>
-        <text id="rdTCold" class="lbl val" x="850" y="478" text-anchor="middle">9.0 psi</text>
-        <text id="rdBHot" class="lbl val" x="500" y="228" text-anchor="middle">0%</text>
-        <text id="rdBCold" class="lbl val" x="500" y="518" text-anchor="middle">45%</text>
-        </g>
-
         <!-- RCC-1012 reversing relay on the hot deck branch -->
         <g id="relayHot">
           <line class="wire wire-branch" x1="500" y1="237" x2="498" y2="252"/>
@@ -345,53 +249,101 @@
           <text class="tc2-mod" x="498" y="308" text-anchor="middle">REV. RELAY</text>
         </g>
           <g id="ctrlHot2">
-            <polygon class="tc2-hex" points="570,180 635,180 672,235 635,286 570,286 532,235"/>
-            <circle class="tc2-nub" cx="570" cy="180" r="10"/>
-            <circle class="tc2-nub" cx="635" cy="180" r="10"/>
-            <circle class="tc2-nub" cx="672" cy="235" r="10"/>
-            <circle class="tc2-nub" cx="635" cy="286" r="10"/>
-            <circle class="tc2-nub" cx="570" cy="286" r="10"/>
-            <circle class="tc2-nub" cx="532" cy="235" r="10"/>
-            <circle class="tc2-dia" cx="603" cy="238" r="57"/>
-            <circle class="tc2-dia" cx="604" cy="276" r="47"/>
-            <rect class="tc2-nubx" x="587" y="164" width="30" height="22" rx="11"/>
+            <polygon class="tc2-hex" points="571,184 633,184 670,240 639,289 565,289 534,240"/>
+            <circle class="tc2-dia" cx="602" cy="236" r="50"/>
+            <circle class="tc2-dia" cx="602" cy="289" r="34"/>
+            <circle class="tc2-nub" cx="571" cy="184" r="8"/>
+            <circle class="tc2-nub" cx="633" cy="184" r="8"/>
+            <circle class="tc2-nub" cx="670" cy="240" r="8"/>
+            <circle class="tc2-nub" cx="639" cy="289" r="8"/>
+            <circle class="tc2-nub" cx="565" cy="289" r="8"/>
+            <circle class="tc2-nub" cx="534" cy="240" r="8"/>
+            <rect class="tc2-nubx" x="591" y="166" width="22" height="20" rx="10"/>
             <text class="eq dim" x="635" y="344" text-anchor="middle">HOT DECK CONTROLLER</text>
           </g>
           <g id="ctrlCold2">
-            <polygon class="tc2-hex" points="570,476 635,476 672,531 635,582 570,582 532,531"/>
-            <circle class="tc2-nub" cx="570" cy="476" r="10"/>
-            <circle class="tc2-nub" cx="635" cy="476" r="10"/>
-            <circle class="tc2-nub" cx="672" cy="531" r="10"/>
-            <circle class="tc2-nub" cx="635" cy="582" r="10"/>
-            <circle class="tc2-nub" cx="570" cy="582" r="10"/>
-            <circle class="tc2-nub" cx="532" cy="531" r="10"/>
-            <circle class="tc2-dia" cx="603" cy="534" r="57"/>
-            <circle class="tc2-dia" cx="604" cy="572" r="47"/>
-            <rect class="tc2-nubx" x="587" y="460" width="30" height="22" rx="11"/>
-            <text class="eq dim" x="635" y="627" text-anchor="middle">COLD DECK CONTROLLER</text>
+            <polygon class="tc2-hex" points="571,480 633,480 670,536 639,585 565,585 534,536"/>
+            <circle class="tc2-dia" cx="602" cy="532" r="50"/>
+            <circle class="tc2-dia" cx="602" cy="585" r="34"/>
+            <circle class="tc2-nub" cx="571" cy="480" r="8"/>
+            <circle class="tc2-nub" cx="633" cy="480" r="8"/>
+            <circle class="tc2-nub" cx="670" cy="536" r="8"/>
+            <circle class="tc2-nub" cx="639" cy="585" r="8"/>
+            <circle class="tc2-nub" cx="565" cy="585" r="8"/>
+            <circle class="tc2-nub" cx="534" cy="536" r="8"/>
+            <rect class="tc2-nubx" x="591" y="462" width="22" height="20" rx="10"/>
+            <text class="eq dim" x="635" y="640" text-anchor="middle">COLD DECK CONTROLLER</text>
           </g>
         <g id="csc2Front">
-            <circle class="tc2-fport" cx="603" cy="174" r="11"/>
-            <text class="tc2-flbl" x="587" y="170" text-anchor="end">X</text>
-            <circle class="tc2-fport" cx="607" cy="198" r="11"/>
-            <text class="tc2-flbl" x="607" y="223" text-anchor="middle">Y</text>
-            <circle class="tc2-fport" cx="588" cy="236" r="11"/>
-            <text class="tc2-flbl" x="573" y="241" text-anchor="end">M</text>
-            <circle class="tc2-fport" cx="616" cy="237" r="11"/>
-            <text class="tc2-flbl" x="631" y="242" text-anchor="start">B</text>
-            <circle class="tc2-fport" cx="596" cy="292" r="11"/>
-            <text class="tc2-flbl" x="581" y="286" text-anchor="end">T</text>
-            <circle class="tc2-fport" cx="603" cy="467" r="11"/>
-            <text class="tc2-flbl" x="587" y="463" text-anchor="end">X</text>
-            <circle class="tc2-fport" cx="607" cy="491" r="11"/>
-            <text class="tc2-flbl" x="607" y="509" text-anchor="middle">Y</text>
-            <circle class="tc2-fport" cx="588" cy="530" r="11"/>
-            <text class="tc2-flbl" x="573" y="535" text-anchor="end">M</text>
-            <circle class="tc2-fport" cx="616" cy="527" r="11"/>
-            <text class="tc2-flbl" x="631" y="532" text-anchor="start">B</text>
-            <circle class="tc2-fport" cx="596" cy="588" r="11"/>
-            <text class="tc2-flbl" x="581" y="582" text-anchor="end">T</text>
+            <circle class="tc2-fport" cx="602" cy="180" r="6" style="stroke-width:5"/>
+            <text class="tc2-flbl" x="584" y="178" text-anchor="end">X</text>
+            <circle class="tc2-fport" cx="602" cy="199" r="5" style="stroke-width:5"/>
+            <text class="tc2-flbl" x="602" y="219" text-anchor="middle">Y</text>
+            <circle class="tc2-fport" cx="589" cy="240" r="7" style="stroke-width:6"/>
+            <text class="tc2-flbl" x="573" y="245" text-anchor="end">M</text>
+            <circle class="tc2-fport" cx="615" cy="240" r="7" style="stroke-width:6"/>
+            <text class="tc2-flbl" x="631" y="245" text-anchor="start">B</text>
+            <circle class="tc2-fport" cx="602" cy="294" r="9" style="stroke-width:6"/>
+            <text class="tc2-flbl" x="584" y="286" text-anchor="end">T</text>
+            <circle class="tc2-fport" cx="602" cy="476" r="6" style="stroke-width:5"/>
+            <text class="tc2-flbl" x="584" y="474" text-anchor="end">X</text>
+            <circle class="tc2-fport" cx="602" cy="495" r="5" style="stroke-width:5"/>
+            <text class="tc2-flbl" x="602" y="515" text-anchor="middle">Y</text>
+            <circle class="tc2-fport" cx="589" cy="536" r="7" style="stroke-width:6"/>
+            <text class="tc2-flbl" x="573" y="541" text-anchor="end">M</text>
+            <circle class="tc2-fport" cx="615" cy="536" r="7" style="stroke-width:6"/>
+            <text class="tc2-flbl" x="631" y="541" text-anchor="start">B</text>
+            <circle class="tc2-fport" cx="602" cy="590" r="9" style="stroke-width:6"/>
+            <text class="tc2-flbl" x="584" y="582" text-anchor="end">T</text>
         </g>
+        <!-- room thermostat (remote) -->
+        <g class="dev-shadow">
+          <rect class="tstat-plate" x="1020" y="240" width="170" height="140" rx="15"/>
+          <rect class="tstat-recess" x="1030" y="250" width="150" height="120" rx="11"/>
+          <line class="tstat-louvre" x1="1040" y1="355" x2="1170" y2="355"/>
+          <line class="tstat-louvre" x1="1040" y1="362" x2="1170" y2="362"/>
+          <g id="tstatDial" class="clickable" tabindex="0" role="slider" aria-label="Thermostat setpoint" aria-valuemin="60" aria-valuemax="80">
+            <circle class="tstat-dial" cx="1058" cy="292" r="24"/>
+            <g id="tstatScale"></g>
+            <line id="tNeedle" class="needle" x1="1058" y1="292" x2="1058" y2="270"/>
+            <circle class="dial-hub" cx="1058" cy="292" r="3.5"/>
+            <circle class="dial-hit" cx="1058" cy="292" r="34"/>
+          </g>
+          <polygon class="tstat-idx" points="1058,260 1053,252 1063,252"/>
+          <text class="eq" x="1090" y="266">THERMOSTAT</text>
+          <text class="eq dim" x="1090" y="280">remote &middot; 3&ndash;15 psi</text>
+          <text id="rdTOut" class="lbl val" x="1090" y="308">9.0 psi</text>
+          <text id="rdTSp" class="lbl" x="1090" y="326">set 72&deg;F</text>
+          <text id="rdRoomT" class="lbl val" x="1090" y="346">room 76.0&deg;F</text>
+          <rect class="fitting" x="1099" y="374" width="12" height="14" rx="2"/>
+          <rect class="fitting" x="1159" y="374" width="12" height="14" rx="2"/>
+        </g>
+
+        <!-- main air -->
+        <g id="compressor" class="clickable" tabindex="0" role="button" aria-label="Toggle main air supply" transform="translate(0,15)">
+          <rect class="unit" x="40" y="600" width="120" height="60" rx="8"/>
+          <circle class="fan" cx="68" cy="630" r="13"/>
+          <path class="fan" d="M68 617 A13 13 0 0 1 68 643"/>
+          <text class="eq" x="120" y="626" text-anchor="middle">MAIN</text>
+          <text class="eq" x="120" y="644" text-anchor="middle">AIR</text>
+          <text id="rdComp" class="lbl val" x="100" y="676" text-anchor="middle">20 psi</text>
+        </g>
+        <line id="mainHeader" class="wire wire-main" x1="160" y1="645" x2="1170" y2="645"/>
+        <line id="mainTrunk" class="wire wire-main" x1="240" y1="645" x2="240" y2="285"/>
+        <g id="teeMark">
+          <circle class="tee" cx="1000" cy="400" r="4.5"/>
+          <text class="lbl" x="1015" y="420" text-anchor="middle">tee</text>
+        </g>
+
+        <g id="ctrlReadouts">
+        <text id="rdMainHot" class="lbl val" x="420" y="275" text-anchor="middle">20 psi</text>
+        <text id="rdMainCold" class="lbl val" x="420" y="565" text-anchor="middle">20 psi</text>
+        <text id="rdTHot" class="lbl val" x="850" y="188" text-anchor="middle">9.0 psi</text>
+        <text id="rdTCold" class="lbl val" x="850" y="478" text-anchor="middle">9.0 psi</text>
+        <text id="rdBHot" class="lbl val" x="500" y="228" text-anchor="middle">0%</text>
+        <text id="rdBCold" class="lbl val" x="500" y="518" text-anchor="middle">45%</text>
+        </g>
+
       </svg>
 
       <div class="legend">
@@ -481,6 +433,6 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=43"></script>
+<script src="js/sim.js?v=44"></script>
 </body>
 </html>

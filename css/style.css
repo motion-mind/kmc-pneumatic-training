@@ -379,9 +379,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .__drop_tc2-ptxt { fill: #4c5457; font-size: 5.5px; font-weight: 700; }
 .__drop_tc2-etch { fill: #7c8488; font-size: 5.5px; font-weight: 700; letter-spacing: 0.12em; }
 
-.tc2-hex { fill: #d8bf8a; stroke: #16181a; stroke-width: 6; stroke-linejoin: round; }
-.tc2-nub { fill: #e4cda4; stroke: #16181a; stroke-width: 5; }
-.tc2-dia { fill: #d3b87a; stroke: #16181a; stroke-width: 6; }
-.tc2-nubx { fill: #e4cda4; stroke: #16181a; stroke-width: 5; }
-.tc2-fport { fill: #ffffff; stroke: #16181a; stroke-width: 5; }
+.tc2-hex { fill: #d3b87a; stroke: #16181a; stroke-width: 7; stroke-linejoin: round; }
+.tc2-nub { fill: #16181a; stroke: none; }
+.tc2-dia { fill: #d3b87a; stroke: #16181a; stroke-width: 5; }
+.tc2-nubx { fill: #d3b87a; stroke: #16181a; stroke-width: 5; }
+.tc2-fport { fill: #ffffff; stroke: #16181a; }
 .tc2-flbl { fill: #16181a; font-size: 14px; font-weight: 800; }

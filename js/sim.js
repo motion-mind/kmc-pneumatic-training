@@ -39,18 +39,18 @@
   // face (X/Y velocity at the top, M and B mid-face, T at the bottom), so those
   // runs tuck behind the controller body; the CSC-3000 uses perimeter ports.
   var TUBES = [
-    { id: "hotH", points: [[570, 150], [570, 197]], p2000: [[570, 150], [570, 174], [603, 174]], cls: "wire-sensor", name: "hot deck sensor H", mode: "ctrl" },
-    { id: "hotL", points: [[607, 150], [607, 185]], p2000: [[607, 150], [607, 198]], cls: "wire-sensor", name: "hot deck sensor L", mode: "ctrl" },
-    { id: "coldH", points: [[570, 440], [570, 487]], p2000: [[570, 440], [570, 467], [603, 467]], cls: "wire-sensor", name: "cold deck sensor H", mode: "ctrl" },
-    { id: "coldL", points: [[607, 440], [607, 475]], p2000: [[607, 440], [607, 491]], cls: "wire-sensor", name: "cold deck sensor L", mode: "ctrl" },
-    { id: "hotB", points: [[541, 237], [460, 237]], p2000: [[616, 237], [460, 237]], cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
-    { id: "coldB", points: [[541, 527], [460, 527]], p2000: [[616, 527], [460, 527]], cls: "wire-branch", name: "cold deck branch", mode: "ctrl" },
-    { id: "mainHot", points: [[240, 285], [543, 285]], p2000: [[240, 285], [588, 285], [588, 236]], cls: "wire-main", name: "main air to hot controller", mode: "ctrl" },
-    { id: "mainCold", points: [[240, 575], [543, 575]], p2000: [[240, 575], [588, 575], [588, 530]], cls: "wire-main", name: "main air to cold controller", mode: "ctrl" },
+    { id: "hotH", points: [[570, 150], [570, 197]], p2000: [[570, 150], [570, 180], [602, 180]], cls: "wire-sensor", name: "hot deck sensor H", mode: "ctrl" },
+    { id: "hotL", points: [[607, 150], [607, 185]], p2000: [[607, 150], [607, 199], [602, 199]], cls: "wire-sensor", name: "hot deck sensor L", mode: "ctrl" },
+    { id: "coldH", points: [[570, 440], [570, 487]], p2000: [[570, 440], [570, 476], [602, 476]], cls: "wire-sensor", name: "cold deck sensor H", mode: "ctrl" },
+    { id: "coldL", points: [[607, 440], [607, 475]], p2000: [[607, 440], [607, 495], [602, 495]], cls: "wire-sensor", name: "cold deck sensor L", mode: "ctrl" },
+    { id: "hotB", points: [[541, 237], [460, 237]], p2000: [[615, 240], [460, 237]], cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
+    { id: "coldB", points: [[541, 527], [460, 527]], p2000: [[615, 536], [460, 527]], cls: "wire-branch", name: "cold deck branch", mode: "ctrl" },
+    { id: "mainHot", points: [[240, 285], [543, 285]], p2000: [[240, 285], [589, 285], [589, 240]], cls: "wire-main", name: "main air to hot controller", mode: "ctrl" },
+    { id: "mainCold", points: [[240, 575], [543, 575]], p2000: [[240, 575], [589, 575], [589, 536]], cls: "wire-main", name: "main air to cold controller", mode: "ctrl" },
     { id: "mainTstat", points: [[1165, 645], [1165, 380]], cls: "wire-main", name: "main air to thermostat" },
     { id: "tMain", points: [[1105, 380], [1105, 400], [1000, 400]], cls: "wire-reset", name: "thermostat output", mode: "ctrl" },
-    { id: "tHot", points: [[1000, 400], [1000, 197], [663, 197]], p2000: [[1000, 400], [1000, 292], [596, 292]], cls: "wire-reset", name: "teed signal to hot controller", mode: "ctrl" },
-    { id: "tCold", points: [[1000, 400], [1000, 487], [663, 487]], p2000: [[1000, 400], [1000, 588], [596, 588]], cls: "wire-reset", name: "teed signal to cold controller", mode: "ctrl" },
+    { id: "tHot", points: [[1000, 400], [1000, 197], [663, 197]], p2000: [[1000, 400], [1000, 294], [602, 294]], cls: "wire-reset", name: "teed signal to hot controller", mode: "ctrl" },
+    { id: "tCold", points: [[1000, 400], [1000, 487], [663, 487]], p2000: [[1000, 400], [1000, 590], [602, 590]], cls: "wire-reset", name: "teed signal to cold controller", mode: "ctrl" },
     { id: "tDirect", points: [[1105, 380], [1105, 400], [1000, 400], [1000, 490], [460, 490]], cls: "wire-reset", name: "thermostat to linked actuator", mode: "opposed" }
   ];
 
