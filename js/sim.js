@@ -251,9 +251,11 @@
     document.getElementById("ctrlCold").style.display = two ? "block" : "none";
     document.getElementById("ctrlHot").style.display = two ? "block" : "none";
 
+    // The NO / NC markings are printed on the wheel and rotate with it; the
+    // fixed index triangle outside the wheel points at the selected one.
     var coolNC = state.coldAction === "NC", hotNO = state.hotAction === "NO";
-    document.getElementById("damperPtrCold").setAttribute("transform", "rotate(" + (coolNC ? 90 : 180) + " 581 521)");
-    document.getElementById("damperPtrHot").setAttribute("transform", "rotate(" + (hotNO ? 180 : 90) + " 581 231)");
+    document.getElementById("damperDialCold").setAttribute("transform", "rotate(" + (coolNC ? 90 : 0) + " 581 521)");
+    document.getElementById("damperDialHot").setAttribute("transform", "rotate(" + (hotNO ? 0 : 90) + " 581 231)");
 
     document.getElementById("teeMark").style.display = two ? "block" : "none";
     document.getElementById("ctrlReadouts").style.display = two ? "block" : "none";
