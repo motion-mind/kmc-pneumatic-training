@@ -186,6 +186,18 @@
     paint();
   }
 
+  function setFlowAnim(el, frac) {
+    if (!el) return;
+    if (frac <= 0.01) {
+      el.style.animationPlayState = "paused";
+      el.style.opacity = "0";
+    } else {
+      el.style.animationPlayState = "running";
+      el.style.animationDuration = (1.6 - frac * 1.45).toFixed(2) + "s";
+      el.style.opacity = (0.2 + frac * 0.72).toFixed(2);
+    }
+  }
+
   function paint() {
     var L = state.lines, two = state.twoControllers;
     var mainPSI = state.mainOn ? "20 psi" : "0 psi";
@@ -219,14 +231,8 @@
     var tc = clamp((state.roomTemp - 55) / 30, 0, 1);
     zone.style.fill = "hsla(" + (210 - tc * 202).toFixed(0) + ", 72%, 48%, 0.30)";
 
-    var fr = clamp(state.flow / MAX, 0, 1);
-    var fl = document.getElementById("flowLine");
-    fl.style.animationDuration = (1.6 - fr * 1.45).toFixed(2) + "s";
-    fl.style.opacity = (0.22 + fr * 0.7).toFixed(2);
-    var flh = document.getElementById("flowLineHot");
-    var hr = clamp(state.hotPct / 100, 0, 1);
-    flh.style.animationDuration = (1.6 - hr * 1.45).toFixed(2) + "s";
-    flh.style.opacity = (0.16 + hr * 0.72).toFixed(2);
+    setFlowAnim(document.getElementById("flowLine"), clamp(state.coldPct / 100, 0, 1));
+    setFlowAnim(document.getElementById("flowLineHot"), clamp(state.hotPct / 100, 0, 1));
 
     document.getElementById("compressor").style.opacity = state.mainOn ? "1" : "0.45";
     document.getElementById("mainHeader").style.opacity = state.mainOn ? "1" : "0.45";
