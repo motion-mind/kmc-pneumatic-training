@@ -30,16 +30,16 @@
   var TUBES = [
     { id: "hotH", points: [[570, 150], [570, 187]], cls: "wire-sensor", name: "hot deck sensor H", mode: "ctrl" },
     { id: "hotL", points: [[607, 150], [607, 175]], cls: "wire-sensor", name: "hot deck sensor L", mode: "ctrl" },
-    { id: "coldH", points: [[570, 440], [570, 467]], cls: "wire-sensor", name: "cold deck sensor H", mode: "ctrl" },
-    { id: "coldL", points: [[607, 440], [607, 455]], cls: "wire-sensor", name: "cold deck sensor L", mode: "ctrl" },
+    { id: "coldH", points: [[570, 440], [570, 477]], cls: "wire-sensor", name: "cold deck sensor H", mode: "ctrl" },
+    { id: "coldL", points: [[607, 440], [607, 465]], cls: "wire-sensor", name: "cold deck sensor L", mode: "ctrl" },
     { id: "hotB", points: [[541, 227], [460, 227]], cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
-    { id: "coldB", points: [[541, 507], [460, 507]], cls: "wire-branch", name: "cold deck branch", mode: "ctrl" },
+    { id: "coldB", points: [[541, 517], [460, 517]], cls: "wire-branch", name: "cold deck branch", mode: "ctrl" },
     { id: "mainHot", points: [[290, 275], [543, 275]], cls: "wire-main", name: "main air to hot controller", mode: "ctrl" },
-    { id: "mainCold", points: [[290, 555], [543, 555]], cls: "wire-main", name: "main air to cold controller", mode: "ctrl" },
+    { id: "mainCold", points: [[290, 565], [543, 565]], cls: "wire-main", name: "main air to cold controller", mode: "ctrl" },
     { id: "mainTstat", points: [[1150, 630], [1150, 380]], cls: "wire-main", name: "main air to thermostat" },
     { id: "tMain", points: [[1108, 240], [1108, 187], [1000, 187]], cls: "wire-reset", name: "thermostat output", mode: "ctrl" },
     { id: "tHot", points: [[1000, 187], [663, 187]], cls: "wire-reset", name: "teed signal to hot controller", mode: "ctrl" },
-    { id: "tCold", points: [[1000, 187], [1000, 467], [663, 467]], cls: "wire-reset", name: "teed signal to cold controller", mode: "ctrl" },
+    { id: "tCold", points: [[1000, 187], [1000, 477], [663, 477]], cls: "wire-reset", name: "teed signal to cold controller", mode: "ctrl" },
     { id: "tDirect", points: [[1108, 240], [1108, 187], [1000, 187], [1000, 490], [460, 490]], cls: "wire-reset", name: "thermostat to linked actuator", mode: "opposed" }
   ];
 
@@ -160,15 +160,24 @@
       coldT = (coldAir && sig && L.tCold) ? outPsi : 0;
       hotT = (hotAir && sig && L.tHot) ? outPsi : 0;
 
+      // The selector sets the actuator type (spring/fail position) AND the drive
+      // direction: the correct pairing is cold = N.C., hot = N.O. Setting either
+      // selector to the other value reverses that deck's operating direction.
       var fc = clamp((coldT - RESET_START) / RESET_SPAN, 0, 1);
       var coldSP = MIN + fc * (MAX - MIN);
-      var coldTgt = coldAir ? clamp(coldSP / MAX * 100, 0, 100) : (state.coldAction === "NO" ? 100 : 0);
-      if (coldAir && !(L.coldH && L.coldL)) coldTgt = 100;
+      var coldCmd = coldAir ? clamp(coldSP / MAX * 100, 0, 100) : null;
+      if (coldAir && !(L.coldH && L.coldL)) coldCmd = 100;
+      var coldTgt;
+      if (coldCmd === null) coldTgt = (state.coldAction === "NO") ? 100 : 0;
+      else coldTgt = (state.coldAction === "NC") ? coldCmd : (100 - coldCmd);
 
       var fh = clamp((RESET_START - hotT) / RESET_SPAN, 0, 1);
       var hotSP = fh * MAX;
-      var hotTgt = hotAir ? clamp(hotSP / MAX * 100, 0, 100) : (state.hotAction === "NO" ? 100 : 0);
-      if (hotAir && !(L.hotH && L.hotL)) hotTgt = 100;
+      var hotCmd = hotAir ? clamp(hotSP / MAX * 100, 0, 100) : null;
+      if (hotAir && !(L.hotH && L.hotL)) hotCmd = 100;
+      var hotTgt;
+      if (hotCmd === null) hotTgt = (state.hotAction === "NO") ? 100 : 0;
+      else hotTgt = (state.hotAction === "NO") ? hotCmd : (100 - hotCmd);
 
       // the actuators stroke to the commanded position at a finite rate
       coldPct = actLag(state.coldPct, coldTgt, dt);
@@ -243,7 +252,7 @@
     document.getElementById("ctrlHot").style.display = two ? "block" : "none";
 
     var coolNC = state.coldAction === "NC", hotNO = state.hotAction === "NO";
-    document.getElementById("damperPtrCold").setAttribute("transform", "rotate(" + (coolNC ? 90 : 180) + " 581 511)");
+    document.getElementById("damperPtrCold").setAttribute("transform", "rotate(" + (coolNC ? 90 : 180) + " 581 521)");
     document.getElementById("damperPtrHot").setAttribute("transform", "rotate(" + (hotNO ? 180 : 90) + " 581 231)");
 
     document.getElementById("teeMark").style.display = two ? "block" : "none";
