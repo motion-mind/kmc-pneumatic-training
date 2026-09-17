@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=45">
+<link rel="stylesheet" href="css/style.css?v=46">
 </head>
 <body>
 <header class="topbar">
@@ -232,8 +232,6 @@
         <text class="eq dim" x="635" y="344" text-anchor="middle">HOT DECK CONTROLLER</text>
         </g>
 
-        <g id="tubeLayer"></g>
-
         <!-- RCC-1012 reversing relay on the hot deck branch -->
         <g id="relayHot">
           <line class="wire wire-branch" x1="500" y1="237" x2="498" y2="252"/>
@@ -280,6 +278,9 @@
             <text class="portlbl" x="602" y="611" text-anchor="middle">T</text>
             <text class="eq dim" x="635" y="629" text-anchor="middle">COLD DECK CONTROLLER</text>
           </g>
+
+
+        <g id="tubeLayer"></g>
 
         <!-- room thermostat (remote) -->
         <g class="dev-shadow">
@@ -418,6 +419,6 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=45"></script>
+<script src="js/sim.js?v=46"></script>
 </body>
 </html>
