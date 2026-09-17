@@ -322,3 +322,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 #tstatDial { cursor: grab; touch-action: none; }
 #tstatDial:active { cursor: grabbing; }
 #tstatDial:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 50%; }
+
+.sensor-probe { stroke: var(--green); stroke-width: 6; stroke-linecap: round; }
+.sensor-port { fill: var(--panel); stroke: var(--green); stroke-width: 1.6; }
+.sensor-lead { fill: none; stroke: var(--green); stroke-width: 3; stroke-linejoin: round; }

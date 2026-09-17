@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=25">
+<link rel="stylesheet" href="css/style.css?v=26">
 </head>
 <body>
 <header class="topbar">
@@ -44,13 +44,20 @@
 
         <!-- hot deck -->
         <rect class="duct" x="245" y="90" width="695" height="60" rx="6"/>
-        <text class="eq dim" x="620" y="108" text-anchor="middle">HOT DECK</text>
+        <text class="eq dim" x="280" y="110" text-anchor="start">HOT DECK</text>
         <polygon class="air-arrow" points="940,120 966,106 966,134"/>
         <line id="flowLineHot" class="airflow airflow-hot" x1="940" y1="120" x2="249" y2="120"/>
         <g id="sensorHot">
-        <line class="sensor-bar" x1="560" y1="120" x2="620" y2="120"/>
-        <circle class="sensor-tap" cx="570" cy="150" r="4.5"/>
-        <circle class="sensor-tap" cx="607" cy="150" r="4.5"/>
+          <line class="sensor-probe" x1="588" y1="96" x2="588" y2="146"/>
+          <circle class="sensor-port" cx="588" cy="104" r="2.2"/>
+          <circle class="sensor-port" cx="588" cy="114" r="2.2"/>
+          <circle class="sensor-port" cx="588" cy="124" r="2.2"/>
+          <circle class="sensor-port" cx="588" cy="134" r="2.2"/>
+          <path class="sensor-lead" d="M588 146 L570 146 L570 150"/>
+          <path class="sensor-lead" d="M588 146 L607 146 L607 150"/>
+          <circle class="sensor-tap" cx="570" cy="150" r="4"/>
+          <circle class="sensor-tap" cx="607" cy="150" r="4"/>
+          <text class="lbl" x="632" y="110" text-anchor="start">flow sensor</text>
         </g>
         <line id="hotBlade" class="blade" x1="390" y1="120" x2="470" y2="120"/>
         <rect class="shaft" x="428" y="120" width="4" height="50"/>
@@ -58,13 +65,20 @@
 
         <!-- cold deck -->
         <rect class="duct" x="245" y="380" width="695" height="60" rx="6"/>
-        <text class="eq dim" x="620" y="398" text-anchor="middle">COLD DECK</text>
+        <text class="eq dim" x="280" y="400" text-anchor="start">COLD DECK</text>
         <polygon class="air-arrow" points="940,410 966,396 966,424"/>
         <line id="flowLine" class="airflow" x1="940" y1="410" x2="249" y2="410"/>
         <g id="sensorCold">
-        <line class="sensor-bar" x1="560" y1="410" x2="620" y2="410"/>
-        <circle class="sensor-tap" cx="570" cy="440" r="4.5"/>
-        <circle class="sensor-tap" cx="607" cy="440" r="4.5"/>
+          <line class="sensor-probe" x1="588" y1="386" x2="588" y2="436"/>
+          <circle class="sensor-port" cx="588" cy="394" r="2.2"/>
+          <circle class="sensor-port" cx="588" cy="404" r="2.2"/>
+          <circle class="sensor-port" cx="588" cy="414" r="2.2"/>
+          <circle class="sensor-port" cx="588" cy="424" r="2.2"/>
+          <path class="sensor-lead" d="M588 436 L570 436 L570 440"/>
+          <path class="sensor-lead" d="M588 436 L607 436 L607 440"/>
+          <circle class="sensor-tap" cx="570" cy="440" r="4"/>
+          <circle class="sensor-tap" cx="607" cy="440" r="4"/>
+          <text class="lbl" x="632" y="400" text-anchor="start">flow sensor</text>
         </g>
         <line id="blade" class="blade" x1="390" y1="410" x2="470" y2="410"/>
         <rect class="shaft" x="428" y="410" width="4" height="50"/>
@@ -344,6 +358,6 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=25"></script>
+<script src="js/sim.js?v=26"></script>
 </body>
 </html>
