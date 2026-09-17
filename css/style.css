@@ -369,3 +369,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 
 .tc2-tap { fill: #3f6f7a; }
 .tc2-rlbl { fill: #4a5a60; font-size: 8px; font-weight: 800; letter-spacing: 0.04em; }
+
+.tc2-mani { fill: url(#maniGrad); stroke: #828a8e; stroke-width: 1.2; }
+.tc2-inner { fill: none; stroke: #b3babd; stroke-width: 1; }
+.tc2-nut { fill: #b9c0c3; stroke: #7d8588; stroke-width: 1; }
+.tc2-boss { fill: url(#bossGrad); stroke: #7d8588; stroke-width: 1; }
+.tc2-hole { fill: #4a5155; }
+.tc2-plate { fill: #dfe4e5; stroke: #8d9498; stroke-width: 1; }
+.tc2-ptxt { fill: #4c5457; font-size: 5.5px; font-weight: 700; }
+.tc2-etch { fill: #7c8488; font-size: 5.5px; font-weight: 700; letter-spacing: 0.12em; }

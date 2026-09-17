@@ -27,7 +27,9 @@ A simplified but physically reasonable loop:
   - **CSC-2000** (CSC-2003, ports `M`, `T`, `B`, `Y`) — **direct acting only** with a single
     velocity port at `Y`. Because both decks are then direct acting, the hot deck's 3–15 psi
     branch signal is inverted by an **RCC-1012 reversing relay** before it reaches the actuator.
-    The `L` sensor taps are unused (hidden) in this mode.
+    The `L` sensor taps are unused (hidden) in this mode. The drawing shows the controller's
+    **connections face** (port manifold, Y/M/B/T barbed fittings); the LO/HI/SETPOINT calibration
+    face is on the reverse side.
   Either way the controller takes the reset signal at `T` and drives the damper through branch `B`.
 - **Reset type** direct (`LO STAT` = min, `HI STAT` = max) or reverse (swapped) — flip it
   to see what a mis-applied reset does.
