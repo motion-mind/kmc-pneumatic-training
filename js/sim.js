@@ -7,12 +7,13 @@
   var MAX = 200, MIN = 50, RESET_START = 8, RESET_SPAN = 5;
   // Actuator response (first-order). Slowed 50% from the previous 0.4 s baseline.
   var ACT_TAU = 0.8;
-  var DEFAULTS = { mainOn: true, setpoint: 72, roomTemp: 78, twoControllers: true, coldAction: "NC", hotAction: "NO" };
+  var DEFAULTS = { mainOn: true, setpoint: 72, roomTemp: 78, oat: 70, twoControllers: true, coldAction: "NC", hotAction: "NO" };
 
   var state = {
     mainOn: DEFAULTS.mainOn,
     setpoint: DEFAULTS.setpoint,
     roomTemp: DEFAULTS.roomTemp,
+    oat: DEFAULTS.oat,
     twoControllers: DEFAULTS.twoControllers,
     coldAction: DEFAULTS.coldAction,
     hotAction: DEFAULTS.hotAction,
@@ -185,7 +186,11 @@
     var coldFlow = coldPct / 100 * MAX, hotFlow = hotPct / 100 * MAX;
     var flow = coldFlow + hotFlow;
     var supplyTemp = flow > 0 ? (coldFlow * 55 + hotFlow * 95) / flow : 55;
-    var target = state.setpoint + (hotFlow - coldFlow) / MAX * 20 + (1 - clamp(flow / (2 * MAX), 0, 1)) * 8;
+    // Outside air sets the building load: with little airflow the room floats
+    // toward (OAT + internal gains); supply air drives it back to the setpoint.
+    var freeFloat = state.oat + 12;
+    var starved = 1 - clamp(flow / (2 * MAX), 0, 1);
+    var target = state.setpoint + (hotFlow - coldFlow) / MAX * 20 + (freeFloat - state.setpoint) * starved;
     state.roomTemp = clamp(state.roomTemp + (target - state.roomTemp) * 1.3 * dt, 45, 98);
 
     state.tOut = outPsi;
@@ -266,6 +271,7 @@
     setText("rdCfmHot", Math.round(state.hotFlow) + " CFM", false);
     setText("rdCfmCold", Math.round(state.coldFlow) + " CFM", false);
     setText("rdRoomT", "room " + state.roomTemp.toFixed(1) + "\u00B0F", false);
+    setText("rdOat", "OAT " + state.oat.toFixed(0) + "\u00B0F", false);
     setText("rdTSp", "set " + state.setpoint.toFixed(1) + "\u00B0F", false);
     setText("rdTOut", state.tOut.toFixed(1) + " psi", !state.tHasAir);
 
@@ -333,6 +339,8 @@
   function syncControls() {
     document.getElementById("spSl").value = String(state.setpoint);
     document.getElementById("spOut").textContent = state.setpoint.toFixed(1) + "\u00B0F";
+    document.getElementById("oatSl").value = String(state.oat);
+    document.getElementById("oatOut").textContent = state.oat.toFixed(0) + "\u00B0F";
     document.getElementById("daDual").classList.toggle("active", state.twoControllers);
     document.getElementById("daSingle").classList.toggle("active", !state.twoControllers);
     document.getElementById("actHint").textContent = state.twoControllers
@@ -361,7 +369,7 @@
   function reconnectAll() { for (var id in state.lines) state.lines[id] = true; syncLines(); }
   function resetAll() {
     state.mainOn = DEFAULTS.mainOn; state.setpoint = DEFAULTS.setpoint;
-    state.roomTemp = DEFAULTS.roomTemp; state.twoControllers = DEFAULTS.twoControllers;
+    state.roomTemp = DEFAULTS.roomTemp; state.oat = DEFAULTS.oat; state.twoControllers = DEFAULTS.twoControllers;
     state.coldAction = DEFAULTS.coldAction; state.hotAction = DEFAULTS.hotAction;
     reconnectAll(); syncMode(); syncControls();
   }
@@ -374,6 +382,9 @@
 
     document.getElementById("spSl").addEventListener("input", function () {
       state.setpoint = parseFloat(this.value); syncControls();
+    });
+    document.getElementById("oatSl").addEventListener("input", function () {
+      state.oat = parseFloat(this.value); syncControls();
     });
     document.getElementById("daDual").addEventListener("click", function () { setActuators(true); });
     document.getElementById("daSingle").addEventListener("click", function () { setActuators(false); });
