@@ -259,11 +259,11 @@
     document.getElementById("hotBlade").setAttribute("transform",
       "rotate(" + (90 * (state.hotPct / 100)).toFixed(1) + " 390 129)");
 
-    document.getElementById("reheatGroup").style.display = dual ? "none" : "";
-    document.getElementById("dualGroup").style.display = dual ? "" : "none";
-    document.getElementById("hotActuator").style.display = (dual && state.dualActuators) ? "" : "none";
-    document.getElementById("opposedNote").style.display = (dual && !state.dualActuators) ? "" : "none";
-    document.getElementById("opposedLink").style.display = (dual && !state.dualActuators) ? "" : "none";
+    document.getElementById("reheatGroup").style.display = dual ? "none" : "block";
+    document.getElementById("dualGroup").style.display = dual ? "block" : "none";
+    document.getElementById("hotActuator").style.display = (dual && state.dualActuators) ? "block" : "none";
+    document.getElementById("opposedNote").style.display = (dual && !state.dualActuators) ? "block" : "none";
+    document.getElementById("opposedLink").style.display = (dual && !state.dualActuators) ? "block" : "none";
 
     var nc = state.damperAction === "NC";
     document.getElementById("damperPtr").setAttribute("transform",
@@ -400,8 +400,8 @@
     }
     var rg = document.getElementById("reheatGroup");
     var dg = document.getElementById("dualGroup");
-    if (rg) rg.style.display = dual ? "none" : "";
-    if (dg) dg.style.display = dual ? "" : "none";
+    if (rg) rg.style.display = dual ? "none" : "block";
+    if (dg) dg.style.display = dual ? "block" : "none";
   }
 
   function setResetType(t) { state.resetType = t; syncControls(); }
