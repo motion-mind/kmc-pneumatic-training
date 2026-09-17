@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=40">
+<link rel="stylesheet" href="css/style.css?v=41">
 </head>
 <body>
 <header class="topbar">
@@ -232,6 +232,57 @@
         <text class="eq dim" x="635" y="344" text-anchor="middle">HOT DECK CONTROLLER</text>
         </g>
 
+          <g id="ctrlHot2" transform="translate(0,10)">
+            <rect class="tc2-bracket" x="507" y="153" width="190" height="14" rx="3"/>
+            <rect class="tc2-bracket" x="507" y="315" width="190" height="14" rx="3"/>
+            <circle class="tc2-body" cx="602" cy="241" r="78"/>
+            <circle class="tc2-rim" cx="602" cy="241" r="64"/>
+            <circle class="tc2-label" cx="602" cy="241" r="36"/>
+            <text class="tc2-lo" x="602" y="217" text-anchor="middle">LO</text>
+            <text class="tc2-inc" x="602" y="228" text-anchor="middle">INCREASE</text>
+            <text class="tc2-inc" x="602" y="257" text-anchor="middle">INCREASE</text>
+            <text class="tc2-lo" x="602" y="268" text-anchor="middle">HI</text>
+                        <circle class="tc2-screw" cx="602" cy="241" r="6"/>
+            <line class="tc2-slot" x1="596" y1="241" x2="608" y2="241"/>
+            <text class="tc2-mod" x="602" y="173" text-anchor="middle">CSC-2003 &middot; 0-1" W.C. &middot; D.A.</text>
+            <circle class="tc2-knob" cx="602" cy="291" r="12"/>
+            <line class="tc2-slot" x1="602" y1="279" x2="602" y2="303"/>
+            <text class="tc2-tiny" x="602" y="309" text-anchor="middle">SETPOINT</text>
+            <rect class="tc2-port" x="564" y="191" width="12" height="12" rx="3"/>
+            <text class="portlbl" x="562" y="190" text-anchor="end">Y</text>
+            <rect class="tc2-port" x="657" y="191" width="12" height="12" rx="3"/>
+            <text class="portlbl" x="663" y="186" text-anchor="middle">T</text>
+            <rect class="tc2-port" x="535" y="231" width="12" height="12" rx="3"/>
+            <text class="portlbl" x="541" y="226" text-anchor="middle">B</text>
+            <rect class="tc2-port" x="537" y="279" width="12" height="12" rx="3"/>
+            <text class="portlbl" x="531" y="285" text-anchor="end">M</text>
+          </g>
+          <g id="ctrlCold2" transform="translate(0,10)">
+            <rect class="tc2-bracket" x="507" y="443" width="190" height="14" rx="3"/>
+            <rect class="tc2-bracket" x="507" y="605" width="190" height="14" rx="3"/>
+            <circle class="tc2-body" cx="602" cy="531" r="78"/>
+            <circle class="tc2-rim" cx="602" cy="531" r="64"/>
+            <circle class="tc2-label" cx="602" cy="531" r="36"/>
+            <text class="tc2-lo" x="602" y="509" text-anchor="middle">LO</text>
+            <text class="tc2-inc" x="602" y="519" text-anchor="middle">INCREASE</text>
+            <text class="tc2-inc" x="602" y="547" text-anchor="middle">INCREASE</text>
+            <text class="tc2-lo" x="602" y="558" text-anchor="middle">HI</text>
+                        <circle class="tc2-screw" cx="602" cy="531" r="6"/>
+            <line class="tc2-slot" x1="596" y1="531" x2="608" y2="531"/>
+            <text class="tc2-mod" x="602" y="463" text-anchor="middle">CSC-2003 &middot; 0-1" W.C. &middot; D.A.</text>
+            <circle class="tc2-knob" cx="602" cy="581" r="12"/>
+            <line class="tc2-slot" x1="602" y1="569" x2="602" y2="593"/>
+            <text class="tc2-tiny" x="602" y="599" text-anchor="middle">SETPOINT</text>
+            <rect class="tc2-port" x="564" y="191" width="12" height="12" rx="3"/>
+            <text class="portlbl" x="562" y="190" text-anchor="end">Y</text>
+            <rect class="tc2-port" x="657" y="191" width="12" height="12" rx="3"/>
+            <text class="portlbl" x="663" y="186" text-anchor="middle">T</text>
+            <rect class="tc2-port" x="535" y="231" width="12" height="12" rx="3"/>
+            <text class="portlbl" x="541" y="226" text-anchor="middle">B</text>
+            <rect class="tc2-port" x="537" y="279" width="12" height="12" rx="3"/>
+            <text class="portlbl" x="531" y="285" text-anchor="end">M</text>
+          </g>
+
         <!-- room thermostat (remote) -->
         <g class="dev-shadow">
           <rect class="tstat-plate" x="1020" y="240" width="170" height="140" rx="15"/>
@@ -280,6 +331,15 @@
         <text id="rdBCold" class="lbl val" x="500" y="518" text-anchor="middle">45%</text>
         </g>
 
+        <!-- RCC-1012 reversing relay on the hot deck branch -->
+        <g id="relayHot">
+          <line class="wire wire-branch" x1="500" y1="237" x2="498" y2="252"/>
+          <circle class="tc2-tap" cx="500" cy="237" r="3.5"/>
+          <circle class="tc2-relay" cx="498" cy="266" r="14"/>
+          <text class="tc2-rlbl" x="498" y="269" text-anchor="middle">RCC</text>
+          <text class="tc2-mod" x="498" y="299" text-anchor="middle">RCC-1012</text>
+          <text class="tc2-mod" x="498" y="308" text-anchor="middle">REV. RELAY</text>
+        </g>
         <g id="tubeLayer"></g>
       </svg>
 
@@ -304,6 +364,14 @@
           <input id="spSl" type="range" min="60" max="80" step="0.5" value="72">
           <p class="hint">Drag the dial on the thermostat, or use this slider.</p>
         </label>
+        <div class="ctl">
+          <span>Controller series</span>
+          <div class="seg">
+            <button id="cs3000" class="segbtn active" type="button">CSC-3000</button>
+            <button id="cs2000" class="segbtn" type="button">CSC-2000</button>
+          </div>
+          <p class="hint" id="csHint">CSC-3000 &mdash; universal reset volume controller (direct / reverse acting).</p>
+        </div>
         <div class="ctl" id="dualActCtl">
           <span>Deck dampers</span>
           <div class="seg">
@@ -362,6 +430,6 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=40"></script>
+<script src="js/sim.js?v=41"></script>
 </body>
 </html>

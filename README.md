@@ -1,7 +1,7 @@
 # Pneumatic VAV Trainer
 
 A single-page, interactive visual tutorial for a pneumatic VAV terminal built around a
-KMC **CSC-3000**–style reset volume controller and a pneumatic thermostat. Click any tube
+KMC **CSC-3000**– or **CSC-2000**–series reset volume controller and a pneumatic thermostat. Click any tube
 to **plug or unplug** it, click the air supply to cut main air, and watch the damper,
 airflow, and room temperature respond in real time. No quizzes, no long reading — poke at it.
 
@@ -21,8 +21,14 @@ A simplified but physically reasonable loop:
 
 - **Main air** 15–30 psi powers everything (loss of air ⇒ everything fails to its spring position).
 - **Thermostat** is the master: direct-acting, 3–15 psi output proportional to room temperature vs setpoint.
-- **Controller** (ports `M`, `T`, `B`, `H`, `L`, `G`) takes the reset signal at `T` and the
-  velocity pressure from the sensor at `H`/`L`, and drives the damper through branch `B`.
+- **Controller series** — pick `CSC-3000` or `CSC-2000` in the controls:
+  - **CSC-3000** (ports `M`, `T`, `B`, `H`, `L`, `G`) — universal reset volume controller,
+    direct *or* reverse acting, differential velocity input at `H`/`L`.
+  - **CSC-2000** (CSC-2003, ports `M`, `T`, `B`, `Y`) — **direct acting only** with a single
+    velocity port at `Y`. Because both decks are then direct acting, the hot deck's 3–15 psi
+    branch signal is inverted by an **RCC-1012 reversing relay** before it reaches the actuator.
+    The `L` sensor taps are unused (hidden) in this mode.
+  Either way the controller takes the reset signal at `T` and drives the damper through branch `B`.
 - **Reset type** direct (`LO STAT` = min, `HI STAT` = max) or reverse (swapped) — flip it
   to see what a mis-applied reset does.
 - **Velocity pressure** follows `ΔP ≈ 0.5 × (flow/max)²`; the control loop, the duct airflow

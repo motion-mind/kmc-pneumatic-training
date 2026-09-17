@@ -7,7 +7,7 @@
   var MAX = 200, MIN = 50, RESET_START = 8, RESET_SPAN = 5;
   // Actuator response (first-order). Slowed 50% from the previous 0.4 s baseline.
   var ACT_TAU = 0.8;
-  var DEFAULTS = { mainOn: true, setpoint: 72, roomTemp: 78, oat: 70, twoControllers: true, coldAction: "NO", hotAction: "NC" };
+  var DEFAULTS = { mainOn: true, setpoint: 72, roomTemp: 78, oat: 70, twoControllers: true, coldAction: "NO", hotAction: "NC", series: "3000" };
 
   var state = {
     mainOn: DEFAULTS.mainOn,
@@ -17,6 +17,7 @@
     twoControllers: DEFAULTS.twoControllers,
     coldAction: DEFAULTS.coldAction,
     hotAction: DEFAULTS.hotAction,
+    series: DEFAULTS.series,
     lines: {
       hotH: true, hotL: true, coldH: true, coldL: true,
       hotB: true, coldB: true,
@@ -26,6 +27,14 @@
     tOut: 9, coldT: 9, hotT: 9, coldPct: 45, hotPct: 0,
     coldFlow: 50, hotFlow: 0, supplyTemp: 55, flow: 50, failHeat: false
   };
+
+  // The CSC-3000 reads a differential velocity signal (H + L taps). The
+  // CSC-2000 (CSC-2003) has a single velocity port (Y), so only the H tap is
+  // used in that mode.
+  function sensorOK(deck) {
+    var L = state.lines;
+    return state.series === "2000" ? L[deck + "H"] : (L[deck + "H"] && L[deck + "L"]);
+  }
 
   var TUBES = [
     { id: "hotH", points: [[570, 150], [570, 197]], cls: "wire-sensor", name: "hot deck sensor H", mode: "ctrl" },
@@ -166,7 +175,7 @@
       var fc = clamp((coldT - RESET_START) / RESET_SPAN, 0, 1);
       var coldSP = MIN + fc * (MAX - MIN);
       var coldCmd = coldAir ? clamp(coldSP / MAX * 100, 0, 100) : null;
-      if (coldAir && !(L.coldH && L.coldL)) coldCmd = 100;
+      if (coldAir && !sensorOK("cold")) coldCmd = 100;
       // The actuator springs are fixed: cold deck is normally CLOSED (fails
       // shut) and hot deck normally OPEN (fails open), so the box fails to
       // heat. The selector's correct pairing is cold = N.O. / hot = N.C.; any
@@ -178,7 +187,7 @@
       var fh = clamp((RESET_START - hotT) / RESET_SPAN, 0, 1);
       var hotSP = fh * MAX;
       var hotCmd = hotAir ? clamp(hotSP / MAX * 100, 0, 100) : null;
-      if (hotAir && !(L.hotH && L.hotL)) hotCmd = 100;
+      if (hotAir && !sensorOK("hot")) hotCmd = 100;
       var hotTgt;
       if (hotCmd === null) hotTgt = 100;
       else hotTgt = (state.hotAction === "NC") ? hotCmd : (100 - hotCmd);
@@ -252,8 +261,6 @@
     document.getElementById("opposedNote").style.display = two ? "none" : "block";
     document.getElementById("opposedLink").style.display = two ? "none" : "block";
 
-    document.getElementById("ctrlCold").style.display = two ? "block" : "none";
-    document.getElementById("ctrlHot").style.display = two ? "block" : "none";
 
     // The NO / NC markings are printed on the wheel and rotate with it; the
     // fixed index triangle outside the wheel points at the selected one.
@@ -330,15 +337,16 @@
         cls = "bad"; msg = "Both teed signal legs are open \u2014 nothing reaches either controller, so the box fails to heat.";
       } else if (!L.tHot || !L.tCold) {
         cls = "warn"; msg = "A teed signal leg is broken. That open bleed collapses the shared line to ~" + state.tOut.toFixed(1) + " psi, so BOTH controllers lose most of their reset (the unbroken deck drops toward LO STAT).";
-      } else if (!(L.coldH && L.coldL)) {
+      } else if (!sensorOK("cold")) {
         cls = "bad"; msg = "The cold deck sensor is unplugged \u2014 that controller can't measure flow and drives its damper wide open.";
-      } else if (!(L.hotH && L.hotL)) {
+      } else if (!sensorOK("hot")) {
         cls = "warn"; msg = "The hot deck sensor is unplugged \u2014 that controller drives its damper wide open (heat).";
       } else {
         var d = state.roomTemp - state.setpoint;
         if (d > 0.8) msg = "Normal. The room is warm: the cold deck controller is resetting open and the hot deck is closing.";
         else if (d < -0.8) msg = "Normal. The room is cool: the hot deck controller is resetting open and the cold deck is closing.";
         else msg = "Normal. Two KMC controllers (one per deck) sharing the teed thermostat signal; the box is holding setpoint.";
+        if (state.series === "2000") msg += " Both CSC-2000 controllers are direct acting, so the hot deck's branch signal is inverted by the RCC-1012 reversing relay before it reaches the actuator.";
       }
     } else {
       if (!L.tDirect) { cls = "bad"; msg = "The thermostat-to-actuator line is unplugged. The linked dampers lose air and fail to heat."; }
@@ -360,31 +368,50 @@
     document.getElementById("actHint").textContent = state.twoControllers
       ? "Two actuators \u2192 one KMC controller per deck; thermostat signal teed."
       : "Single shaft, 90\u00B0 opposed \u2192 no KMC controller; thermostat drives it directly.";
+    document.getElementById("cs3000").classList.toggle("active", state.series === "3000");
+    document.getElementById("cs2000").classList.toggle("active", state.series === "2000");
+    document.getElementById("csHint").textContent = state.series === "3000"
+      ? "CSC-3000 \u2014 universal reset volume controller (direct / reverse acting, H + L sensor ports)."
+      : "CSC-2000 (CSC-2003) \u2014 direct acting only, single Y velocity port. The hot deck needs the RCC-1012 reversing relay to invert its 3\u201315 psi branch signal.";
     document.getElementById("roMainLabel").textContent = state.twoControllers ? "Main air at M" : "Main air";
     var mb = document.getElementById("mainBtn");
     mb.textContent = state.mainOn ? "Cut main air" : "Restore main air";
     mb.classList.toggle("on", !state.mainOn);
   }
 
-  function setActuators(two) { state.twoControllers = two; syncMode(); syncControls(); }
+  function setActuators(two) {
+    if (state.series === "2000" && !two) { state.series = "3000"; } state.twoControllers = two; syncMode(); syncControls(); }
   function setColdAction(a) { state.coldAction = a; }
   function setHotAction(a) { state.hotAction = a; }
 
   function syncMode() {
+    var two = state.twoControllers, csc2 = state.series === "2000";
     for (var id in els) {
       var m = els[id].mode, show = true;
-      if (m === "ctrl") show = state.twoControllers;
-      else if (m === "opposed") show = !state.twoControllers;
+      if (m === "ctrl") show = two;
+      else if (m === "opposed") show = !two;
+      // The CSC-2000 uses a single velocity port (Y), so the L taps are unused.
+      if (csc2 && (id === "hotL" || id === "coldL")) show = false;
       els[id].g.style.display = show ? "" : "none";
     }
+    document.getElementById("ctrlCold").style.display = (two && !csc2) ? "block" : "none";
+    document.getElementById("ctrlHot").style.display = (two && !csc2) ? "block" : "none";
+    document.getElementById("ctrlCold2").style.display = (two && csc2) ? "block" : "none";
+    document.getElementById("ctrlHot2").style.display = (two && csc2) ? "block" : "none";
+    document.getElementById("relayHot").style.display = (two && csc2) ? "block" : "none";
+    updateTubeStyle();
   }
+
+  function updateTubeStyle() {}
+
+  function setSeries(v) { state.series = v; syncMode(); syncControls(); }
 
   function toggleMain() { state.mainOn = !state.mainOn; syncControls(); }
   function reconnectAll() { for (var id in state.lines) state.lines[id] = true; syncLines(); }
   function resetAll() {
     state.mainOn = DEFAULTS.mainOn; state.setpoint = DEFAULTS.setpoint;
     state.roomTemp = DEFAULTS.roomTemp; state.oat = DEFAULTS.oat; state.twoControllers = DEFAULTS.twoControllers;
-    state.coldAction = DEFAULTS.coldAction; state.hotAction = DEFAULTS.hotAction;
+    state.coldAction = DEFAULTS.coldAction; state.hotAction = DEFAULTS.hotAction; state.series = DEFAULTS.series;
     reconnectAll(); syncMode(); syncControls();
   }
 
@@ -402,6 +429,8 @@
     });
     document.getElementById("daDual").addEventListener("click", function () { setActuators(true); });
     document.getElementById("daSingle").addEventListener("click", function () { setActuators(false); });
+    document.getElementById("cs3000").addEventListener("click", function () { setSeries("3000"); });
+    document.getElementById("cs2000").addEventListener("click", function () { setSeries("2000"); });
     document.getElementById("mainBtn").addEventListener("click", toggleMain);
     document.getElementById("reconnect").addEventListener("click", reconnectAll);
     document.getElementById("resetAll").addEventListener("click", resetAll);
