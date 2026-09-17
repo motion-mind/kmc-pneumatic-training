@@ -7,7 +7,7 @@
   var MAX = 200, MIN = 50, RESET_START = 8, RESET_SPAN = 5;
   // Actuator response (first-order). Slowed 50% from the previous 0.4 s baseline.
   var ACT_TAU = 0.8;
-  var DEFAULTS = { mainOn: true, setpoint: 72, roomTemp: 78, oat: 70, twoControllers: true, coldAction: "NC", hotAction: "NO" };
+  var DEFAULTS = { mainOn: true, setpoint: 72, roomTemp: 78, oat: 70, twoControllers: true, coldAction: "NO", hotAction: "NC" };
 
   var state = {
     mainOn: DEFAULTS.mainOn,
@@ -167,17 +167,21 @@
       var coldSP = MIN + fc * (MAX - MIN);
       var coldCmd = coldAir ? clamp(coldSP / MAX * 100, 0, 100) : null;
       if (coldAir && !(L.coldH && L.coldL)) coldCmd = 100;
+      // The actuator springs are fixed: cold deck is normally CLOSED (fails
+      // shut) and hot deck normally OPEN (fails open), so the box fails to
+      // heat. The selector's correct pairing is cold = N.O. / hot = N.C.; any
+      // other selector position drives that deck's damper backwards.
       var coldTgt;
-      if (coldCmd === null) coldTgt = (state.coldAction === "NO") ? 100 : 0;
-      else coldTgt = (state.coldAction === "NC") ? coldCmd : (100 - coldCmd);
+      if (coldCmd === null) coldTgt = 0;
+      else coldTgt = (state.coldAction === "NO") ? coldCmd : (100 - coldCmd);
 
       var fh = clamp((RESET_START - hotT) / RESET_SPAN, 0, 1);
       var hotSP = fh * MAX;
       var hotCmd = hotAir ? clamp(hotSP / MAX * 100, 0, 100) : null;
       if (hotAir && !(L.hotH && L.hotL)) hotCmd = 100;
       var hotTgt;
-      if (hotCmd === null) hotTgt = (state.hotAction === "NO") ? 100 : 0;
-      else hotTgt = (state.hotAction === "NO") ? hotCmd : (100 - hotCmd);
+      if (hotCmd === null) hotTgt = 100;
+      else hotTgt = (state.hotAction === "NC") ? hotCmd : (100 - hotCmd);
 
       // the actuators stroke to the commanded position at a finite rate
       coldPct = actLag(state.coldPct, coldTgt, dt);
@@ -253,9 +257,8 @@
 
     // The NO / NC markings are printed on the wheel and rotate with it; the
     // fixed index triangle outside the wheel points at the selected one.
-    var coolNC = state.coldAction === "NC", hotNO = state.hotAction === "NO";
-    document.getElementById("damperDialCold").setAttribute("transform", "rotate(" + (coolNC ? 90 : 0) + " 581 521)");
-    document.getElementById("damperDialHot").setAttribute("transform", "rotate(" + (hotNO ? 0 : 90) + " 581 231)");
+    document.getElementById("damperDialCold").setAttribute("transform", "rotate(" + (state.coldAction === "NO" ? 0 : 90) + " 581 521)");
+    document.getElementById("damperDialHot").setAttribute("transform", "rotate(" + (state.hotAction === "NC" ? 90 : 0) + " 581 231)");
 
     document.getElementById("teeMark").style.display = two ? "block" : "none";
     document.getElementById("ctrlReadouts").style.display = two ? "block" : "none";
@@ -302,7 +305,7 @@
     setText("roCfmHot", Math.round(state.hotFlow) + " CFM", false);
     setText("roSupply", state.supplyTemp.toFixed(0) + "\u00B0F", false);
     setText("roRoom", state.roomTemp.toFixed(1) + "\u00B0F", false);
-    setText("roAction", "cold " + (state.coldAction === "NC" ? "N.C." : "N.O.") + " / hot " + (state.hotAction === "NO" ? "N.O." : "N.C."), false);
+    setText("roAction", "cold " + (state.coldAction === "NO" ? "N.O." : "N.C.") + " / hot " + (state.hotAction === "NC" ? "N.C." : "N.O."), false);
 
     paintStatus();
   }
@@ -318,9 +321,9 @@
       if (!coldAir && !hotAir) {
         cls = "bad"; msg = "Both controllers lost main air (M). The box fails to heat: cold deck closed, hot deck wide open.";
       } else if (!coldAir) {
-        cls = "bad"; msg = "The cold deck controller lost main air (M). Its " + (state.coldAction === "NC" ? "normally-closed" : "normally-open") + " actuator springs to its fail position; the hot deck still modulates.";
+        cls = "bad"; msg = "The cold deck controller lost main air (M). Its normally-closed actuator springs shut; the hot deck still modulates.";
       } else if (!hotAir) {
-        cls = "bad"; msg = "The hot deck controller lost main air (M). Its " + (state.hotAction === "NO" ? "normally-open" : "normally-closed") + " actuator springs to its fail position.";
+        cls = "bad"; msg = "The hot deck controller lost main air (M). Its normally-open actuator springs wide open \u2014 full heat.";
       } else if (!L.tMain) {
         cls = "bad"; msg = "The thermostat output line is unplugged \u2014 both controllers lose reset and the box fails to heat.";
       } else if (!L.tHot && !L.tCold) {
@@ -405,13 +408,13 @@
 
     var cc = document.getElementById("damperDialCold");
     if (cc) {
-      cc.addEventListener("click", function () { setColdAction(state.coldAction === "NC" ? "NO" : "NC"); });
-      cc.addEventListener("keydown", function (e) { if (e.key === " " || e.key === "Enter") { e.preventDefault(); setColdAction(state.coldAction === "NC" ? "NO" : "NC"); } });
+      cc.addEventListener("click", function () { setColdAction(state.coldAction === "NO" ? "NC" : "NO"); });
+      cc.addEventListener("keydown", function (e) { if (e.key === " " || e.key === "Enter") { e.preventDefault(); setColdAction(state.coldAction === "NO" ? "NC" : "NO"); } });
     }
     var hc = document.getElementById("damperDialHot");
     if (hc) {
-      hc.addEventListener("click", function () { setHotAction(state.hotAction === "NO" ? "NC" : "NO"); });
-      hc.addEventListener("keydown", function (e) { if (e.key === " " || e.key === "Enter") { e.preventDefault(); setHotAction(state.hotAction === "NO" ? "NC" : "NO"); } });
+      hc.addEventListener("click", function () { setHotAction(state.hotAction === "NC" ? "NO" : "NC"); });
+      hc.addEventListener("keydown", function (e) { if (e.key === " " || e.key === "Enter") { e.preventDefault(); setHotAction(state.hotAction === "NC" ? "NO" : "NC"); } });
     }
 
     var dial = document.getElementById("tstatDial");
