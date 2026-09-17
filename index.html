@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=28">
+<link rel="stylesheet" href="css/style.css?v=29">
 </head>
 <body>
 <header class="topbar">
@@ -148,12 +148,13 @@
             <line class="tc-screw-x" x1="581" y1="517.4" x2="581" y2="524.6"/>
             <text class="tc-note" x="612" y="521" text-anchor="middle" transform="rotate(-90 612 521)">NC</text>
             <polygon class="tc-note-mark" points="623,514 623,528 631,521"/>
-            <text class="tc-note" x="598" y="552" text-anchor="middle">NO</text>
-            <polygon class="tc-note-mark" points="593,555 603,555 598,561"/>
-            <text class="tc-note" x="598" y="573" text-anchor="middle">DAMPER</text>
+            <text class="tc-note" x="581" y="551" text-anchor="middle">NO</text>
+            <polygon class="tc-note-mark" points="576,555 586,555 581,561"/>
+            <polygon class="tc-note-mark" points="576,571 586,571 581,565"/>
+            <text class="tc-note" x="581" y="582" text-anchor="middle">DAMPER</text>
           </g>
 
-          <circle class="tc-plug" cx="581" cy="587" r="9"/>
+          <circle class="tc-plug" cx="581" cy="596" r="9"/>
 
           <rect class="tc-panel" x="637" y="513" width="70" height="84" rx="5"/>
           <text class="tc-paneltext" x="643" y="527">RESET START</text>
@@ -170,8 +171,8 @@
         <text class="portlbl" x="607" y="485" text-anchor="middle">L</text>
         <text class="portlbl" x="663" y="497" text-anchor="middle">T</text>
         <text class="portlbl" x="553" y="513">B</text>
-        <text class="portlbl" x="555" y="569">M</text>
-        <text class="portlbl" x="581" y="605" text-anchor="middle">G</text>
+        <text class="portlbl end" x="533" y="573">M</text>
+        <text class="portlbl" x="581" y="615" text-anchor="middle">G</text>
         <text class="eq dim" x="635" y="627" text-anchor="middle">COLD DECK CONTROLLER</text>
         </g>
         <!-- hot deck controller -->
@@ -207,12 +208,13 @@
             <line class="tc-screw-x" x1="581" y1="227.4" x2="581" y2="234.6"/>
             <text class="tc-note" x="612" y="231" text-anchor="middle" transform="rotate(-90 612 231)">NC</text>
             <polygon class="tc-note-mark" points="623,224 623,238 631,231"/>
-            <text class="tc-note" x="598" y="262" text-anchor="middle">NO</text>
-            <polygon class="tc-note-mark" points="593,265 603,265 598,271"/>
-            <text class="tc-note" x="598" y="283" text-anchor="middle">DAMPER</text>
+            <text class="tc-note" x="581" y="261" text-anchor="middle">NO</text>
+            <polygon class="tc-note-mark" points="576,265 586,265 581,271"/>
+            <polygon class="tc-note-mark" points="576,281 586,281 581,275"/>
+            <text class="tc-note" x="581" y="292" text-anchor="middle">DAMPER</text>
           </g>
 
-          <circle class="tc-plug" cx="581" cy="297" r="9"/>
+          <circle class="tc-plug" cx="581" cy="306" r="9"/>
 
           <rect class="tc-panel" x="637" y="223" width="70" height="84" rx="5"/>
           <text class="tc-paneltext" x="643" y="237">RESET START</text>
@@ -229,8 +231,8 @@
         <text class="portlbl" x="607" y="195" text-anchor="middle">L</text>
         <text class="portlbl" x="663" y="207" text-anchor="middle">T</text>
         <text class="portlbl" x="553" y="223">B</text>
-        <text class="portlbl" x="555" y="279">M</text>
-        <text class="portlbl" x="581" y="315" text-anchor="middle">G</text>
+        <text class="portlbl end" x="533" y="283">M</text>
+        <text class="portlbl" x="581" y="325" text-anchor="middle">G</text>
         <text class="eq dim" x="635" y="344" text-anchor="middle">HOT DECK CONTROLLER</text>
         </g>
 
@@ -364,6 +366,6 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=28"></script>
+<script src="js/sim.js?v=29"></script>
 </body>
 </html>
