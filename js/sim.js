@@ -227,6 +227,8 @@
 
     document.getElementById("teeMark").style.display = two ? "block" : "none";
     document.getElementById("ctrlReadouts").style.display = two ? "block" : "none";
+    document.getElementById("sensorHot").style.display = two ? "block" : "none";
+    document.getElementById("sensorCold").style.display = two ? "block" : "none";
     document.getElementById("actColdL1").textContent = two ? "COLD DECK" : "LINKED";
     document.getElementById("actColdL2").textContent = two ? "ACTUATOR" : "ACTUATOR";
 
