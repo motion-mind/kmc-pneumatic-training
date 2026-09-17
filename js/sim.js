@@ -37,7 +37,7 @@
     { id: "tMain", points: [[1108, 240], [1108, 187], [1000, 187]], cls: "wire-reset", name: "thermostat output", mode: "ctrl" },
     { id: "tHot", points: [[1000, 187], [663, 187]], cls: "wire-reset", name: "teed signal to hot controller", mode: "ctrl" },
     { id: "tCold", points: [[1000, 187], [1000, 467], [663, 467]], cls: "wire-reset", name: "teed signal to cold controller", mode: "ctrl" },
-    { id: "tDirect", points: [[1000, 187], [1000, 490], [460, 490]], cls: "wire-reset", name: "thermostat to linked actuator", mode: "opposed" }
+    { id: "tDirect", points: [[1108, 240], [1108, 187], [1000, 187], [1000, 490], [460, 490]], cls: "wire-reset", name: "thermostat to linked actuator", mode: "opposed" }
   ];
 
   var els = {};
@@ -243,6 +243,7 @@
 
     document.getElementById("compressor").style.opacity = state.mainOn ? "1" : "0.45";
     document.getElementById("mainHeader").style.opacity = state.mainOn ? "1" : "0.45";
+    document.getElementById("mainTrunk").style.display = two ? "block" : "none";
     document.getElementById("mainTrunk").style.opacity = state.mainOn ? "1" : "0.45";
 
     setText("rdComp", mainPSI, !state.mainOn);
