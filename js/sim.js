@@ -28,19 +28,19 @@
   };
 
   var TUBES = [
-    { id: "hotH", points: [[570, 150], [570, 187]], cls: "wire-sensor", name: "hot deck sensor H", mode: "ctrl" },
-    { id: "hotL", points: [[607, 150], [607, 175]], cls: "wire-sensor", name: "hot deck sensor L", mode: "ctrl" },
-    { id: "coldH", points: [[570, 440], [570, 477]], cls: "wire-sensor", name: "cold deck sensor H", mode: "ctrl" },
-    { id: "coldL", points: [[607, 440], [607, 465]], cls: "wire-sensor", name: "cold deck sensor L", mode: "ctrl" },
-    { id: "hotB", points: [[541, 227], [460, 227]], cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
-    { id: "coldB", points: [[541, 517], [460, 517]], cls: "wire-branch", name: "cold deck branch", mode: "ctrl" },
-    { id: "mainHot", points: [[290, 275], [543, 275]], cls: "wire-main", name: "main air to hot controller", mode: "ctrl" },
-    { id: "mainCold", points: [[290, 565], [543, 565]], cls: "wire-main", name: "main air to cold controller", mode: "ctrl" },
-    { id: "mainTstat", points: [[1150, 630], [1150, 380]], cls: "wire-main", name: "main air to thermostat" },
-    { id: "tMain", points: [[1108, 240], [1108, 187], [1000, 187]], cls: "wire-reset", name: "thermostat output", mode: "ctrl" },
-    { id: "tHot", points: [[1000, 187], [663, 187]], cls: "wire-reset", name: "teed signal to hot controller", mode: "ctrl" },
-    { id: "tCold", points: [[1000, 187], [1000, 477], [663, 477]], cls: "wire-reset", name: "teed signal to cold controller", mode: "ctrl" },
-    { id: "tDirect", points: [[1108, 240], [1108, 187], [1000, 187], [1000, 490], [460, 490]], cls: "wire-reset", name: "thermostat to linked actuator", mode: "opposed" }
+    { id: "hotH", points: [[570, 150], [570, 197]], cls: "wire-sensor", name: "hot deck sensor H", mode: "ctrl" },
+    { id: "hotL", points: [[607, 150], [607, 185]], cls: "wire-sensor", name: "hot deck sensor L", mode: "ctrl" },
+    { id: "coldH", points: [[570, 440], [570, 487]], cls: "wire-sensor", name: "cold deck sensor H", mode: "ctrl" },
+    { id: "coldL", points: [[607, 440], [607, 475]], cls: "wire-sensor", name: "cold deck sensor L", mode: "ctrl" },
+    { id: "hotB", points: [[541, 237], [460, 237]], cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
+    { id: "coldB", points: [[541, 527], [460, 527]], cls: "wire-branch", name: "cold deck branch", mode: "ctrl" },
+    { id: "mainHot", points: [[240, 285], [543, 285]], cls: "wire-main", name: "main air to hot controller", mode: "ctrl" },
+    { id: "mainCold", points: [[240, 575], [543, 575]], cls: "wire-main", name: "main air to cold controller", mode: "ctrl" },
+    { id: "mainTstat", points: [[1165, 645], [1165, 380]], cls: "wire-main", name: "main air to thermostat" },
+    { id: "tMain", points: [[1105, 380], [1105, 400], [1000, 400]], cls: "wire-reset", name: "thermostat output", mode: "ctrl" },
+    { id: "tHot", points: [[1000, 400], [1000, 197], [663, 197]], cls: "wire-reset", name: "teed signal to hot controller", mode: "ctrl" },
+    { id: "tCold", points: [[1000, 400], [1000, 487], [663, 487]], cls: "wire-reset", name: "teed signal to cold controller", mode: "ctrl" },
+    { id: "tDirect", points: [[1105, 380], [1105, 400], [1000, 400], [1000, 490], [460, 490]], cls: "wire-reset", name: "thermostat to linked actuator", mode: "opposed" }
   ];
 
   var els = {};
@@ -285,7 +285,7 @@
     setText("rdCfmHot", Math.round(state.hotFlow) + " CFM", false);
     setText("rdCfmCold", Math.round(state.coldFlow) + " CFM", false);
     setText("rdRoomT", "room " + state.roomTemp.toFixed(1) + "\u00B0F", false);
-    setText("rdOat", "OAT " + state.oat.toFixed(0) + "\u00B0F", false);
+    
     setText("rdTSp", "set " + state.setpoint.toFixed(1) + "\u00B0F", false);
     setText("rdTOut", state.tOut.toFixed(1) + " psi", !state.tHasAir);
 

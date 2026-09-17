@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=38">
+<link rel="stylesheet" href="css/style.css?v=39">
 </head>
 <body>
 <header class="topbar">
@@ -25,7 +25,7 @@
 
   <div class="stage-wrap">
     <div class="stage">
-      <svg id="sim" viewBox="0 0 1250 700" role="img" aria-label="Interactive pneumatic dual-duct VAV system">
+      <svg id="sim" viewBox="0 0 1250 720" role="img" aria-label="Interactive pneumatic dual-duct VAV system">
         <defs>
           <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stop-color="#dccfb0"/>
@@ -58,7 +58,7 @@
           <text class="lbl" x="632" y="110" text-anchor="start">flow sensor</text>
         </g>
         <line id="hotBlade" class="blade" x1="390" y1="120" x2="470" y2="120"/>
-        <rect class="shaft" x="428" y="120" width="4" height="50"/>
+        <rect class="shaft" x="428" y="120" width="4" height="60"/>
         <text id="rdHot" class="lbl val" x="482" y="118" text-anchor="start">0%</text>
 
         <!-- cold deck -->
@@ -77,22 +77,20 @@
           <text class="lbl" x="632" y="400" text-anchor="start">flow sensor</text>
         </g>
         <line id="blade" class="blade" x1="390" y1="410" x2="470" y2="410"/>
-        <rect class="shaft" x="428" y="410" width="4" height="50"/>
+        <rect class="shaft" x="428" y="410" width="4" height="60"/>
         <text id="rdDamper" class="lbl val" x="482" y="408" text-anchor="start">45%</text>
 
         <text id="rdCfmHot" class="lbl val" x="268" y="140">0 CFM</text>
         <text id="rdCfmCold" class="lbl val" x="268" y="430">0 CFM</text>
-        <text class="lbl" x="862" y="80" text-anchor="end">from AHU</text>
-        <text id="rdOat" class="lbl val" x="862" y="98" text-anchor="end">OAT 70&deg;F</text>
 
         <!-- hot deck actuator -->
-        <g id="hotActuator">
+        <g id="hotActuator" transform="translate(0,10)">
           <rect class="unit" x="340" y="170" width="120" height="60" rx="8"/>
           <text class="eq" x="400" y="194" text-anchor="middle">HOT DECK</text>
           <text class="eq" x="400" y="210" text-anchor="middle">ACTUATOR</text>
           <text id="rdActHot" class="lbl val" x="400" y="244" text-anchor="middle">0%</text>
         </g>
-        <g id="opposedNote">
+        <g id="opposedNote" transform="translate(0,10)">
           <rect class="unit" x="340" y="170" width="120" height="60" rx="8"/>
           <text class="eq" x="400" y="194" text-anchor="middle">LINKED 90&deg;</text>
           <text class="eq" x="400" y="210" text-anchor="middle">OPPOSED</text>
@@ -100,7 +98,7 @@
         <line id="opposedLink" class="link" x1="430" y1="410" x2="430" y2="120"/>
 
         <!-- cold deck actuator -->
-        <g id="coldActuator">
+        <g id="coldActuator" transform="translate(0,10)">
           <rect class="unit" x="340" y="460" width="120" height="60" rx="8"/>
           <text id="actColdL1" class="eq" x="400" y="484" text-anchor="middle">COLD DECK</text>
           <text id="actColdL2" class="eq" x="400" y="500" text-anchor="middle">ACTUATOR</text>
@@ -108,7 +106,7 @@
         </g>
 
         <!-- single-shaft (opposed) actuator: one actuator, mounted perpendicular to the cold deck unit -->
-        <g id="singleActuator">
+        <g id="singleActuator" transform="translate(0,10)">
           <rect class="unit" x="400" y="450" width="60" height="120" rx="8"/>
           <text class="eq dim" x="430" y="502" text-anchor="middle">LINKED</text>
           <text class="eq dim" x="430" y="518" text-anchor="middle">ACTUATOR</text>
@@ -116,7 +114,7 @@
         </g>
 
         <!-- cold deck controller -->
-        <g id="ctrlCold"><g class="dev-shadow">
+        <g id="ctrlCold" transform="translate(0,10)"><g class="dev-shadow">
           <polygon class="tc-body" points="565,440 665,440 710,485 710,570 665,615 565,615 520,570 520,485"/>
 
           <circle class="tc-boss" cx="633" cy="489" r="13"/>
@@ -175,7 +173,7 @@
         <text class="eq dim" x="635" y="627" text-anchor="middle">COLD DECK CONTROLLER</text>
         </g>
         <!-- hot deck controller -->
-        <g id="ctrlHot"><g class="dev-shadow">
+        <g id="ctrlHot" transform="translate(0,10)"><g class="dev-shadow">
           <polygon class="tc-body" points="565,150 665,150 710,195 710,280 665,325 565,325 520,280 520,195"/>
 
           <circle class="tc-boss" cx="633" cy="199" r="13"/>
@@ -253,12 +251,12 @@
           <text id="rdTOut" class="lbl val" x="1090" y="308">9.0 psi</text>
           <text id="rdTSp" class="lbl" x="1090" y="326">set 72&deg;F</text>
           <text id="rdRoomT" class="lbl val" x="1090" y="346">room 76.0&deg;F</text>
-          <rect class="fitting" x="1098" y="232" width="12" height="14" rx="2"/>
-          <rect class="fitting" x="1174" y="374" width="12" height="14" rx="2"/>
+          <rect class="fitting" x="1099" y="374" width="12" height="14" rx="2"/>
+          <rect class="fitting" x="1159" y="374" width="12" height="14" rx="2"/>
         </g>
 
         <!-- main air -->
-        <g id="compressor" class="clickable" tabindex="0" role="button" aria-label="Toggle main air supply">
+        <g id="compressor" class="clickable" tabindex="0" role="button" aria-label="Toggle main air supply" transform="translate(0,15)">
           <rect class="unit" x="40" y="600" width="120" height="60" rx="8"/>
           <circle class="fan" cx="68" cy="630" r="13"/>
           <path class="fan" d="M68 617 A13 13 0 0 1 68 643"/>
@@ -266,20 +264,20 @@
           <text class="eq" x="120" y="644" text-anchor="middle">AIR</text>
           <text id="rdComp" class="lbl val" x="100" y="676" text-anchor="middle">20 psi</text>
         </g>
-        <line id="mainHeader" class="wire wire-main" x1="160" y1="630" x2="1180" y2="630"/>
-        <line id="mainTrunk" class="wire wire-main" x1="290" y1="630" x2="290" y2="275"/>
+        <line id="mainHeader" class="wire wire-main" x1="160" y1="645" x2="1170" y2="645"/>
+        <line id="mainTrunk" class="wire wire-main" x1="240" y1="645" x2="240" y2="285"/>
         <g id="teeMark">
-          <circle class="tee" cx="1000" cy="187" r="4.5"/>
-          <text class="lbl" x="1000" y="177" text-anchor="middle">tee</text>
+          <circle class="tee" cx="1000" cy="400" r="4.5"/>
+          <text class="lbl" x="1000" y="390" text-anchor="middle">tee</text>
         </g>
 
         <g id="ctrlReadouts">
-        <text id="rdMainHot" class="lbl val" x="420" y="264" text-anchor="middle">20 psi</text>
-        <text id="rdMainCold" class="lbl val" x="420" y="554" text-anchor="middle">20 psi</text>
-        <text id="rdTHot" class="lbl val" x="850" y="178" text-anchor="middle">9.0 psi</text>
-        <text id="rdTCold" class="lbl val" x="850" y="468" text-anchor="middle">9.0 psi</text>
-        <text id="rdBHot" class="lbl val" x="500" y="217" text-anchor="middle">0%</text>
-        <text id="rdBCold" class="lbl val" x="500" y="507" text-anchor="middle">45%</text>
+        <text id="rdMainHot" class="lbl val" x="420" y="275" text-anchor="middle">20 psi</text>
+        <text id="rdMainCold" class="lbl val" x="420" y="565" text-anchor="middle">20 psi</text>
+        <text id="rdTHot" class="lbl val" x="850" y="188" text-anchor="middle">9.0 psi</text>
+        <text id="rdTCold" class="lbl val" x="850" y="478" text-anchor="middle">9.0 psi</text>
+        <text id="rdBHot" class="lbl val" x="500" y="228" text-anchor="middle">0%</text>
+        <text id="rdBCold" class="lbl val" x="500" y="518" text-anchor="middle">45%</text>
         </g>
 
         <g id="tubeLayer"></g>
@@ -364,6 +362,6 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=38"></script>
+<script src="js/sim.js?v=39"></script>
 </body>
 </html>
