@@ -4,7 +4,7 @@
   var NS = "http://www.w3.org/2000/svg";
   var tubeLayer = document.getElementById("tubeLayer");
 
-  var MAX = 1200, MIN = 300, RESET_START = 8, RESET_SPAN = 5;
+  var MAX = 200, MIN = 50, RESET_START = 8, RESET_SPAN = 5;
   var DEFAULTS = { mainOn: true, setpoint: 72, roomTemp: 78, twoControllers: true, coldAction: "NC", hotAction: "NO" };
 
   var state = {
@@ -21,7 +21,7 @@
       tMain: true, tHot: true, tCold: true, tDirect: true
     },
     tOut: 9, coldT: 9, hotT: 9, coldPct: 45, hotPct: 0,
-    supplyTemp: 55, flow: 540, failHeat: false
+    coldFlow: 50, hotFlow: 0, supplyTemp: 55, flow: 50, failHeat: false
   };
 
   var TUBES = [
@@ -176,7 +176,7 @@
     var coldFlow = coldPct / 100 * MAX, hotFlow = hotPct / 100 * MAX;
     var flow = coldFlow + hotFlow;
     var supplyTemp = flow > 0 ? (coldFlow * 55 + hotFlow * 95) / flow : 55;
-    var target = state.setpoint + (hotFlow - coldFlow) / MAX * 20 + (1 - clamp(flow / MAX, 0, 1)) * 8;
+    var target = state.setpoint + (hotFlow - coldFlow) / MAX * 20 + (1 - clamp(flow / (2 * MAX), 0, 1)) * 8;
     state.roomTemp = clamp(state.roomTemp + (target - state.roomTemp) * 1.3 * dt, 45, 98);
 
     state.tOut = outPsi;
@@ -185,6 +185,8 @@
     state.hotT = hotT;
     state.coldPct = coldPct;
     state.hotPct = hotPct;
+    state.coldFlow = coldFlow;
+    state.hotFlow = hotFlow;
     state.flow = flow;
     state.supplyTemp = supplyTemp;
     state.failHeat = failHeat;
@@ -238,10 +240,6 @@
     var needAng = -60 + (state.setpoint - 60) / 20 * 120;
     document.getElementById("tNeedle").setAttribute("transform", "rotate(" + needAng.toFixed(1) + " 1058 292)");
 
-    var zone = document.getElementById("zoneRect");
-    var tc = clamp((state.roomTemp - 55) / 30, 0, 1);
-    zone.style.fill = "hsla(" + (210 - tc * 202).toFixed(0) + ", 72%, 48%, 0.30)";
-
     setFlowAnim(document.getElementById("flowLine"), clamp(state.coldPct / 100, 0, 1));
     setFlowAnim(document.getElementById("flowLineHot"), clamp(state.hotPct / 100, 0, 1));
 
@@ -256,10 +254,10 @@
     setText("rdActCold", Math.round(state.coldPct) + "%", false);
     setText("rdActHot", Math.round(state.hotPct) + "%", false);
     setText("rdActSingle", Math.round(state.coldPct) + "%", false);
-    setText("rdFlow", Math.round(state.flow) + " CFM", false);
-    setText("rdRoom", state.roomTemp.toFixed(1) + "\u00B0F", false);
+    setText("rdCfmHot", Math.round(state.hotFlow) + " CFM", false);
+    setText("rdCfmCold", Math.round(state.coldFlow) + " CFM", false);
+    setText("rdRoomT", "room " + state.roomTemp.toFixed(1) + "\u00B0F", false);
     setText("rdTSp", "set " + state.setpoint.toFixed(1) + "\u00B0F", false);
-    setText("rdRoomSp", "set " + state.setpoint.toFixed(1) + "\u00B0F", false);
     setText("rdTOut", state.tOut.toFixed(1) + " psi", !state.tHasAir);
 
     setText("rdMainHot", two && state.mainOn && L.mainHot ? "20 psi" : "0 psi", two && !(state.mainOn && L.mainHot));
@@ -274,7 +272,8 @@
     setText("roTC", (two ? state.coldT : state.tOut).toFixed(1) + " psi", two && state.coldT <= 0);
     setText("roDamper", Math.round(state.coldPct) + "%", false);
     setText("roHeat", Math.round(state.hotPct) + "%", false);
-    setText("roFlow", Math.round(state.flow) + " CFM", false);
+    setText("roCfmCold", Math.round(state.coldFlow) + " CFM", false);
+    setText("roCfmHot", Math.round(state.hotFlow) + " CFM", false);
     setText("roSupply", state.supplyTemp.toFixed(0) + "\u00B0F", false);
     setText("roRoom", state.roomTemp.toFixed(1) + "\u00B0F", false);
     setText("roAction", "cold " + (state.coldAction === "NC" ? "N.C." : "N.O.") + " / hot " + (state.hotAction === "NO" ? "N.O." : "N.C."), false);

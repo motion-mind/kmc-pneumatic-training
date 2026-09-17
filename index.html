@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=22">
+<link rel="stylesheet" href="css/style.css?v=23">
 </head>
 <body>
 <header class="topbar">
@@ -41,12 +41,6 @@
           </linearGradient>
         </defs>
 
-        <!-- zone + mixing plenum -->
-        <rect id="zoneRect" class="zone" x="40" y="240" width="160" height="180" rx="12"/>
-        <text class="eq dim" x="120" y="272" text-anchor="middle">ZONE</text>
-        <text id="rdRoom" class="lbl val big" x="120" y="336" text-anchor="middle">76.0&deg;F</text>
-        <text id="rdRoomSp" class="lbl" x="120" y="360" text-anchor="middle">set 72&deg;F</text>
-        <rect class="duct" x="200" y="90" width="45" height="340" rx="6"/>
 
         <!-- hot deck -->
         <rect class="duct" x="245" y="90" width="695" height="60" rx="6"/>
@@ -76,7 +70,8 @@
         <rect class="shaft" x="428" y="410" width="4" height="50"/>
         <text id="rdDamper" class="lbl val" x="482" y="408" text-anchor="start">45%</text>
 
-        <text id="rdFlow" class="lbl val" x="360" y="270" text-anchor="middle">540 CFM</text>
+        <text id="rdCfmHot" class="lbl val" x="268" y="140">0 CFM</text>
+        <text id="rdCfmCold" class="lbl val" x="268" y="430">0 CFM</text>
         <text class="lbl" x="862" y="80" text-anchor="end">from AHU</text>
 
         <!-- hot deck actuator -->
@@ -236,6 +231,7 @@
           <text class="eq dim" x="1090" y="280">remote &middot; 3&ndash;15 psi</text>
           <text id="rdTOut" class="lbl val" x="1090" y="308">9.0 psi</text>
           <text id="rdTSp" class="lbl" x="1090" y="326">set 72&deg;F</text>
+          <text id="rdRoomT" class="lbl val" x="1090" y="346">room 76.0&deg;F</text>
           <rect class="fitting" x="1098" y="232" width="12" height="14" rx="2"/>
           <rect class="fitting" x="1174" y="374" width="12" height="14" rx="2"/>
         </g>
@@ -316,7 +312,8 @@
           <div><dt>Cold damper</dt><dd id="roDamper">45%</dd></div>
           <div><dt>Hot damper</dt><dd id="roHeat">0%</dd></div>
           <div><dt>Damper action</dt><dd id="roAction">cold N.C. / hot N.O.</dd></div>
-          <div><dt>Airflow</dt><dd id="roFlow">540 CFM</dd></div>
+          <div><dt>Cold deck flow</dt><dd id="roCfmCold">0 CFM</dd></div>
+          <div><dt>Hot deck flow</dt><dd id="roCfmHot">0 CFM</dd></div>
           <div><dt>Supply air</dt><dd id="roSupply">55&deg;F</dd></div>
           <div><dt>Room</dt><dd id="roRoom">76.0&deg;F</dd></div>
         </dl>
@@ -341,6 +338,6 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=22"></script>
+<script src="js/sim.js?v=23"></script>
 </body>
 </html>
