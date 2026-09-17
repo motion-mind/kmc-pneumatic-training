@@ -137,14 +137,20 @@
     var tHasAir = state.mainOn && L.mainTstat;
     var tOut = tHasAir ? clamp(9 + (state.roomTemp - state.setpoint) * 1.2, 3, 15) : 0;
 
-    var coldPct, hotPct, coldT = 0, hotT = 0, failHeat = false;
+    var coldPct, hotPct, coldT = 0, hotT = 0, failHeat = false, outPsi = tOut;
 
     if (two) {
       var coldAir = state.mainOn && L.mainCold;
       var hotAir = state.mainOn && L.mainHot;
       var sig = L.tMain && tHasAir;
-      coldT = (coldAir && sig && L.tCold) ? tOut : 0;
-      hotT = (hotAir && sig && L.tHot) ? tOut : 0;
+      // A broken leg on the teed signal is an open bleed: the restrictor can no
+      // longer hold the shared line, so both legs collapse. One open leg leaves
+      // the other controller with only a small residual; two open = nothing.
+      var legsOpen = (L.tHot ? 0 : 1) + (L.tCold ? 0 : 1);
+      if (!sig || legsOpen >= 2) outPsi = 0;
+      else if (legsOpen === 1) outPsi = Math.round(tOut * 0.2 * 10) / 10;
+      coldT = (coldAir && sig && L.tCold) ? outPsi : 0;
+      hotT = (hotAir && sig && L.tHot) ? outPsi : 0;
 
       var fc = clamp((coldT - RESET_START) / RESET_SPAN, 0, 1);
       var coldSP = MIN + fc * (MAX - MIN);
@@ -173,7 +179,7 @@
     var target = state.setpoint + (hotFlow - coldFlow) / MAX * 20 + (1 - clamp(flow / MAX, 0, 1)) * 8;
     state.roomTemp = clamp(state.roomTemp + (target - state.roomTemp) * 1.3 * dt, 45, 98);
 
-    state.tOut = tOut;
+    state.tOut = outPsi;
     state.tHasAir = tHasAir;
     state.coldT = coldT;
     state.hotT = hotT;
@@ -282,10 +288,12 @@
         cls = "bad"; msg = "The cold deck controller lost main air (M). Its normally-closed actuator springs shut; the hot deck still modulates.";
       } else if (!hotAir) {
         cls = "bad"; msg = "The hot deck controller lost main air (M). Its normally-open actuator springs wide open \u2014 full heat.";
-      } else if (!L.tMain || !L.tCold) {
-        cls = "warn"; msg = "A thermostat signal leg is unplugged. The affected controller loses reset and its deck fails to its spring.";
-      } else if (!L.tHot) {
-        cls = "warn"; msg = "The hot controller's signal leg is unplugged \u2014 the hot deck holds LO STAT (maximum flow / heat).";
+      } else if (!L.tMain) {
+        cls = "bad"; msg = "The thermostat output line is unplugged \u2014 both controllers lose reset and the box fails to heat.";
+      } else if (!L.tHot && !L.tCold) {
+        cls = "bad"; msg = "Both teed signal legs are open \u2014 nothing reaches either controller, so the box fails to heat.";
+      } else if (!L.tHot || !L.tCold) {
+        cls = "warn"; msg = "A teed signal leg is broken. That open bleed collapses the shared line to ~" + state.tOut.toFixed(1) + " psi, so BOTH controllers lose most of their reset (the unbroken deck drops toward LO STAT).";
       } else if (!(L.coldH && L.coldL)) {
         cls = "bad"; msg = "The cold deck sensor is unplugged \u2014 that controller can't measure flow and drives its damper wide open.";
       } else if (!(L.hotH && L.hotL)) {
