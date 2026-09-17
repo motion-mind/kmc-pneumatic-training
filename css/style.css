@@ -317,3 +317,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .coil-serp { fill: none; stroke: var(--cyan); stroke-width: 2.5; stroke-linejoin: round; }
 .valve-body { fill: #c8b48c; stroke: #6f6450; stroke-width: 1.5; }
 .valve-stem { stroke: #6f6450; stroke-width: 3; stroke-linecap: round; }
+
+.dial-hit { fill: transparent; }
+#tstatDial { cursor: grab; touch-action: none; }
+#tstatDial:active { cursor: grabbing; }
+#tstatDial:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 50%; }

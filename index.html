@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=21">
+<link rel="stylesheet" href="css/style.css?v=22">
 </head>
 <body>
 <header class="topbar">
@@ -224,10 +224,13 @@
           <rect class="tstat-recess" x="1030" y="250" width="150" height="120" rx="11"/>
           <line class="tstat-louvre" x1="1040" y1="355" x2="1170" y2="355"/>
           <line class="tstat-louvre" x1="1040" y1="362" x2="1170" y2="362"/>
-          <circle class="tstat-dial" cx="1058" cy="292" r="24"/>
-          <g id="tstatScale"></g>
-          <line id="tNeedle" class="needle" x1="1058" y1="292" x2="1058" y2="270"/>
-          <circle class="dial-hub" cx="1058" cy="292" r="3.5"/>
+          <g id="tstatDial" class="clickable" tabindex="0" role="slider" aria-label="Thermostat setpoint" aria-valuemin="60" aria-valuemax="80">
+            <circle class="tstat-dial" cx="1058" cy="292" r="24"/>
+            <g id="tstatScale"></g>
+            <line id="tNeedle" class="needle" x1="1058" y1="292" x2="1058" y2="270"/>
+            <circle class="dial-hub" cx="1058" cy="292" r="3.5"/>
+            <circle class="dial-hit" cx="1058" cy="292" r="34"/>
+          </g>
           <polygon class="tstat-idx" points="1058,260 1053,252 1063,252"/>
           <text class="eq" x="1090" y="266">THERMOSTAT</text>
           <text class="eq dim" x="1090" y="280">remote &middot; 3&ndash;15 psi</text>
@@ -277,8 +280,9 @@
       <section class="panel">
         <h2>Controls</h2>
         <label class="ctl">
-          <span>Room setpoint <output id="spOut">72&deg;F</output></span>
+          <span>Thermostat setpoint <output id="spOut">72&deg;F</output></span>
           <input id="spSl" type="range" min="60" max="80" step="0.5" value="72">
+          <p class="hint">Drag the dial on the thermostat, or use this slider.</p>
         </label>
         <div class="ctl" id="dualActCtl">
           <span>Deck dampers</span>
@@ -337,6 +341,6 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=21"></script>
+<script src="js/sim.js?v=22"></script>
 </body>
 </html>

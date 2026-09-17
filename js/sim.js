@@ -384,6 +384,33 @@
       hc.addEventListener("keydown", function (e) { if (e.key === " " || e.key === "Enter") { e.preventDefault(); setHotAction(state.hotAction === "NO" ? "NC" : "NO"); } });
     }
 
+    var dial = document.getElementById("tstatDial");
+    if (dial) {
+      var dragging = false;
+      function setFromPointer(evt) {
+        var box = document.getElementById("sim").getBoundingClientRect();
+        var x = (evt.clientX - box.left) / box.width * 1250;
+        var y = (evt.clientY - box.top) / box.height * 700;
+        var ang = clamp(Math.atan2(x - 1058, -(y - 292)) * 180 / Math.PI, -60, 60);
+        state.setpoint = Math.round((60 + (ang + 60) / 120 * 20) * 2) / 2;
+        syncControls();
+      }
+      dial.addEventListener("pointerdown", function (e) {
+        dragging = true;
+        if (dial.setPointerCapture) { try { dial.setPointerCapture(e.pointerId); } catch (err) {} }
+        setFromPointer(e);
+      });
+      dial.addEventListener("pointermove", function (e) { if (dragging) setFromPointer(e); });
+      dial.addEventListener("pointerup", function () { dragging = false; });
+      dial.addEventListener("pointercancel", function () { dragging = false; });
+      dial.addEventListener("keydown", function (e) {
+        var d = 0;
+        if (e.key === "ArrowUp" || e.key === "ArrowRight") d = 0.5;
+        else if (e.key === "ArrowDown" || e.key === "ArrowLeft") d = -0.5;
+        if (d) { state.setpoint = clamp(state.setpoint + d, 60, 80); syncControls(); e.preventDefault(); }
+      });
+    }
+
     var comp = document.getElementById("compressor");
     comp.addEventListener("click", toggleMain);
     comp.addEventListener("keydown", function (e) { if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggleMain(); } });
