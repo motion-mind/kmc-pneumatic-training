@@ -112,7 +112,7 @@ a { color: var(--accent); }
 
 
 
-.intro { flex: 0 0 auto; font-size: 16px; color: var(--muted); margin: 4px 0 18px; max-width: 88ch; }
+.intro { flex: 0 0 auto; font-size: 16px; color: var(--muted); margin: 4px 0 14px; width: 100%; max-width: none; }
 .intro b { color: var(--ink); }
 
 main {
