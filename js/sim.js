@@ -159,7 +159,7 @@
 
       var fh = clamp((RESET_START - hotT) / RESET_SPAN, 0, 1);
       var hotSP = fh * MAX;
-      hotPct = hotAir ? clamp(hotSP / MAX * 100, 0, 100) : 100;
+      hotPct = hotAir ? clamp(hotSP / MAX * 100, 0, 100) : (state.hotAction === "NO" ? 100 : 0);
       if (hotAir && !(L.hotH && L.hotL)) hotPct = 100;
 
       failHeat = !coldAir && !hotAir;
@@ -277,6 +277,7 @@
     setText("roFlow", Math.round(state.flow) + " CFM", false);
     setText("roSupply", state.supplyTemp.toFixed(0) + "\u00B0F", false);
     setText("roRoom", state.roomTemp.toFixed(1) + "\u00B0F", false);
+    setText("roAction", "cold " + (state.coldAction === "NC" ? "N.C." : "N.O.") + " / hot " + (state.hotAction === "NO" ? "N.O." : "N.C."), false);
 
     paintStatus();
   }
@@ -292,9 +293,9 @@
       if (!coldAir && !hotAir) {
         cls = "bad"; msg = "Both controllers lost main air (M). The box fails to heat: cold deck closed, hot deck wide open.";
       } else if (!coldAir) {
-        cls = "bad"; msg = "The cold deck controller lost main air (M). Its normally-closed actuator springs shut; the hot deck still modulates.";
+        cls = "bad"; msg = "The cold deck controller lost main air (M). Its " + (state.coldAction === "NC" ? "normally-closed" : "normally-open") + " actuator springs to its fail position; the hot deck still modulates.";
       } else if (!hotAir) {
-        cls = "bad"; msg = "The hot deck controller lost main air (M). Its normally-open actuator springs wide open \u2014 full heat.";
+        cls = "bad"; msg = "The hot deck controller lost main air (M). Its " + (state.hotAction === "NO" ? "normally-open" : "normally-closed") + " actuator springs to its fail position.";
       } else if (!L.tMain) {
         cls = "bad"; msg = "The thermostat output line is unplugged \u2014 both controllers lose reset and the box fails to heat.";
       } else if (!L.tHot && !L.tCold) {
