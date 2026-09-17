@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=13">
+<link rel="stylesheet" href="css/style.css?v=14">
 </head>
 <body>
 <header class="topbar">
@@ -52,7 +52,7 @@
         <rect class="duct" x="245" y="90" width="695" height="60" rx="6"/>
         <text class="eq dim" x="620" y="108" text-anchor="middle">HOT DECK</text>
         <polygon class="air-arrow" points="940,120 966,106 966,134"/>
-        <line id="flowLineHot" class="airflow" x1="940" y1="120" x2="249" y2="120"/>
+        <line id="flowLineHot" class="airflow airflow-hot" x1="940" y1="120" x2="249" y2="120"/>
         <line class="sensor-bar" x1="560" y1="120" x2="620" y2="120"/>
         <circle class="sensor-tap" cx="570" cy="150" r="4.5"/>
         <circle class="sensor-tap" cx="607" cy="150" r="4.5"/>
@@ -324,6 +324,6 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=13"></script>
+<script src="js/sim.js?v=14"></script>
 </body>
 </html>

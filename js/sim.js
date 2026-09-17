@@ -193,7 +193,7 @@
     document.getElementById("blade").setAttribute("transform",
       "rotate(" + (90 * (1 - state.coldPct / 100)).toFixed(1) + " 430 410)");
     document.getElementById("hotBlade").setAttribute("transform",
-      "rotate(" + (90 * (state.hotPct / 100)).toFixed(1) + " 430 120)");
+      "rotate(" + (90 * (1 - state.hotPct / 100)).toFixed(1) + " 430 120)");
 
     document.getElementById("hotActuator").style.display = two ? "block" : "none";
     document.getElementById("coldActuator").style.display = "block";
