@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=17">
+<link rel="stylesheet" href="css/style.css?v=18">
 </head>
 <body>
 <header class="topbar">
@@ -99,6 +99,14 @@
           <text id="actColdL1" class="eq" x="400" y="484" text-anchor="middle">COLD DECK</text>
           <text id="actColdL2" class="eq" x="400" y="500" text-anchor="middle">ACTUATOR</text>
           <text id="rdActCold" class="lbl val" x="400" y="534" text-anchor="middle">0%</text>
+        </g>
+
+        <!-- single-shaft (opposed) actuator: one actuator, mounted perpendicular to the cold deck unit -->
+        <g id="singleActuator">
+          <rect class="unit" x="400" y="450" width="60" height="120" rx="8"/>
+          <text class="eq dim" x="430" y="502" text-anchor="middle">LINKED</text>
+          <text class="eq dim" x="430" y="518" text-anchor="middle">ACTUATOR</text>
+          <text id="rdActSingle" class="lbl val" x="430" y="588" text-anchor="middle">50%</text>
         </g>
 
         <!-- cold deck controller -->
@@ -328,6 +336,6 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=17"></script>
+<script src="js/sim.js?v=18"></script>
 </body>
 </html>

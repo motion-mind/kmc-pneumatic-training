@@ -214,7 +214,8 @@
       "rotate(" + (90 * (1 - state.hotPct / 100)).toFixed(1) + " 430 120)");
 
     document.getElementById("hotActuator").style.display = two ? "block" : "none";
-    document.getElementById("coldActuator").style.display = "block";
+    document.getElementById("coldActuator").style.display = two ? "block" : "none";
+    document.getElementById("singleActuator").style.display = two ? "none" : "block";
     document.getElementById("opposedNote").style.display = two ? "none" : "block";
     document.getElementById("opposedLink").style.display = two ? "none" : "block";
 
@@ -229,8 +230,6 @@
     document.getElementById("ctrlReadouts").style.display = two ? "block" : "none";
     document.getElementById("sensorHot").style.display = two ? "block" : "none";
     document.getElementById("sensorCold").style.display = two ? "block" : "none";
-    document.getElementById("actColdL1").textContent = two ? "COLD DECK" : "LINKED";
-    document.getElementById("actColdL2").textContent = two ? "ACTUATOR" : "ACTUATOR";
 
     var needAng = -60 + (state.setpoint - 60) / 20 * 120;
     document.getElementById("tNeedle").setAttribute("transform", "rotate(" + needAng.toFixed(1) + " 1058 292)");
@@ -250,7 +249,8 @@
     setText("rdDamper", Math.round(state.coldPct) + "%", false);
     setText("rdHot", Math.round(state.hotPct) + "%", false);
     setText("rdActCold", Math.round(state.coldPct) + "%", false);
-    setText("rdActHot", two ? Math.round(state.hotPct) + "%" : "linked", false);
+    setText("rdActHot", Math.round(state.hotPct) + "%", false);
+    setText("rdActSingle", Math.round(state.coldPct) + "%", false);
     setText("rdFlow", Math.round(state.flow) + " CFM", false);
     setText("rdRoom", state.roomTemp.toFixed(1) + "\u00B0F", false);
     setText("rdTSp", "set " + state.setpoint.toFixed(1) + "\u00B0F", false);
