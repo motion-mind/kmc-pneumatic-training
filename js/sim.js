@@ -5,6 +5,8 @@
   var tubeLayer = document.getElementById("tubeLayer");
 
   var MAX = 200, MIN = 50, RESET_START = 8, RESET_SPAN = 5;
+  // Actuator response (first-order). Slowed 50% from the previous 0.4 s baseline.
+  var ACT_TAU = 0.8;
   var DEFAULTS = { mainOn: true, setpoint: 72, roomTemp: 78, twoControllers: true, coldAction: "NC", hotAction: "NO" };
 
   var state = {
@@ -43,6 +45,11 @@
   var els = {};
 
   function clamp(v, a, b) { return Math.min(b, Math.max(a, v)); }
+
+  function actLag(cur, tgt, dt) {
+    var v = cur + (tgt - cur) * (1 - Math.exp(-dt / ACT_TAU));
+    return Math.abs(tgt - v) < 1 ? tgt : v;
+  }
   function polar(cx, cy, r, deg) { var a = deg * Math.PI / 180; return [cx + r * Math.sin(a), cy - r * Math.cos(a)]; }
   function seg(cls, x1, y1, x2, y2) {
     var l = document.createElementNS(NS, "line");
@@ -154,23 +161,25 @@
 
       var fc = clamp((coldT - RESET_START) / RESET_SPAN, 0, 1);
       var coldSP = MIN + fc * (MAX - MIN);
-      coldPct = coldAir ? clamp(coldSP / MAX * 100, 0, 100) : (state.coldAction === "NO" ? 100 : 0);
-      if (coldAir && !(L.coldH && L.coldL)) coldPct = 100;
+      var coldTgt = coldAir ? clamp(coldSP / MAX * 100, 0, 100) : (state.coldAction === "NO" ? 100 : 0);
+      if (coldAir && !(L.coldH && L.coldL)) coldTgt = 100;
 
       var fh = clamp((RESET_START - hotT) / RESET_SPAN, 0, 1);
       var hotSP = fh * MAX;
-      hotPct = hotAir ? clamp(hotSP / MAX * 100, 0, 100) : (state.hotAction === "NO" ? 100 : 0);
-      if (hotAir && !(L.hotH && L.hotL)) hotPct = 100;
+      var hotTgt = hotAir ? clamp(hotSP / MAX * 100, 0, 100) : (state.hotAction === "NO" ? 100 : 0);
+      if (hotAir && !(L.hotH && L.hotL)) hotTgt = 100;
+
+      // the actuators stroke to the commanded position at a finite rate
+      coldPct = actLag(state.coldPct, coldTgt, dt);
+      hotPct = actLag(state.hotPct, hotTgt, dt);
 
       failHeat = !coldAir && !hotAir;
     } else {
       var actAir = state.mainOn && L.mainTstat && L.tDirect;
-      if (actAir) {
-        coldPct = clamp((tOut - 7) / 5, 0, 1) * 100;
-        hotPct = 100 - coldPct;
-      } else {
-        coldPct = 0; hotPct = 100; failHeat = true;
-      }
+      var coldTgt2 = actAir ? clamp((tOut - 7) / 5, 0, 1) * 100 : 0;
+      coldPct = actLag(state.coldPct, coldTgt2, dt);
+      hotPct = 100 - coldPct;
+      if (!actAir) failHeat = true;
     }
 
     var coldFlow = coldPct / 100 * MAX, hotFlow = hotPct / 100 * MAX;
