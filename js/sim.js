@@ -208,10 +208,14 @@
     var L = state.lines, two = state.twoControllers;
     var mainPSI = state.mainOn ? "20 psi" : "0 psi";
 
+    // Single shaft: the two blades are mounted 90 deg apart, so the hot deck
+    // blade tracks the cold deck blade + 90 deg (they stay perpendicular).
+    var coldAng = 90 * (1 - state.coldPct / 100);
+    var hotAng = two ? (90 * (1 - state.hotPct / 100)) : (coldAng + 90);
     document.getElementById("blade").setAttribute("transform",
-      "rotate(" + (90 * (1 - state.coldPct / 100)).toFixed(1) + " 430 410)");
+      "rotate(" + coldAng.toFixed(1) + " 430 410)");
     document.getElementById("hotBlade").setAttribute("transform",
-      "rotate(" + (90 * (1 - state.hotPct / 100)).toFixed(1) + " 430 120)");
+      "rotate(" + hotAng.toFixed(1) + " 430 120)");
 
     document.getElementById("hotActuator").style.display = two ? "block" : "none";
     document.getElementById("coldActuator").style.display = two ? "block" : "none";
