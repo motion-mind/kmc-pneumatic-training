@@ -311,3 +311,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .tc-note-mark { fill: #6d5f42; }
 .link { stroke: var(--muted); stroke-width: 2.5; stroke-dasharray: 5 4; }
 #opposedNote, #opposedLink { display: none; }
+
+.coil-serp { fill: none; stroke: var(--cyan); stroke-width: 2.5; stroke-linejoin: round; }
+.valve-body { fill: #c8b48c; stroke: #6f6450; stroke-width: 1.5; }
+.valve-stem { stroke: #6f6450; stroke-width: 3; stroke-linecap: round; }

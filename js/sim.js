@@ -38,8 +38,8 @@
     { id: "bLine", points: [[556, 372], [450, 372]], cls: "wire-branch", name: "branch to actuator" },
     { id: "hLine", points: [[585, 250], [585, 332]], cls: "wire-sensor", name: "sensor H line" },
     { id: "lLine", points: [[622, 250], [622, 320]], cls: "wire-sensor", name: "sensor L line" },
-    { id: "reheatLine", points: [[535, 420], [280, 420], [280, 346]], cls: "wire-heat", name: "reheat branch", mode: "reheat" },
-    { id: "hotLine", points: [[725, 340], [786, 340], [786, 130], [465, 130]], cls: "wire-heat", name: "hot deck branch", mode: "dual" }
+    { id: "reheatLine", points: [[535, 420], [288, 420], [288, 300]], cls: "wire-heat", name: "reheat branch", mode: "reheat" },
+    { id: "hotLine", points: [[725, 340], [786, 340], [786, 56], [450, 56]], cls: "wire-heat", name: "hot deck branch", mode: "dual" }
   ];
 
   var els = {};
@@ -257,9 +257,7 @@
     document.getElementById("blade").setAttribute("transform",
       "rotate(" + (90 * (1 - state.coldPct / 100)).toFixed(1) + " 390 210)");
     document.getElementById("hotBlade").setAttribute("transform",
-      "rotate(" + (90 * (state.hotPct / 100)).toFixed(1) + " 325 130)");
-    document.getElementById("reheatFill").setAttribute("width",
-      (60 * state.reheatPct / 100).toFixed(1));
+      "rotate(" + (90 * (state.hotPct / 100)).toFixed(1) + " 390 129)");
 
     document.getElementById("reheatGroup").style.display = dual ? "none" : "";
     document.getElementById("dualGroup").style.display = dual ? "" : "none";
@@ -284,6 +282,14 @@
     var fr = clamp(state.flow / MAX, 0, 1);
     fl.style.animationDuration = (1.6 - fr * 1.45).toFixed(2) + "s";
     fl.style.opacity = (0.22 + fr * 0.7).toFixed(2);
+
+    setText("ductLabel", dual ? "COLD DECK" : "SUPPLY DUCT", false);
+    var flh = document.getElementById("flowLineHot");
+    if (flh) {
+      var hr = clamp(state.hotPct / 100, 0, 1);
+      flh.style.animationDuration = (1.6 - hr * 1.45).toFixed(2) + "s";
+      flh.style.opacity = (0.16 + hr * 0.72).toFixed(2);
+    }
 
     document.getElementById("compressor").style.opacity = state.mainOn ? "1" : "0.45";
     document.getElementById("mainHeader").style.opacity = state.mainOn ? "1" : "0.45";

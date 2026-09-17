@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — interactive</title>
 <meta name="description" content="Interactive pneumatic VAV training: plug and unplug the thermostat, KMC box controller, actuator and airflow sensor lines and watch the system respond.">
-<link rel="stylesheet" href="css/style.css?v=9">
+<link rel="stylesheet" href="css/style.css?v=10">
 </head>
 <body>
 <header class="topbar">
@@ -41,11 +41,11 @@
         </defs>
 
         <rect class="duct" x="200" y="170" width="580" height="80" rx="6"/>
-        <text class="eq dim" x="500" y="196" text-anchor="middle">SUPPLY DUCT</text>
+        <text id="ductLabel" class="eq dim" x="500" y="196" text-anchor="middle">SUPPLY DUCT</text>
         <polygon class="air-arrow" points="780,210 806,196 806,224"/>
-        <text class="lbl" x="770" y="150" text-anchor="end">from AHU</text>
+        <text class="lbl" x="770" y="74" text-anchor="end">from AHU</text>
         <line id="flowLine" class="airflow" x1="780" y1="210" x2="202" y2="210"/>
-        <text id="rdFlow" class="lbl val" x="250" y="144" text-anchor="middle">540 CFM</text>
+        <text id="rdFlow" class="lbl val" x="470" y="240" text-anchor="middle">540 CFM</text>
 
         <line class="sensor-bar" x1="574" y1="210" x2="634" y2="210"/>
         <circle class="sensor-tap" cx="585" cy="250" r="4.5"/>
@@ -97,44 +97,43 @@
           <rect class="fitting" x="904" y="450" width="12" height="14" rx="2"/>
         </g>
 
-        <!-- reheat coil (single duct + reheat) -->
+        <!-- reheat coil + valve (single duct + reheat) -->
         <g id="reheatGroup">
           <rect class="coil" x="266" y="170" width="74" height="80" rx="4"/>
-          <line class="coil-fin" x1="278" y1="176" x2="278" y2="244"/>
-          <line class="coil-fin" x1="290" y1="176" x2="290" y2="244"/>
-          <line class="coil-fin" x1="302" y1="176" x2="302" y2="244"/>
-          <line class="coil-fin" x1="314" y1="176" x2="314" y2="244"/>
-          <line class="coil-fin" x1="326" y1="176" x2="326" y2="244"/>
-          <text class="eq dim" x="303" y="164" text-anchor="middle">REHEAT COIL</text>
-          <line class="pipe" x1="288" y1="250" x2="288" y2="276"/>
-          <line class="pipe" x1="320" y1="250" x2="320" y2="276"/>
-          <rect class="unit" x="215" y="276" width="110" height="70" rx="8"/>
-          <text class="eq" x="270" y="300" text-anchor="middle">REHEAT</text>
-          <text class="eq" x="270" y="316" text-anchor="middle">VALVE</text>
-          <rect class="valvebar" x="240" y="326" width="60" height="8" rx="2"/>
-          <rect id="reheatFill" class="valvefill" x="240" y="326" width="0" height="8" rx="2"/>
-          <text id="rdReheat" class="lbl val" x="270" y="362" text-anchor="middle">0%</text>
+          <path class="coil-serp" d="M278 182 H328 V196 H278 V210 H328 V224 H278 V238"/>
+          <text class="eq dim" x="303" y="164" text-anchor="middle">HEATING COIL</text>
+          <line class="pipe" x1="285" y1="250" x2="285" y2="330"/>
+          <line class="pipe" x1="321" y1="250" x2="321" y2="330"/>
+          <line class="pipe" x1="236" y1="330" x2="340" y2="330"/>
+          <polygon class="valve-body" points="276,321 300,339 276,339 300,321"/>
+          <line class="valve-stem" x1="288" y1="321" x2="288" y2="300"/>
+          <rect class="unit" x="250" y="262" width="76" height="38" rx="8"/>
+          <text class="eq" x="288" y="278" text-anchor="middle">REHEAT</text>
+          <text class="eq" x="288" y="292" text-anchor="middle">ACTUATOR</text>
+          <text id="rdReheat" class="lbl val" x="260" y="358" text-anchor="middle">0%</text>
         </g>
 
         <!-- hot deck (dual duct) -->
         <g id="dualGroup">
-          <rect class="duct" x="300" y="86" width="50" height="84" rx="4"/>
-          <polygon class="air-arrow" points="325,104 316,88 334,88"/>
-          <text class="eq dim" x="325" y="76" text-anchor="middle">HOT DECK</text>
-          <line id="hotBlade" class="blade" x1="305" y1="130" x2="345" y2="130"/>
-          <rect class="shaft" x="345" y="128" width="20" height="4"/>
-          <line id="opposedLink" class="link" x1="390" y1="210" x2="325" y2="130"/>
+          <rect class="duct" x="240" y="100" width="540" height="58" rx="6"/>
+          <rect class="duct" x="232" y="156" width="16" height="16"/>
+          <polygon class="air-arrow" points="780,129 806,115 806,143"/>
+          <line id="flowLineHot" class="airflow" x1="780" y1="129" x2="244" y2="129"/>
+          <text class="eq dim" x="470" y="114" text-anchor="middle">HOT DECK</text>
+          <line id="hotBlade" class="blade" x1="361" y1="129" x2="419" y2="129"/>
+          <rect class="shaft" x="388" y="86" width="4" height="43"/>
+          <line id="opposedLink" class="link" x1="390" y1="170" x2="390" y2="129"/>
           <g id="hotActuator">
-            <rect class="unit" x="365" y="98" width="100" height="66" rx="8"/>
-            <text class="eq" x="415" y="122" text-anchor="middle">HOT DECK</text>
-            <text class="eq" x="415" y="138" text-anchor="middle">ACTUATOR</text>
+            <rect class="unit" x="330" y="26" width="120" height="60" rx="8"/>
+            <text class="eq" x="390" y="50" text-anchor="middle">HOT DECK</text>
+            <text class="eq" x="390" y="66" text-anchor="middle">ACTUATOR</text>
           </g>
           <g id="opposedNote">
-            <rect class="unit" x="365" y="98" width="100" height="66" rx="8"/>
-            <text class="eq" x="415" y="122" text-anchor="middle">LINKED 90&deg;</text>
-            <text class="eq" x="415" y="138" text-anchor="middle">OPPOSED</text>
+            <rect class="unit" x="330" y="26" width="120" height="60" rx="8"/>
+            <text class="eq" x="390" y="50" text-anchor="middle">LINKED 90&deg;</text>
+            <text class="eq" x="390" y="66" text-anchor="middle">OPPOSED</text>
           </g>
-          <text id="rdHot" class="lbl val" x="415" y="158" text-anchor="middle">0%</text>
+          <text id="rdHot" class="lbl val" x="466" y="58" text-anchor="start">0%</text>
         </g>
 
         <!-- KMC CSC-3000 series reset volume controller (front face) -->
@@ -288,6 +287,6 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=9"></script>
+<script src="js/sim.js?v=10"></script>
 </body>
 </html>
