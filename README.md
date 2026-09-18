@@ -62,9 +62,10 @@ manufacturer's dimensioned drawing:
   handles updates just that measurement.
 - `ports[]` — `{ id, x, y, d }`; push-on barbs on the CSC-3000 are ~0.26 in
   across, not big bosses.
-- `dials[]` — the large **adjustment screws** (`loStat`, `hiStat`,
-  `resetSpan`) plus the `damper` selector wheel. These are the big circles on
-  the face; they are *not* ports.
+- `dials[]` — the large **adjustment screws**, one per panel legend row and in
+  the same order: `resetStart`, `loStat`, `hiStat`, `resetSpan` — plus the
+  `damper` selector wheel. These are the big circles on the face; they are
+  *not* ports. `hiStat` is 72% of `loStat`'s diameter, as on the real face.
 - `panel` — the etched `RESET START / LO STAT ΔP / HI STAT ΔP / RESET SPAN`
   plate and its blank label.
 - `caps[]` — `G`, the larger gauge-tap cap.

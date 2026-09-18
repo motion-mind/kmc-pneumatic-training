@@ -30,28 +30,31 @@
     // => 1.4637" chamfer, 4.407" wide, 3.777" tall.
     body: { top: 1.48, diag: 2.07, side: 0.85 },
     ports: [
-      { id: "H", x: 1.05, y: 0.70, d: 0.30 },
-      { id: "L", x: 1.62, y: 0.70, d: 0.30 },
-      { id: "T", x: 3.28, y: 0.70, d: 0.30 },
-      { id: "B", x: 0.40, y: 1.70, d: 0.30 },
-      { id: "M", x: 0.40, y: 2.44, d: 0.30 }
+      { id: "H", x: 1.00, y: 0.70, d: 0.30 },
+      { id: "L", x: 1.50, y: 0.70, d: 0.30 },
+      { id: "T", x: 3.30, y: 0.70, d: 0.30 },
+      { id: "B", x: 0.34, y: 1.72, d: 0.30 },
+      { id: "M", x: 0.34, y: 2.40, d: 0.30 }
     ],
-    caps: [{ id: "G", x: 1.10, y: 3.20, d: 0.55 }],
+    caps: [{ id: "G", x: 1.05, y: 3.20, d: 0.55 }],
+    // One adjuster per panel legend row, in the same top-to-bottom order.
+    // hiStat is 72% of loStat's diameter, as on the real face.
     dials: [
-      { id: "damper", x: 1.10, y: 1.92, d: 1.00, kind: "damper" },
-      { id: "loStat", x: 2.42, y: 0.95, d: 1.00, kind: "arrow" },
-      { id: "hiStat", x: 2.42, y: 2.06, d: 1.00, kind: "arrow" },
-      { id: "resetSpan", x: 2.42, y: 3.17, d: 1.00, kind: "screw" }
+      { id: "damper", x: 1.15, y: 1.95, d: 1.00, kind: "damper" },
+      { id: "resetStart", x: 2.24, y: 0.58, d: 0.90, kind: "arrow" },
+      { id: "loStat", x: 2.24, y: 1.58, d: 0.90, kind: "arrow" },
+      { id: "hiStat", x: 2.24, y: 2.44, d: 0.648, kind: "arrow" },
+      { id: "resetSpan", x: 2.24, y: 3.28, d: 0.90, kind: "screw" }
     ],
     panel: {
-      x: 2.95, y: 1.28, w: 1.05, h: 1.42,
+      x: 2.76, y: 1.28, w: 1.20, h: 1.38,
       lines: [
-        { t: "RESET START", dy: 0.26 },
-        { t: "LO STAT \u0394P", dy: 0.62 },
-        { t: "HI STAT \u0394P", dy: 0.98 },
-        { t: "RESET SPAN", dy: 1.36 }
+        { t: "RESET START", dy: 0.20 },
+        { t: "LO STAT \u0394P", dy: 0.49 },
+        { t: "HI STAT \u0394P", dy: 0.78 },
+        { t: "RESET SPAN", dy: 1.07 }
       ],
-      sticker: { dx: 0.11, dy: 1.42, w: 0.86, h: 0.16 }
+      sticker: { dx: 0.08, dy: 1.13, w: 1.04, h: 0.15 }
     }
   };
 
