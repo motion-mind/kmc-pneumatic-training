@@ -63,34 +63,29 @@
   // Two diaphragm housings plus six mounting bolts.
   var csc2000 = {
     name: "CSC-2000",
-    // 3-1/4" (83) x 3-9/16" (91) mounting plate, per KMC DS_CSC-2000.
-    size: { w: 3.25, h: 3.5625 },
-    plate: { r: 0.16 },
-    // Lobed housing: a large primary diaphragm plus a smaller secondary one,
-    // with four mount lobes on the diagonals.  Same read as the drawing's
-    // scalloped outline.
+    // Regular hexagon: 1.72" sides, 3.0" tall, 3.4" across the corners, so the
+    // flats sit at y = 0 / 3.0 and the left/right vertices at x = 0 / 3.4.
+    size: { w: 3.4, h: 3.26 },
+    poly: [[0, 1.5], [0.84, 0], [2.56, 0], [3.4, 1.5], [2.56, 3.0], [0.84, 3.0]],
     circles: [
-      { x: 1.62, y: 1.42, d: 1.98 },
-      { x: 1.62, y: 2.92, d: 1.42 },
-      { x: 0.92, y: 0.52, d: 0.76 },
-      { x: 2.32, y: 0.52, d: 0.76 },
-      { x: 0.92, y: 2.94, d: 0.76 },
-      { x: 2.32, y: 2.94, d: 0.76 }
+      { x: 1.7, y: 1.5, d: 2.57 },    // main diaphragm, centred in the hexagon
+      { x: 1.7, y: 2.57, d: 1.37 },   // secondary housing
+      { x: 1.7, y: 2.42, d: 1.00 }    // inner boss carrying T
     ],
-    // mount holes: four lobe holes plus the two mid-side tab holes
+    // 6 x 0.25" holes, one per hexagon corner
     bolts: [
-      { id: "h1", x: 0.92, y: 0.52 }, { id: "h2", x: 2.32, y: 0.52 },
-      { id: "h3", x: 0.12, y: 1.72 }, { id: "h4", x: 3.13, y: 1.72 },
-      { id: "h5", x: 0.92, y: 2.94 }, { id: "h6", x: 2.32, y: 2.94 }
+      { id: "h1", x: 0.84, y: 0 }, { id: "h2", x: 2.56, y: 0 },
+      { id: "h3", x: 3.4, y: 1.5 }, { id: "h4", x: 2.56, y: 3.0 },
+      { id: "h5", x: 0.84, y: 3.0 }, { id: "h6", x: 0, y: 1.5 }
     ],
-    boltD: 0.30,
-    // 1/4" push-on fittings, same as the CSC-3000's barbed ports.
+    boltD: 0.25,
+    // all ports 0.36"
     ports: [
-      { id: "X", x: 1.62, y: 0.44, d: 0.22, label: { dx: -0.24, dy: 0.04, anchor: "end" } },
-      { id: "Y", x: 1.62, y: 0.94, d: 0.22, label: { dx: 0, dy: 0.34, anchor: "middle" } },
-      { id: "M", x: 1.35, y: 1.72, d: 0.22, label: { dx: -0.24, dy: 0.04, anchor: "end" } },
-      { id: "B", x: 1.90, y: 1.72, d: 0.22, label: { dx: 0.24, dy: 0.04, anchor: "start" } },
-      { id: "T", x: 1.62, y: 2.62, d: 0.22, label: { dx: 0, dy: -0.30, anchor: "middle" } }
+      { id: "X", x: 1.7, y: 0, d: 0.36, label: { dx: -0.30, dy: 0.06, anchor: "end" } },
+      { id: "Y", x: 1.7, y: 0.65, d: 0.36, label: { dx: 0, dy: 0.42, anchor: "middle" } },
+      { id: "M", x: 1.48, y: 1.5, d: 0.36, label: { dx: -0.28, dy: 0.06, anchor: "end" } },
+      { id: "B", x: 1.92, y: 1.5, d: 0.36, label: { dx: 0.28, dy: 0.06, anchor: "start" } },
+      { id: "T", x: 1.7, y: 2.42, d: 0.36, label: { dx: 0, dy: -0.34, anchor: "middle" } }
     ]
   };
 
@@ -319,6 +314,11 @@
       }));
     }
     if (s.body) g.appendChild(el("polygon", "tc-body", { points: bodyPoints(s, ppu) }));
+    if (s.poly) {
+      g.appendChild(el("polygon", "tc-body", {
+        points: s.poly.map(function (v) { return f1(v[0] * ppu) + "," + f1(v[1] * ppu); }).join(" ")
+      }));
+    }
     items(model, "circles").forEach(function (c) {
       g.appendChild(el("circle", "tc-body", {
         cx: f1(c.x * ppu), cy: f1(c.y * ppu), r: f1(c.d / 2 * ppu)
