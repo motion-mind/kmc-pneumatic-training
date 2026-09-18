@@ -68,7 +68,6 @@
 
   function buildTubeSpecs(model) {
     var h = ports(model, "hot"), c = ports(model, "cold");
-    var main = model === "csc2000" ? 285 : 285;
     var tHotY = model === "csc2000" ? 295 : 175;
     var tColdY = model === "csc2000" ? 589 : 475;
     return [
@@ -80,16 +79,16 @@
         cls: "wire-sensor", name: "cold deck sensor H", mode: "ctrl" },
       { id: "coldL", points: probeRoute(PROBE.cold.lo, c.lo, 460),
         cls: "wire-sensor", name: "cold deck sensor L", mode: "ctrl" },
-      { id: "hotB", points: [[h.branch.x, h.branch.y], [h.branch.x, h.branch.y + 13],
-        [ACTUATOR_X, h.branch.y + 13], [ACTUATOR_X, 237]],
+      { id: "hotB", points: [[h.branch.x, h.branch.y], [ACTUATOR_X, h.branch.y],
+        [ACTUATOR_X, 237]],
         cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
-      { id: "coldB", points: [[c.branch.x, c.branch.y], [c.branch.x, c.branch.y + 13],
-        [ACTUATOR_X, c.branch.y + 13], [ACTUATOR_X, 527]],
+      { id: "coldB", points: [[c.branch.x, c.branch.y], [ACTUATOR_X, c.branch.y],
+        [ACTUATOR_X, 527]],
         cls: "wire-branch", name: "cold deck branch", mode: "ctrl" },
-      { id: "mainHot", points: [[TRUNK_X, main], [h.main.x, main],
-        [h.main.x, h.main.y]], cls: "wire-main", name: "main air to hot controller", mode: "ctrl" },
-      { id: "mainCold", points: [[TRUNK_X, main + 290], [c.main.x, main + 290],
-        [c.main.x, c.main.y]], cls: "wire-main", name: "main air to cold controller", mode: "ctrl" },
+      { id: "mainHot", points: [[TRUNK_X, h.main.y], [h.main.x, h.main.y]],
+        cls: "wire-main", name: "main air to hot controller", mode: "ctrl" },
+      { id: "mainCold", points: [[TRUNK_X, c.main.y], [c.main.x, c.main.y]],
+        cls: "wire-main", name: "main air to cold controller", mode: "ctrl" },
       { id: "mainTstat", points: [[1165, 645], [1165, 380]], cls: "wire-main", name: "main air to thermostat" },
       { id: "tMain", points: [[1105, 380], [1105, 400], TEE], cls: "wire-reset", name: "thermostat output", mode: "ctrl" },
       { id: "tHot", points: [TEE, [TEE[0], tHotY], [h.stat.x, tHotY], [h.stat.x, h.stat.y]],
