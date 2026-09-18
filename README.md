@@ -42,10 +42,47 @@ A simplified but physically reasonable loop:
 ## Files
 
 ```
-index.html     Single page: SVG system, controls, readouts, short legend + "try this"
-css/style.css  Theme (light/dark), layout, SVG palette, side panel
-js/sim.js      State, tube build/plug logic, control loop, rendering, controls
+index.html        Single page: SVG system, controls, readouts, legend + "try this"
+css/style.css     Theme (light/dark), layout, SVG palette, side panel
+js/controllers.js Controller artwork + the calibration tuner (see below)
+js/sim.js         State, tube build/plug logic, control loop, rendering, controls
 ```
+
+## Controller artwork (and how to correct it)
+
+The two controllers are **not** hand-drawn SVG. `js/controllers.js` holds a
+declarative spec per model, authored **in inches** measured from the
+manufacturer's dimensioned drawing:
+
+- `size` — overall body, inches. `body.cut` — the octagon corner chamfer.
+- `ports[]` — `{ id, x, y, d }`; push-on barbs on the CSC-3000 are ~0.26 in
+  across, not big bosses.
+- `dials[]` — the large **adjustment screws** (`loStat`, `hiStat`,
+  `resetSpan`) plus the `damper` selector wheel. These are the big circles on
+  the face; they are *not* ports.
+- `panel` — the etched `RESET START / LO STAT ΔP / HI STAT ΔP / RESET SPAN`
+  plate and its blank label.
+- `caps[]` — `G`, the larger gauge-tap cap.
+
+`PLACEMENT[model].ppu` is pixels-per-inch, so the whole part scales as one
+unit and stays dimensionally faithful. **The tubing is derived from these
+coordinates** (`Controllers.anchor()`), so moving a port moves its tube too —
+you never edit tube paths by hand.
+
+### Tuning workflow
+
+1. Open the page and press **Tune controllers** (in the right-hand panel).
+2. Drag any handle: ports, dials, bolt heads, and the three body corners
+   (width, height, corner chamfer). Everything updates live, in inches.
+3. **Copy spec**, then paste the JSON over the matching entry in
+   `js/controllers.js` (`csc3000` or `csc2000`) and commit.
+
+"Apply JSON" re-parses the textarea in place for quick experimentation without
+a reload. Neither button touches the layout math — they only edit the numbers.
+
+> Dimensions currently seeded from KMC `DS_CSC-3000` (213-035-01, 4-1/2 in
+> plate) and `DS_CSC-2000` (3-1/4 x 3-9/16 in). Always confirm against the
+> tag-specific drawing for the unit you are duplicating.
 
 ## Deployed
 

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=47">
+<link rel="stylesheet" href="css/style.css?v=49">
 </head>
 <body>
 <header class="topbar">
@@ -114,114 +114,10 @@
         </g>
 
         <!-- cold deck controller -->
-        <g id="ctrlCold" transform="translate(0,10)"><g class="dev-shadow">
-          <polygon class="tc-body" points="565,440 741,440 781,480 781,575 741,615 565,615 520,570 520,485"/>
-
-          <circle class="tc-boss" cx="548" cy="478" r="10"/>
-          <circle class="tc-bore" cx="548" cy="478" r="4"/>
-          <circle class="tc-boss" cx="588" cy="478" r="10"/>
-          <circle class="tc-bore" cx="588" cy="478" r="4"/>
-          <circle class="tc-boss" cx="663" cy="478" r="10"/>
-          <circle class="tc-bore" cx="663" cy="478" r="4"/>
-
-          <circle class="tc-boss" cx="541" cy="517" r="10"/>
-          <circle class="tc-bore" cx="541" cy="517" r="4"/>
-          <circle class="tc-boss" cx="543" cy="565" r="10"/>
-          <circle class="tc-bore" cx="543" cy="565" r="4"/>
-
-          <g id="damperDialCold" class="clickable" tabindex="0" role="button" aria-label="Toggle damper action between N.O. and N.C." transform="rotate(0 581 521)">
-            <circle class="tc-wheel" cx="581" cy="521" r="20"/>
-            <line class="tc-spoke" x1="581" y1="521" x2="595.1" y2="506.9"/>
-            <line class="tc-spoke" x1="581" y1="521" x2="566.9" y2="506.9"/>
-            <line class="tc-spoke" x1="581" y1="521" x2="595.1" y2="535.1"/>
-            <line class="tc-spoke" x1="581" y1="521" x2="566.9" y2="535.1"/>
-            <circle class="tc-screw" cx="581" cy="521" r="6"/>
-            <line class="tc-screw-x" x1="577.4" y1="521" x2="584.6" y2="521"/>
-            <line class="tc-screw-x" x1="581" y1="517.4" x2="581" y2="524.6"/>
-            <text class="tc-note" x="581" y="535" text-anchor="middle">NO</text>
-            <polygon class="tc-note-mark" points="576,538 586,538 581,545"/>
-            <text class="tc-note" x="611" y="505" text-anchor="middle" transform="rotate(-90 612 521)">NC</text>
-            <polygon class="tc-note-mark" points="598,516 598,526 605,521"/>
-          </g>
-          <polygon class="tc-note-mark" points="576,557 586,557 581,550"/>
-          <text class="tc-note" x="581" y="565" text-anchor="middle">DAMPER</text>
-
-          <circle class="tc-plug" cx="581" cy="596" r="9"/>
-
-          <rect class="tc-panel" x="680" y="464" width="70" height="84" rx="5"/>
-          <text class="tc-paneltext" x="686" y="478">RESET START</text>
-          <text class="tc-paneltext" x="686" y="496">LO STAT &Delta;P</text>
-          <text class="tc-paneltext" x="686" y="514">HI STAT &Delta;P</text>
-          <text class="tc-paneltext" x="686" y="530">RESET SPAN</text>
-          <circle class="tc-boss" cx="738" cy="496" r="6.5"/>
-          <circle class="tc-bore" cx="738" cy="496" r="2.5"/>
-          <circle class="tc-boss" cx="738" cy="514" r="6.5"/>
-          <circle class="tc-bore" cx="738" cy="514" r="2.5"/>
-          <rect class="tc-sticker" x="686" y="536" width="46" height="9" rx="1.5"/>
-        </g>
-        <text class="portlbl" x="548" y="498" text-anchor="middle">H</text>
-        <text class="portlbl" x="588" y="498" text-anchor="middle">L</text>
-        <text class="portlbl" x="663" y="498" text-anchor="middle">T</text>
-        <text class="portlbl" x="541" y="537" text-anchor="middle">B</text>
-        <text class="portlbl" x="543" y="585" text-anchor="middle">M</text>
-        <text class="portlbl" x="581" y="615" text-anchor="middle">G</text>
-        <text class="eq dim" x="650" y="634" text-anchor="middle">COLD DECK CONTROLLER</text>
-        </g>
+        <g id="ctrlCold"></g>
 
         <!-- hot deck controller -->
-        <g id="ctrlHot" transform="translate(0,10)"><g class="dev-shadow">
-          <polygon class="tc-body" points="565,150 741,150 781,190 781,285 741,325 565,325 520,280 520,195"/>
-
-          <circle class="tc-boss" cx="548" cy="188" r="10"/>
-          <circle class="tc-bore" cx="548" cy="188" r="4"/>
-          <circle class="tc-boss" cx="588" cy="188" r="10"/>
-          <circle class="tc-bore" cx="588" cy="188" r="4"/>
-          <circle class="tc-boss" cx="663" cy="188" r="10"/>
-          <circle class="tc-bore" cx="663" cy="188" r="4"/>
-
-          <circle class="tc-boss" cx="541" cy="227" r="10"/>
-          <circle class="tc-bore" cx="541" cy="227" r="4"/>
-          <circle class="tc-boss" cx="543" cy="275" r="10"/>
-          <circle class="tc-bore" cx="543" cy="275" r="4"/>
-
-          <g id="damperDialHot" class="clickable" tabindex="0" role="button" aria-label="Toggle damper action between N.O. and N.C." transform="rotate(0 581 231)">
-            <circle class="tc-wheel" cx="581" cy="231" r="20"/>
-            <line class="tc-spoke" x1="581" y1="231" x2="595.1" y2="216.9"/>
-            <line class="tc-spoke" x1="581" y1="231" x2="566.9" y2="216.9"/>
-            <line class="tc-spoke" x1="581" y1="231" x2="595.1" y2="245.1"/>
-            <line class="tc-spoke" x1="581" y1="231" x2="566.9" y2="245.1"/>
-            <circle class="tc-screw" cx="581" cy="231" r="6"/>
-            <line class="tc-screw-x" x1="577.4" y1="231" x2="584.6" y2="231"/>
-            <line class="tc-screw-x" x1="581" y1="227.4" x2="581" y2="234.6"/>
-            <text class="tc-note" x="581" y="245" text-anchor="middle">NO</text>
-            <polygon class="tc-note-mark" points="576,248 586,248 581,255"/>
-            <text class="tc-note" x="611" y="215" text-anchor="middle" transform="rotate(-90 612 231)">NC</text>
-            <polygon class="tc-note-mark" points="598,226 598,236 605,231"/>
-          </g>
-          <polygon class="tc-note-mark" points="576,267 586,267 581,260"/>
-          <text class="tc-note" x="581" y="275" text-anchor="middle">DAMPER</text>
-
-          <circle class="tc-plug" cx="581" cy="306" r="9"/>
-
-          <rect class="tc-panel" x="680" y="174" width="70" height="84" rx="5"/>
-          <text class="tc-paneltext" x="686" y="188">RESET START</text>
-          <text class="tc-paneltext" x="686" y="206">LO STAT &Delta;P</text>
-          <text class="tc-paneltext" x="686" y="224">HI STAT &Delta;P</text>
-          <text class="tc-paneltext" x="686" y="240">RESET SPAN</text>
-          <circle class="tc-boss" cx="738" cy="206" r="6.5"/>
-          <circle class="tc-bore" cx="738" cy="206" r="2.5"/>
-          <circle class="tc-boss" cx="738" cy="224" r="6.5"/>
-          <circle class="tc-bore" cx="738" cy="224" r="2.5"/>
-          <rect class="tc-sticker" x="686" y="246" width="46" height="9" rx="1.5"/>
-        </g>
-        <text class="portlbl" x="548" y="208" text-anchor="middle">H</text>
-        <text class="portlbl" x="588" y="208" text-anchor="middle">L</text>
-        <text class="portlbl" x="663" y="208" text-anchor="middle">T</text>
-        <text class="portlbl" x="541" y="247" text-anchor="middle">B</text>
-        <text class="portlbl" x="543" y="295" text-anchor="middle">M</text>
-        <text class="portlbl" x="581" y="325" text-anchor="middle">G</text>
-        <text class="eq dim" x="650" y="344" text-anchor="middle">HOT DECK CONTROLLER</text>
-        </g>
+        <g id="ctrlHot"></g>
 
         <!-- RCC-1012 reversing relay on the hot deck branch -->
         <g id="relayHot">
@@ -231,47 +127,13 @@
           <text class="tc-paneltext" x="498" y="288" text-anchor="middle">RCC-1012</text>
           <text class="tc-paneltext" x="498" y="297" text-anchor="middle">REV. RELAY</text>
         </g>
-          <g id="ctrlHot2">
-            <polygon class="tc-body" points="567,170 637,170 667,200 667,290 637,320 567,320 537,290 537,200"/>
-            <circle class="tc-boss" cx="602" cy="190" r="8"/>
-            <circle class="tc-bore" cx="602" cy="190" r="3"/>
-            <circle class="tc-boss" cx="602" cy="225" r="8"/>
-            <circle class="tc-bore" cx="602" cy="225" r="3"/>
-            <circle class="tc-boss" cx="586" cy="255" r="8"/>
-            <circle class="tc-bore" cx="586" cy="255" r="3"/>
-            <circle class="tc-boss" cx="618" cy="255" r="8"/>
-            <circle class="tc-bore" cx="618" cy="255" r="3"/>
-            <circle class="tc-boss" cx="602" cy="295" r="12"/>
-            <circle class="tc-bore" cx="602" cy="295" r="5"/>
-            <text class="portlbl" x="602" y="178" text-anchor="middle">X</text>
-            <text class="portlbl" x="602" y="239" text-anchor="middle">Y</text>
-            <text class="portlbl end" x="572" y="258">M</text>
-            <text class="portlbl" x="632" y="258">B</text>
-            <text class="portlbl" x="602" y="317" text-anchor="middle">T</text>
-            <text class="eq dim" x="635" y="335" text-anchor="middle">HOT DECK CONTROLLER</text>
-          </g>
-          <g id="ctrlCold2">
-            <polygon class="tc-body" points="567,464 637,464 667,494 667,584 637,614 567,614 537,584 537,494"/>
-            <circle class="tc-boss" cx="602" cy="484" r="8"/>
-            <circle class="tc-bore" cx="602" cy="484" r="3"/>
-            <circle class="tc-boss" cx="602" cy="519" r="8"/>
-            <circle class="tc-bore" cx="602" cy="519" r="3"/>
-            <circle class="tc-boss" cx="586" cy="549" r="8"/>
-            <circle class="tc-bore" cx="586" cy="549" r="3"/>
-            <circle class="tc-boss" cx="618" cy="549" r="8"/>
-            <circle class="tc-bore" cx="618" cy="549" r="3"/>
-            <circle class="tc-boss" cx="602" cy="589" r="12"/>
-            <circle class="tc-bore" cx="602" cy="589" r="5"/>
-            <text class="portlbl" x="602" y="472" text-anchor="middle">X</text>
-            <text class="portlbl" x="602" y="533" text-anchor="middle">Y</text>
-            <text class="portlbl end" x="572" y="552">M</text>
-            <text class="portlbl" x="632" y="552">B</text>
-            <text class="portlbl" x="602" y="611" text-anchor="middle">T</text>
-            <text class="eq dim" x="635" y="629" text-anchor="middle">COLD DECK CONTROLLER</text>
-          </g>
+          <g id="ctrlHot2"></g>
+          <g id="ctrlCold2"></g>
 
 
         <g id="tubeLayer"></g>
+
+        <g id="tunerLayer"></g>
 
         <!-- room thermostat (remote) -->
         <g class="dev-shadow">
@@ -370,6 +232,31 @@
         </div>
       </section>
 
+      <section class="panel">
+        <h2>Controller artwork</h2>
+        <p class="hint">Artwork is defined in inches in <code>js/controllers.js</code>.
+          Drag any handle to match your hardware, then copy the spec back.</p>
+        <div class="ctl buttons">
+          <button id="tuneBtn" class="btn" type="button">Tune controllers</button>
+        </div>
+        <div id="tunebox" class="tunebox" style="display:none">
+          <div class="row">
+            <label>Series
+              <select id="tuneModel">
+                <option value="csc3000">CSC-3000</option>
+                <option value="csc2000">CSC-2000</option>
+              </select>
+            </label>
+          </div>
+          <textarea id="tuneSpec" spellcheck="false"></textarea>
+          <div class="row">
+            <button id="tuneApply" class="btn" type="button">Apply JSON</button>
+            <button id="tuneCopy" class="btn" type="button">Copy spec</button>
+          </div>
+          <p class="hint" id="tuneStatus"></p>
+        </div>
+      </section>
+
       <section class="panel status" id="statusPanel">
         <h2>What&rsquo;s happening</h2>
         <p id="statusText">&nbsp;</p>
@@ -410,6 +297,7 @@
   </div>
 </footer>
 
-<script src="js/sim.js?v=47"></script>
+<script src="js/controllers.js?v=49"></script>
+<script src="js/sim.js?v=49"></script>
 </body>
 </html>

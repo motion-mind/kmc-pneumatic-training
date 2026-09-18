@@ -35,24 +35,78 @@
     return L[deck + "H"] && L[deck + "L"];
   }
 
-  // Tube routing differs by controller series: the CSC-2000's ports sit on its
-  // face (X/Y velocity at the top, M and B mid-face, T at the bottom), so those
-  // runs tuck behind the controller body; the CSC-3000 uses perimeter ports.
-  var TUBES = [
-    { id: "hotH", points: [[570, 150], [570, 180], [548, 180], [548, 198]], p2000: [[570, 150], [570, 182], [602, 182], [602, 190]], cls: "wire-sensor", name: "hot deck sensor H", mode: "ctrl" },
-    { id: "hotL", points: [[607, 150], [607, 178], [588, 178], [588, 198]], p2000: [[607, 150], [607, 217], [602, 217], [602, 225]], cls: "wire-sensor", name: "hot deck sensor L", mode: "ctrl" },
-    { id: "coldH", points: [[570, 440], [570, 470], [548, 470], [548, 488]], p2000: [[570, 440], [570, 476], [602, 476], [602, 484]], cls: "wire-sensor", name: "cold deck sensor H", mode: "ctrl" },
-    { id: "coldL", points: [[607, 440], [607, 468], [588, 468], [588, 488]], p2000: [[607, 440], [607, 511], [602, 511], [602, 519]], cls: "wire-sensor", name: "cold deck sensor L", mode: "ctrl" },
-    { id: "hotB", points: [[541, 237], [460, 237]], p2000: [[618, 255], [618, 268], [460, 268], [460, 237]], cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
-    { id: "coldB", points: [[541, 527], [460, 527]], p2000: [[618, 549], [618, 562], [460, 562], [460, 527]], cls: "wire-branch", name: "cold deck branch", mode: "ctrl" },
-    { id: "mainHot", points: [[240, 285], [543, 285]], p2000: [[240, 285], [586, 285], [586, 255]], cls: "wire-main", name: "main air to hot controller", mode: "ctrl" },
-    { id: "mainCold", points: [[240, 575], [543, 575]], p2000: [[240, 575], [586, 575], [586, 549]], cls: "wire-main", name: "main air to cold controller", mode: "ctrl" },
-    { id: "mainTstat", points: [[1165, 645], [1165, 380]], cls: "wire-main", name: "main air to thermostat" },
-    { id: "tMain", points: [[1105, 380], [1105, 400], [1000, 400]], cls: "wire-reset", name: "thermostat output", mode: "ctrl" },
-    { id: "tHot", points: [[1000, 400], [1000, 175], [663, 175], [663, 198]], p2000: [[1000, 400], [1000, 295], [602, 295]], cls: "wire-reset", name: "teed signal to hot controller", mode: "ctrl" },
-    { id: "tCold", points: [[1000, 400], [1000, 475], [663, 475], [663, 488]], p2000: [[1000, 400], [1000, 589], [602, 589]], cls: "wire-reset", name: "teed signal to cold controller", mode: "ctrl" },
-    { id: "tDirect", points: [[1105, 380], [1105, 400], [1000, 400], [1000, 490], [460, 490]], cls: "wire-reset", name: "thermostat to linked actuator", mode: "opposed" }
-  ];
+  // ---- tube routing -------------------------------------------------------
+  // The controller end of every tube is read straight from the controller spec
+  // (Controllers.anchor), so retuning the artwork in js/controllers.js moves the
+  // tubing with it.  The other end is fixed plant: probes, actuators, tee.
+  var PORTMAP = {
+    csc3000: { hi: "H", lo: "L", branch: "B", main: "M", stat: "T" },
+    csc2000: { hi: "X", lo: "Y", branch: "B", main: "M", stat: "T" }
+  };
+
+  // Sensor probes and their tap x positions (fixed graphics).
+  var PROBE = { hot: { hi: [570, 150], lo: [607, 150] },
+                cold: { hi: [570, 440], lo: [607, 440] } };
+  var ACTUATOR_X = 460, TEE = [1000, 400], TRUNK_X = 240;
+
+  function ports(model, deck) {
+    var m = PORTMAP[model], o = {};
+    for (var k in m) o[k] = Controllers.anchor(model, deck, m[k]);
+    return o;
+  }
+
+  // Route helper: drop the probe tap to `jog`, run across to the port, drop in.
+  function probeRoute(tap, port, jog) {
+    var pts = [tap];
+    if (Math.abs(tap[0] - port.x) > 0.6) {
+      pts.push([tap[0], jog]);
+      pts.push([port.x, jog]);
+    }
+    pts.push([port.x, port.y]);
+    return pts;
+  }
+
+  function buildTubeSpecs(model) {
+    var h = ports(model, "hot"), c = ports(model, "cold");
+    var main = model === "csc2000" ? 285 : 285;
+    var tHotY = model === "csc2000" ? 295 : 175;
+    var tColdY = model === "csc2000" ? 589 : 475;
+    return [
+      { id: "hotH", points: probeRoute(PROBE.hot.hi, h.hi, 180),
+        cls: "wire-sensor", name: "hot deck sensor H", mode: "ctrl" },
+      { id: "hotL", points: probeRoute(PROBE.hot.lo, h.lo, 170),
+        cls: "wire-sensor", name: "hot deck sensor L", mode: "ctrl" },
+      { id: "coldH", points: probeRoute(PROBE.cold.hi, c.hi, 470),
+        cls: "wire-sensor", name: "cold deck sensor H", mode: "ctrl" },
+      { id: "coldL", points: probeRoute(PROBE.cold.lo, c.lo, 460),
+        cls: "wire-sensor", name: "cold deck sensor L", mode: "ctrl" },
+      { id: "hotB", points: [[h.branch.x, h.branch.y], [h.branch.x, h.branch.y + 13],
+        [ACTUATOR_X, h.branch.y + 13], [ACTUATOR_X, 237]],
+        cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
+      { id: "coldB", points: [[c.branch.x, c.branch.y], [c.branch.x, c.branch.y + 13],
+        [ACTUATOR_X, c.branch.y + 13], [ACTUATOR_X, 527]],
+        cls: "wire-branch", name: "cold deck branch", mode: "ctrl" },
+      { id: "mainHot", points: [[TRUNK_X, main], [h.main.x, main],
+        [h.main.x, h.main.y]], cls: "wire-main", name: "main air to hot controller", mode: "ctrl" },
+      { id: "mainCold", points: [[TRUNK_X, main + 290], [c.main.x, main + 290],
+        [c.main.x, c.main.y]], cls: "wire-main", name: "main air to cold controller", mode: "ctrl" },
+      { id: "mainTstat", points: [[1165, 645], [1165, 380]], cls: "wire-main", name: "main air to thermostat" },
+      { id: "tMain", points: [[1105, 380], [1105, 400], TEE], cls: "wire-reset", name: "thermostat output", mode: "ctrl" },
+      { id: "tHot", points: [TEE, [TEE[0], tHotY], [h.stat.x, tHotY], [h.stat.x, h.stat.y]],
+        cls: "wire-reset", name: "teed signal to hot controller", mode: "ctrl" },
+      { id: "tCold", points: [TEE, [TEE[0], tColdY], [c.stat.x, tColdY], [c.stat.x, c.stat.y]],
+        cls: "wire-reset", name: "teed signal to cold controller", mode: "ctrl" },
+      { id: "tDirect", points: [[1105, 380], [1105, 400], TEE, [1000, 490], [460, 490]],
+        cls: "wire-reset", name: "thermostat to linked actuator", mode: "opposed" }
+    ];
+  }
+
+  var TUBE_GEOM = [];
+
+  // Rebuild routing when the series or the controller artwork changes.
+  function retube() {
+    TUBE_GEOM = buildTubeSpecs(state.series === "2000" ? "csc2000" : "csc3000");
+  }
 
   var els = {};
 
@@ -90,7 +144,7 @@
   }
 
   function buildTube(t) {
-    var pts = (state.series === "2000" && t.p2000) ? t.p2000 : t.points;
+    var pts = (TUBE_GEOM.filter(function (g) { return g.id === t.id; })[0] || t).points;
     var n = pts.length;
     var last = pts[n - 1], prev = pts[n - 2] || pts[0];
     var dx = last[0] - prev[0], dy = last[1] - prev[1];
@@ -146,9 +200,10 @@
 
   // Series changes move the port positions, so the tube geometry is rebuilt.
   function rebuildTubes() {
+    retube();
     while (tubeLayer.firstChild) tubeLayer.removeChild(tubeLayer.firstChild);
     els = {};
-    TUBES.forEach(buildTube);
+    TUBE_GEOM.forEach(buildTube);
     syncLines();
   }
 
@@ -275,8 +330,13 @@
 
     // The NO / NC markings are printed on the wheel and rotate with it; the
     // fixed index triangle outside the wheel points at the selected one.
-    document.getElementById("damperDialCold").setAttribute("transform", "rotate(" + (state.coldAction === "NO" ? 0 : 90) + " 581 521)");
-    document.getElementById("damperDialHot").setAttribute("transform", "rotate(" + (state.hotAction === "NC" ? 90 : 0) + " 581 231)");
+    var rc = Controllers.rel("csc3000", "damper");
+    var dc = document.getElementById("damperDialCold");
+    if (dc) dc.setAttribute("transform",
+      "rotate(" + (state.coldAction === "NO" ? 0 : 90) + " " + rc.x + " " + rc.y + ")");
+    var dh = document.getElementById("damperDialHot");
+    if (dh) dh.setAttribute("transform",
+      "rotate(" + (state.hotAction === "NC" ? 90 : 0) + " " + rc.x + " " + rc.y + ")");
 
     document.getElementById("teeMark").style.display = two ? "block" : "none";
     document.getElementById("ctrlReadouts").style.display = two ? "block" : "none";
@@ -415,7 +475,14 @@
 
   function updateTubeStyle() {}
 
-  function setSeries(v) { state.series = v; rebuildTubes(); syncMode(); syncControls(); }
+  function setSeries(v) {
+    state.series = v;
+    rebuildTubes(); syncMode(); syncControls();
+    if (typeof Controllers !== "undefined" && Controllers.setTuneModel) {
+      Controllers.setTuneModel(v === "2000" ? "csc2000" : "csc3000");
+      Controllers.redrawHandles();
+    }
+  }
 
   function toggleMain() { state.mainOn = !state.mainOn; syncControls(); }
   function reconnectAll() { for (var id in state.lines) state.lines[id] = true; syncLines(); }
@@ -429,7 +496,8 @@
   }
 
   function init() {
-    TUBES.forEach(buildTube);
+    retube();
+    TUBE_GEOM.forEach(buildTube);
     syncLines();
     initDeviceArt();
     syncMode();
@@ -448,17 +516,54 @@
     document.getElementById("reconnect").addEventListener("click", reconnectAll);
     document.getElementById("resetAll").addEventListener("click", resetAll);
 
-    var cc = document.getElementById("damperDialCold");
-    if (cc) {
-      cc.addEventListener("click", function () { setColdAction(state.coldAction === "NO" ? "NC" : "NO"); });
-      cc.addEventListener("keydown", function (e) { if (e.key === " " || e.key === "Enter") { e.preventDefault(); setColdAction(state.coldAction === "NO" ? "NC" : "NO"); } });
-    }
-    var hc = document.getElementById("damperDialHot");
-    if (hc) {
-      hc.addEventListener("click", function () { setHotAction(state.hotAction === "NC" ? "NO" : "NC"); });
-      hc.addEventListener("keydown", function (e) { if (e.key === " " || e.key === "Enter") { e.preventDefault(); setHotAction(state.hotAction === "NC" ? "NO" : "NC"); } });
+    // ---- controller artwork tuner ----
+    var tuneBtn = document.getElementById("tuneBtn");
+    if (tuneBtn) {
+      tuneBtn.addEventListener("click", function () { Controllers.tune(); });
+      document.getElementById("tuneModel").addEventListener("change", function () {
+        Controllers.setTuneModel(this.value);
+        Controllers.exportSpec();
+      });
+      document.getElementById("tuneApply").addEventListener("click", function () {
+        Controllers.applySpec();
+      });
+      document.getElementById("tuneCopy").addEventListener("click", function () {
+        var ta = document.getElementById("tuneSpec");
+        ta.select();
+        if (navigator.clipboard) navigator.clipboard.writeText(ta.value);
+        else document.execCommand("copy");
+        document.getElementById("tuneStatus").textContent = "Spec copied to clipboard.";
+      });
+      document.getElementById("tunerLayer").addEventListener("pointerdown", function (e) {
+        Controllers.beginDrag(e);
+      });
     }
 
+    // Delegated on the SVG root: the tuner re-renders these groups, so
+    // per-element listeners would be lost.
+    var svgRoot = document.getElementById("sim");
+    function closestId(node, id) {
+      while (node && node !== svgRoot) {
+        if (node.id === id) return node;
+        node = node.parentNode;
+      }
+      return null;
+    }
+    svgRoot.addEventListener("click", function (e) {
+      if (closestId(e.target, "damperDialCold")) setColdAction(state.coldAction === "NO" ? "NC" : "NO");
+      else if (closestId(e.target, "damperDialHot")) setHotAction(state.hotAction === "NC" ? "NO" : "NC");
+    });
+    svgRoot.addEventListener("keydown", function (e) {
+      if (e.key !== " " && e.key !== "Enter") return;
+      var t = closestId(e.target, "damperDialCold") ? "cold"
+            : closestId(e.target, "damperDialHot") ? "hot" : null;
+      if (!t) return;
+      e.preventDefault();
+      if (t === "cold") setColdAction(state.coldAction === "NO" ? "NC" : "NO");
+      else setHotAction(state.hotAction === "NC" ? "NO" : "NC");
+    });
+
+    // Thermostat dial: drag or arrow keys to change setpoint.
     var dial = document.getElementById("tstatDial");
     if (dial) {
       var dragging = false;
@@ -514,6 +619,13 @@
   function applyTheme(isDark) {
     document.body.classList.toggle("theme-dark", isDark);
     document.getElementById("themeToggle").textContent = isDark ? "Light" : "Dark";
+  }
+
+  // The controller tuner re-renders the artwork; keep the tubing attached.
+  if (typeof Controllers !== "undefined") {
+    Controllers.afterRender = function () {
+      if (typeof els !== "undefined" && Object.keys(els).length) rebuildTubes();
+    };
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
