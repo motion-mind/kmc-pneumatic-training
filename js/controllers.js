@@ -26,24 +26,25 @@
   // NOT ports.  G is the larger gauge-tap cap (5/32" tubing).
   var csc3000 = {
     name: "CSC-3000",
-    size: { w: 4.5, h: 3.85 },
-    body: { cut: 0.62 },
+    // Measured octagon: 1.48" top & bottom, 2.07" diagonals, 0.85" sides.
+    // => 1.4637" chamfer, 4.407" wide, 3.777" tall.
+    body: { top: 1.48, diag: 2.07, side: 0.85 },
     ports: [
-      { id: "H", x: 1.02, y: 0.62, d: 0.30 },
-      { id: "L", x: 1.58, y: 0.62, d: 0.30 },
-      { id: "T", x: 3.30, y: 0.62, d: 0.30 },
-      { id: "B", x: 0.40, y: 1.70, d: 0.30 },
-      { id: "M", x: 0.40, y: 2.44, d: 0.30 }
+      { id: "H", x: 1.03, y: 0.70, d: 0.30 },
+      { id: "L", x: 1.58, y: 0.66, d: 0.30 },
+      { id: "T", x: 3.28, y: 0.66, d: 0.30 },
+      { id: "B", x: 0.40, y: 1.70, d: 0.30, label: { dx: 0.30, dy: 0.05, anchor: "start" } },
+      { id: "M", x: 0.40, y: 2.44, d: 0.30, label: { dx: 0.30, dy: 0.05, anchor: "start" } }
     ],
-    caps: [{ id: "G", x: 1.10, y: 3.40, d: 0.55 }],
+    caps: [{ id: "G", x: 1.10, y: 3.20, d: 0.55 }],
     dials: [
       { id: "damper", x: 1.10, y: 1.92, d: 1.00, kind: "damper" },
-      { id: "loStat", x: 2.52, y: 0.95, d: 1.00, kind: "arrow" },
-      { id: "hiStat", x: 2.50, y: 2.06, d: 1.00, kind: "arrow" },
-      { id: "resetSpan", x: 2.50, y: 3.17, d: 1.00, kind: "screw" }
+      { id: "loStat", x: 2.42, y: 0.95, d: 1.00, kind: "arrow" },
+      { id: "hiStat", x: 2.42, y: 2.06, d: 1.00, kind: "arrow" },
+      { id: "resetSpan", x: 2.42, y: 3.17, d: 1.00, kind: "screw" }
     ],
     panel: {
-      x: 3.04, y: 1.24, w: 1.36, h: 1.78,
+      x: 2.95, y: 1.28, w: 1.05, h: 1.42,
       lines: [
         { t: "RESET START", dy: 0.26 },
         { t: "LO STAT \u0394P", dy: 0.62 },
@@ -59,8 +60,7 @@
   // Two diaphragm housings plus six mounting bolts.
   var csc2000 = {
     name: "CSC-2000",
-    size: { w: 3.25, h: 3.5625 },
-    body: { cut: 0.46 },
+    body: { top: 2.33, diag: 0.65, side: 2.6425 },
     circles: [
       { x: 1.62, y: 1.53, d: 1.84 },
       { x: 1.62, y: 2.90, d: 1.30 }
@@ -90,6 +90,19 @@
   };
 
   // ------------------------------------------------------------- geometry --
+  // The octagonal body is specified the way you measure it on the part:
+  //   top/bottom edge length, diagonal edge length, left/right edge length.
+  // The chamfers are 45 degrees, so  diagonal = chamfer * sqrt(2).
+  function octagon(s) {
+    var b = s.body;
+    var cut = b.diag / Math.SQRT2;
+    return { cut: cut, w: b.top + 2 * cut, h: b.side + 2 * cut };
+  }
+  function bodySize(s) {
+    if (s.body) { var o = octagon(s); return { w: o.w, h: o.h }; }
+    return s.size || { w: 1, h: 1 };
+  }
+
   function place(model, deck) {
     var pl = PLACEMENT[model];
     return { ppu: pl.ppu, origin: pl[deck] || pl.hot };
@@ -141,7 +154,8 @@
   var f1 = function (n) { return (+n).toFixed(1); };
 
   function bodyPoints(s, ppu) {
-    var w = s.size.w * ppu, h = s.size.h * ppu, c = s.body.cut * ppu;
+    var o = octagon(s);
+    var w = o.w * ppu, h = o.h * ppu, c = o.cut * ppu;
     return [[c, 0], [w - c, 0], [w, c], [w, h - c],
             [w - c, h], [c, h], [0, h - c], [0, c]]
       .map(function (p) { return f1(p[0]) + "," + f1(p[1]); }).join(" ");
@@ -258,10 +272,9 @@
     buildPanel(g, s, ppu);
     items(model, "ports").forEach(function (p) { buildPort(g, s, p, ppu); });
 
-    if (s.size) {
-      g.appendChild(txt("eq dim", s.size.w / 2 * ppu, (s.size.h + 0.30) * ppu,
-        deck.toUpperCase() + " DECK CONTROLLER", "middle"));
-    }
+    var bs = bodySize(s);
+    g.appendChild(txt("eq dim", bs.w / 2 * ppu, (bs.h + 0.30) * ppu,
+      deck.toUpperCase() + " DECK CONTROLLER", "middle"));
     g.setAttribute("transform", "translate(" + pl.origin.x + "," + pl.origin.y + ")");
     return g;
   }
@@ -318,19 +331,25 @@
       tuneLayer.appendChild(h);
       tuneLayer.appendChild(txt("tune-lbl", f1(a.x), f1(a.y - 13), e.it.id, "middle"));
     });
+    // Octagon handles: one per edge family, so you drag the measurement you
+    // actually took with a tape (top/bottom, diagonal, left/right).
     var s = SPECS[tuneModel];
-    if (s.size) {
-      var pl = place(tuneModel, "hot");
-      var w = s.size.w * pl.ppu, hgt = s.size.h * pl.ppu;
-      [["size.w", 0, 0], ["size.h", 0, 0]].forEach(function () {});
-      var corners = [[w, 0], [w, hgt], [0, hgt]];
-      corners.forEach(function (c, i) {
+    if (s.body) {
+      var pl = place(tuneModel, "hot"), o = octagon(s);
+      var w = o.w * pl.ppu, hgt = o.h * pl.ppu, c = o.cut * pl.ppu;
+      [
+        { key: "body.top", x: w / 2, y: 0, id: "top" },
+        { key: "body.side", x: 0, y: hgt / 2, id: "side" },
+        { key: "body.diag", x: c / 2, y: c / 2, id: "diag" }
+      ].forEach(function (g) {
         var h = el("rect", "tune-handle", {
-          x: f1(c[0] - 6), y: f1(c[1] - 6), width: 12, height: 12
+          x: f1(g.x - 6), y: f1(g.y - 6), width: 12, height: 12
         });
-        h.setAttribute("data-key", i === 0 ? "size.w" : (i === 1 ? "size.h" : "body.cut"));
-        h.setAttribute("data-id", "corner" + i);
+        h.setAttribute("data-key", g.key);
+        h.setAttribute("data-id", g.id);
         tuneLayer.appendChild(h);
+        tuneLayer.appendChild(txt("tune-lbl", f1(pl.origin.x + g.x),
+          f1(pl.origin.y + g.y - 14), g.id, "middle"));
       });
     }
   }
@@ -356,9 +375,17 @@
       var loc = toSvg(ev);
       var x = (loc.x - pl.origin.x) / pl.ppu;
       var y = (loc.y - pl.origin.y) / pl.ppu;
-      if (key === "size.w") { spec.size.w = Math.max(1, snap(x)); }
-      else if (key === "size.h") { spec.size.h = Math.max(1, snap(y)); }
-      else if (key === "body.cut") { spec.body.cut = Math.max(0, snap(Math.min(x, y))); }
+      if (key === "body.top") {
+        // top edge spans chamfer..w-chamfer; its midpoint is w/2 = (top+2c)/2
+        var c1 = spec.body.diag / Math.SQRT2;
+        spec.body.top = Math.max(0.05, snap(2 * x - 2 * c1));
+      } else if (key === "body.side") {
+        var c2 = spec.body.diag / Math.SQRT2;
+        spec.body.side = Math.max(0.05, snap(2 * y - 2 * c2));
+      } else if (key === "body.diag") {
+        // chamfer midpoint sits at (c/2, c/2), so x + y = c  =>  diag = c*sqrt2
+        spec.body.diag = Math.max(0.05, snap((x + y) * Math.SQRT2));
+      }
       else {
         var it = find(tuneModel, id);
         if (!it) return;
@@ -368,6 +395,7 @@
       if (api.afterRender) api.afterRender();
       drawHandles();
       exportSpec();
+      status("Drag any handle \u2014 " + dimsText(tuneModel));
     }
     function up() {
       document.removeEventListener("pointermove", move);
@@ -376,6 +404,16 @@
     }
     document.addEventListener("pointermove", move);
     document.addEventListener("pointerup", up);
+  }
+
+  function dimsText(model) {
+    var s = SPECS[model];
+    if (!s.body) return "";
+    var o = octagon(s);
+    return "top " + s.body.top.toFixed(3) + "\u2033  \u00b7  diag " +
+      s.body.diag.toFixed(3) + "\u2033  \u00b7  side " + s.body.side.toFixed(3) +
+      "\u2033   (\u2192 " + o.w.toFixed(3) + "\u2033 \u00d7 " + o.h.toFixed(3) + "\u2033, chamfer " +
+      o.cut.toFixed(3) + "\u2033)";
   }
 
   function exportSpec() {
@@ -412,7 +450,7 @@
     if (tuneOn) {
       drawHandles();
       exportSpec();
-      status("Drag any handle. 1 unit = 1 inch at " + place(tuneModel, "hot").ppu + " px/in.");
+      status("Drag any handle \u2014 " + dimsText(tuneModel));
     }
   }
 
@@ -421,7 +459,7 @@
     render: render, build: build, anchor: anchor, rel: rel, find: find,
     items: items, place: place,
     tune: tune, applySpec: applySpec, exportSpec: exportSpec,
-    beginDrag: beginDrag, redrawHandles: drawHandles,
+    beginDrag: beginDrag, redrawHandles: drawHandles, octagon: octagon, dimsText: dimsText,
     setTuneModel: function (m) { tuneModel = m; if (tuneOn) drawHandles(); },
     set: function (model, spec) { SPECS[model] = spec; }
   };

@@ -54,7 +54,12 @@ The two controllers are **not** hand-drawn SVG. `js/controllers.js` holds a
 declarative spec per model, authored **in inches** measured from the
 manufacturer's dimensioned drawing:
 
-- `size` — overall body, inches. `body.cut` — the octagon corner chamfer.
+- `body` — the octagonal housing, specified by the three lengths you measure
+  with a tape: `top` (1.48 in top & bottom edge), `diag` (2.07 in diagonal
+  edge) and `side` (0.85 in left & right edge). The chamfers are 45°, so
+  `chamfer = diag / √2` and `width = top + 2·chamfer`, `height = side + 2·chamfer`
+  — currently 4.407 × 3.777 in for the CSC-3000. Dragging any one of the three
+  handles updates just that measurement.
 - `ports[]` — `{ id, x, y, d }`; push-on barbs on the CSC-3000 are ~0.26 in
   across, not big bosses.
 - `dials[]` — the large **adjustment screws** (`loStat`, `hiStat`,
