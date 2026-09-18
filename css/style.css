@@ -380,3 +380,4 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 }
 .tunebox .row { display: flex; gap: 6px; align-items: center; margin: 6px 0; }
 .tunebox .row label { flex: 0 0 auto; }
+.tune-handle.tune-bad { stroke: #b00020; fill: rgba(176, 0, 32, 0.38); }

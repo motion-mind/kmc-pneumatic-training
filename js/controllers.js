@@ -27,31 +27,30 @@
   var csc3000 = {
     name: "CSC-3000",
     // Measured octagon: 1.48" top & bottom, 2.07" diagonals, 0.85" sides.
-    // => 1.4637" chamfer, 4.407" wide, 3.777" tall.
     body: { top: 1.48, diag: 2.07, side: 0.85 },
     ports: [
-      { id: "H", x: 1.00, y: 0.70, d: 0.30 },
-      { id: "L", x: 1.50, y: 0.70, d: 0.30 },
-      { id: "T", x: 3.30, y: 0.70, d: 0.30 },
-      { id: "B", x: 0.34, y: 1.72, d: 0.30 },
-      { id: "M", x: 0.34, y: 2.40, d: 0.30 }
+      { id: "H", x: 0.88, y: 0.76, d: 0.3 },
+      { id: "L", x: 1.21, y: 0.7, d: 0.3 },
+      { id: "T", x: 2.99, y: 0.63, d: 0.3 },
+      { id: "B", x: 0.25, y: 1.61, d: 0.3 },
+      { id: "M", x: 0.25, y: 2.24, d: 0.3 }
     ],
-    caps: [{ id: "G", x: 1.05, y: 3.20, d: 0.55 }],
+    caps: [{ id: "G", x: 1.78, y: 2.84, d: 0.55 }],
     // One adjuster per panel legend row, in the same top-to-bottom order.
     // hiStat is 72% of loStat's diameter, as on the real face.
     dials: [
-      { id: "damper", x: 1.15, y: 1.95, d: 1.00, kind: "damper" },
-      { id: "resetStart", x: 2.24, y: 0.58, d: 0.90, kind: "arrow" },
-      { id: "loStat", x: 2.24, y: 1.58, d: 0.90, kind: "arrow" },
-      { id: "hiStat", x: 2.24, y: 2.44, d: 0.648, kind: "arrow" },
-      { id: "resetSpan", x: 2.24, y: 3.28, d: 0.90, kind: "screw" }
+      { id: "damper", x: 1.15, y: 1.95, d: 1, kind: "damper" },
+      { id: "resetStart", x: 2.24, y: 0.58, d: 0.9, kind: "arrow" },
+      { id: "loStat", x: 2.21, y: 1.93, d: 0.9, kind: "arrow" },
+      { id: "hiStat", x: 3.13, y: 1.95, d: 0.648, kind: "arrow" },
+      { id: "resetSpan", x: 2.48, y: 3.1, d: 0.9, kind: "screw" }
     ],
     panel: {
-      x: 2.76, y: 1.28, w: 1.20, h: 1.38,
+      x: 2.76, y: 1.28, w: 1.2, h: 1.38,
       lines: [
-        { t: "RESET START", dy: 0.20 },
-        { t: "LO STAT \u0394P", dy: 0.49 },
-        { t: "HI STAT \u0394P", dy: 0.78 },
+        { t: "RESET START", dy: 0.2 },
+        { t: "LO STAT ΔP", dy: 0.49 },
+        { t: "HI STAT ΔP", dy: 0.78 },
         { t: "RESET SPAN", dy: 1.07 }
       ],
       sticker: { dx: 0.08, dy: 1.13, w: 1.04, h: 0.15 }
@@ -327,6 +326,16 @@
     return out;
   }
 
+  // Is a disc of radius `r` centred at (x,y) wholly inside the octagon?
+  function outsideBody(model, x, y, r) {
+    var s = SPECS[model];
+    if (!s || !s.body) return false;
+    var o = octagon(s);
+    return (x + y < o.cut + r) || (o.w - x + y < o.cut + r) ||
+           (x + o.h - y < o.cut + r) || (o.w - x + o.h - y < o.cut + r) ||
+           (x < r) || (y < r) || (x > o.w - r) || (y > o.h - r);
+  }
+
   function drawHandles() {
     if (!tuneLayer) return;
     while (tuneLayer.firstChild) tuneLayer.removeChild(tuneLayer.firstChild);
@@ -337,6 +346,9 @@
       var h = el("circle", "tune-handle", { cx: f1(a.x), cy: f1(a.y), r: 9 });
       h.setAttribute("data-key", e.key);
       h.setAttribute("data-id", e.it.id);
+      if (outsideBody(tuneModel, e.it.x, e.it.y, (e.it.d || 0.3) / 2)) {
+        h.classList.add("tune-bad");
+      }
       tuneLayer.appendChild(h);
       tuneLayer.appendChild(txt("tune-lbl", f1(a.x), f1(a.y - 13), e.it.id, "middle"));
     });
@@ -404,7 +416,7 @@
       if (api.afterRender) api.afterRender();
       drawHandles();
       exportSpec();
-      status("Drag any handle \u2014 " + dimsText(tuneModel));
+      status("Drag any handle \u2014 " + dimsText(tuneModel) + warnText());
     }
     function up() {
       document.removeEventListener("pointermove", move);
@@ -423,6 +435,15 @@
       s.body.diag.toFixed(3) + "\u2033  \u00b7  side " + s.body.side.toFixed(3) +
       "\u2033   (\u2192 " + o.w.toFixed(3) + "\u2033 \u00d7 " + o.h.toFixed(3) + "\u2033, chamfer " +
       o.cut.toFixed(3) + "\u2033)";
+  }
+
+  // Anything hanging off the octagon would look broken in the drawing.
+  function warnText() {
+    var bad = [];
+    editable(tuneModel).forEach(function (e) {
+      if (outsideBody(tuneModel, e.it.x, e.it.y, (e.it.d || 0.3) / 2)) bad.push(e.it.id);
+    });
+    return bad.length ? "\n\u26a0 outside the body: " + bad.join(", ") : "";
   }
 
   function exportSpec() {
@@ -459,7 +480,7 @@
     if (tuneOn) {
       drawHandles();
       exportSpec();
-      status("Drag any handle \u2014 " + dimsText(tuneModel));
+      status("Drag any handle \u2014 " + dimsText(tuneModel) + warnText());
     }
   }
 
@@ -467,7 +488,7 @@
     SPECS: SPECS, PLACEMENT: PLACEMENT, MOUNTS: MOUNTS,
     render: render, build: build, anchor: anchor, rel: rel, find: find,
     items: items, place: place,
-    tune: tune, applySpec: applySpec, exportSpec: exportSpec,
+    tune: tune, applySpec: applySpec, exportSpec: exportSpec, outsideBody: outsideBody,
     beginDrag: beginDrag, redrawHandles: drawHandles, octagon: octagon, dimsText: dimsText,
     setTuneModel: function (m) { tuneModel = m; if (tuneOn) drawHandles(); },
     set: function (model, spec) { SPECS[model] = spec; }
