@@ -31,31 +31,28 @@
     ports: [
       { id: "H", x: 0.72, y: 0.71, d: 0.3 },
       { id: "L", x: 1.21, y: 0.7, d: 0.3 },
-      { id: "T", x: 3.04, y: 0.65, d: 0.3, label: { dx: 0.30, dy: 0.05, anchor: "start" } },
-      { id: "B", x: 0.25, y: 1.61, d: 0.3, label: { dx: 0.10, dy: -0.34, anchor: "middle" } },
-      { id: "M", x: 0.25, y: 2.24, d: 0.3 }
+      { id: "T", x: 3.04, y: 0.65, d: 0.3, label: { dx: 0.3, dy: 0.05, anchor: "start" } },
+      { id: "B", x: 0.25, y: 1.68, d: 0.3, label: { dx: 0.1, dy: -0.34, anchor: "middle" } },
+      { id: "M", x: 0.27, y: 2.1, d: 0.3 }
     ],
-    caps: [{ id: "G", x: 1.72, y: 2.92, d: 0.19 }],
+    caps: [{ id: "G", x: 1.59, y: 3, d: 0.19 }],
     // One adjuster per panel legend row, in the same top-to-bottom order.
     // hiStat is 72% of loStat's diameter, as on the real face.
     dials: [
-      { id: "damper", x: 1.15, y: 1.95, d: 1, kind: "damper" },
-      { id: "resetStart", x: 2.16, y: 0.68, d: 0.9, kind: "arrow" },
-      { id: "loStat", x: 2.21, y: 1.93, d: 0.9, kind: "arrow" },
+      { id: "damper", x: 1.1, y: 1.87, d: 1, kind: "damper" },
+      { id: "resetStart", x: 2.26, y: 0.65, d: 0.9, kind: "arrow" },
+      { id: "loStat", x: 2.11, y: 1.87, d: 0.9, kind: "arrow" },
       { id: "hiStat", x: 3.13, y: 1.95, d: 0.648, kind: "arrow" },
-      { id: "resetSpan", x: 2.47, y: 3.14, d: 0.9, kind: "screw" }
+      { id: "resetSpan", x: 2.3, y: 3.1, d: 0.9, kind: "screw" }
     ],
     panel: {
-      // Narrow and tall: RESET START + LO STAT ΔP stack above the HI STAT
-      // dial, HI STAT ΔP sits to the dial's right, then the blank tag, then
-      // RESET SPAN at the bottom.
-      x: 2.78, y: 1.05, w: 1.20, h: 1.68,
+      x: 2.78, y: 1.05, w: 1.2, h: 1.68,
       lines: [
         { t: "RESET START", dy: 0.17, lead: "resetStart" },
-        { t: "LO STAT \u0394P", dy: 0.40, lead: "loStat" },
+        { t: "LO STAT \u0394P", dy: 0.4, lead: "loStat" },
         { t: "HI STAT", dy: 0.84, dx: 0.68 },
         { t: "\u0394P", dy: 0.99, dx: 0.68 },
-        { t: "RESET SPAN", dy: 1.50, lead: "resetSpan" }
+        { t: "RESET SPAN", dy: 1.5, lead: "resetSpan" }
       ],
       sticker: { dx: 0.08, dy: 1.28, w: 0.94, h: 0.15 }
     }
