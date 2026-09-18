@@ -197,14 +197,20 @@
         }));
       });
       buildScrew(grp, x, y, r);
-      grp.appendChild(txt("tc-note", x, f1(y + r * 0.70), "NO", "middle"));
+      // NO / NC each get a label plus a fixed index triangle pointing outward,
+      // so the pair reads symmetrically (NO straight down, NC to the right).
+      grp.appendChild(txt("tc-note", x, f1(y + r * 0.62), "NO", "middle"));
       grp.appendChild(el("polygon", "tc-note-mark", {
         points: f1(x - 5) + "," + f1(y + r * 0.80) + " " + f1(x + 5) + "," + f1(y + r * 0.80) +
-                " " + f1(x) + "," + f1(y + r * 0.80 + 7)
+                " " + f1(x) + "," + f1(y + r * 1.05)
       }));
-      var nx = x + r * 0.70;
+      var nx = x + r * 0.58;
       grp.appendChild(txt("tc-note", f1(nx), f1(y), "NC", "middle",
         "rotate(-90 " + f1(nx) + " " + f1(y) + ")"));
+      grp.appendChild(el("polygon", "tc-note-mark", {
+        points: f1(x + r * 0.80) + "," + f1(y - 5) + " " + f1(x + r * 0.80) + "," + f1(y + 5) +
+                " " + f1(x + r * 1.05) + "," + f1(y)
+      }));
       g.appendChild(grp);
       // Fixed DAMPER index — outside the rotating group.
       g.appendChild(el("polygon", "tc-note-mark", {
