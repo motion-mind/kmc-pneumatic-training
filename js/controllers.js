@@ -51,11 +51,11 @@
       // RESET SPAN at the bottom.
       x: 2.78, y: 1.05, w: 1.20, h: 1.68,
       lines: [
-        { t: "RESET START", dy: 0.17 },
-        { t: "LO STAT \u0394P", dy: 0.40 },
+        { t: "RESET START", dy: 0.17, lead: "resetStart" },
+        { t: "LO STAT \u0394P", dy: 0.40, lead: "loStat" },
         { t: "HI STAT", dy: 0.84, dx: 0.68 },
         { t: "\u0394P", dy: 0.99, dx: 0.68 },
-        { t: "RESET SPAN", dy: 1.50 }
+        { t: "RESET SPAN", dy: 1.50, lead: "resetSpan" }
       ],
       sticker: { dx: 0.08, dy: 1.28, w: 0.94, h: 0.15 }
     }
@@ -266,15 +266,28 @@
     buildScrew(g, x, y, r);
   }
 
-  function buildPanel(g, s, ppu) {
+  function buildPanel(g, s, model, deck, ppu) {
     var p = s.panel; if (!p) return;
     var x = p.x * ppu, y = p.y * ppu;
     g.appendChild(el("rect", "tc-panel", {
       x: f1(x), y: f1(y), width: f1(p.w * ppu), height: f1(p.h * ppu), rx: 5
     }));
     (p.lines || []).forEach(function (ln) {
-      g.appendChild(txt("tc-paneltext", f1(x + (ln.dx || 0.11) * ppu),
-        f1(y + ln.dy * ppu), ln.t));
+      var lx = x + (ln.dx || 0.11) * ppu, ly = y + ln.dy * ppu;
+      if (ln.lead) {
+        // Leader from the left end of the label out to the dial it names.
+        var d = find(model, ln.lead);
+        if (d) {
+          var dcx = d.x * ppu, dcy = d.y * ppu, dr = d.d / 2 * ppu;
+          var sx = lx - 0.04 * ppu, sy = ly - 0.05 * ppu;
+          var vx = sx - dcx, vy = sy - dcy, vl = Math.hypot(vx, vy) || 1;
+          g.appendChild(el("line", "tc-panel-lead", {
+            x1: f1(dcx + (vx / vl) * (dr + 1.5)), y1: f1(dcy + (vy / vl) * (dr + 1.5)),
+            x2: f1(sx), y2: f1(sy)
+          }));
+        }
+      }
+      g.appendChild(txt("tc-paneltext", f1(lx), f1(ly), ln.t));
     });
     if (p.sticker) {
       g.appendChild(el("rect", "tc-sticker", {
@@ -308,7 +321,7 @@
       g.appendChild(txt("portlbl", f1(x), f1(y + r + 0.24 * ppu), c.id, "middle"));
     });
     // Panel first: the HI STAT adjuster sits on top of the printed plate.
-    buildPanel(g, s, ppu);
+    buildPanel(g, s, model, deck, ppu);
     items(model, "dials").forEach(function (d) { buildDial(g, s, d, deck, ppu, model + "-" + deck); });
     items(model, "ports").forEach(function (p) { buildPort(g, s, p, ppu); });
 
