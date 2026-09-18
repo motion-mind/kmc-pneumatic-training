@@ -29,13 +29,13 @@
     // Measured octagon: 1.48" top & bottom, 2.07" diagonals, 0.85" sides.
     body: { top: 1.48, diag: 2.07, side: 0.85 },
     ports: [
-      { id: "H", x: 0.88, y: 0.76, d: 0.3 },
+      { id: "H", x: 0.72, y: 0.71, d: 0.3 },
       { id: "L", x: 1.21, y: 0.7, d: 0.3 },
       { id: "T", x: 2.99, y: 0.63, d: 0.3 },
       { id: "B", x: 0.25, y: 1.61, d: 0.3 },
       { id: "M", x: 0.25, y: 2.24, d: 0.3 }
     ],
-    caps: [{ id: "G", x: 1.78, y: 2.84, d: 0.55 }],
+    caps: [{ id: "G", x: 1.57, y: 2.9, d: 0.19 }],
     // One adjuster per panel legend row, in the same top-to-bottom order.
     // hiStat is 72% of loStat's diameter, as on the real face.
     dials: [
@@ -46,11 +46,11 @@
       { id: "resetSpan", x: 2.48, y: 3.1, d: 0.9, kind: "screw" }
     ],
     panel: {
-      x: 2.76, y: 1.28, w: 1.2, h: 1.38,
+      x: 2.76, y: 1.28, w: 1.36, h: 1.3,
       lines: [
         { t: "RESET START", dy: 0.2 },
-        { t: "LO STAT ΔP", dy: 0.49 },
-        { t: "HI STAT ΔP", dy: 0.78 },
+        { t: "LO STAT ΔP", dy: 0.49, dx: 0.78 },
+        { t: "HI STAT ΔP", dy: 0.78, dx: 0.78 },
         { t: "RESET SPAN", dy: 1.07 }
       ],
       sticker: { dx: 0.08, dy: 1.13, w: 1.04, h: 0.15 }
@@ -243,7 +243,8 @@
       x: f1(x), y: f1(y), width: f1(p.w * ppu), height: f1(p.h * ppu), rx: 5
     }));
     (p.lines || []).forEach(function (ln) {
-      g.appendChild(txt("tc-paneltext", f1(x + 0.11 * ppu), f1(y + ln.dy * ppu), ln.t));
+      g.appendChild(txt("tc-paneltext", f1(x + (ln.dx || 0.11) * ppu),
+        f1(y + ln.dy * ppu), ln.t));
     });
     if (p.sticker) {
       g.appendChild(el("rect", "tc-sticker", {
@@ -276,8 +277,9 @@
       g.appendChild(el("circle", "tc-plug", { cx: f1(x), cy: f1(y), r: f1(r) }));
       g.appendChild(txt("portlbl", f1(x), f1(y + r + 0.24 * ppu), c.id, "middle"));
     });
-    items(model, "dials").forEach(function (d) { buildDial(g, s, d, deck, ppu); });
+    // Panel first: the HI STAT adjuster sits on top of the printed plate.
     buildPanel(g, s, ppu);
+    items(model, "dials").forEach(function (d) { buildDial(g, s, d, deck, ppu); });
     items(model, "ports").forEach(function (p) { buildPort(g, s, p, ppu); });
 
     var bs = bodySize(s);

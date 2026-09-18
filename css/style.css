@@ -192,7 +192,7 @@ main {
 .tc-dial { fill: #cdbb96; stroke: #9c8a63; stroke-width: 1.2; }
 .tc-cross { stroke: #6d6250; stroke-width: 1.6; stroke-linecap: round; }
 .tc-panel { fill: url(#panelGrad); stroke: #9c8a63; stroke-width: 1.2; }
-.tc-paneltext { fill: #695b3e; font-size: 6px; font-weight: 800; letter-spacing: 0.01em; }
+.tc-paneltext { fill: #695b3e; font-size: 4.5px; font-weight: 800; letter-spacing: 0.01em; }
 .tc-note { fill: #6d5f42; font-size: 7px; font-weight: 800; letter-spacing: 0.02em; }
 .tc-sticker { fill: #f2f1ea; stroke: #b8b3a4; stroke-width: 0.8; }
 .knob-tick { stroke: #7a6c4c; stroke-width: 1; }
