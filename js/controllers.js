@@ -72,11 +72,12 @@
       { x: 1.7, y: 2.57, d: 1.37 },   // secondary housing
       { x: 1.7, y: 2.42, d: 1.00 }    // inner boss carrying T
     ],
-    // 6 x 0.25" holes, one per hexagon corner
+    // 6 x 0.25" holes, set inboard of each hexagon corner so they sit between
+    // the corner and the 2.57" main circle (corner radius 1.72", circle 1.285").
     bolts: [
-      { id: "h1", x: 0.84, y: 0 }, { id: "h2", x: 2.56, y: 0 },
-      { id: "h3", x: 3.4, y: 1.5 }, { id: "h4", x: 2.56, y: 3.0 },
-      { id: "h5", x: 0.84, y: 3.0 }, { id: "h6", x: 0, y: 1.5 }
+      { id: "h1", x: 0.95, y: 0.20 }, { id: "h2", x: 2.45, y: 0.20 },
+      { id: "h3", x: 3.20, y: 1.50 }, { id: "h4", x: 2.45, y: 2.80 },
+      { id: "h5", x: 0.95, y: 2.80 }, { id: "h6", x: 0.20, y: 1.50 }
     ],
     boltD: 0.25,
     // all ports 0.36"
