@@ -88,7 +88,7 @@
   // Where each model is drawn.  `hot`/`cold` are the drawing coordinates that
   // the spec's (0,0) maps to for that deck.
   var PLACEMENT = {
-    csc3000: { ppu: 48, hot: { x: 520, y: 150 }, cold: { x: 520, y: 440 } },
+    csc3000: { ppu: 48, hot: { x: 520, y: 160 }, cold: { x: 520, y: 450 } },
     csc2000: { ppu: 48, hot: { x: 524, y: 158 }, cold: { x: 524, y: 448 } }
   };
 
