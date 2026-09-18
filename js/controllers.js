@@ -31,26 +31,26 @@
     ports: [
       { id: "H", x: 0.72, y: 0.71, d: 0.3 },
       { id: "L", x: 1.21, y: 0.7, d: 0.3 },
-      { id: "T", x: 2.99, y: 0.63, d: 0.3 },
+      { id: "T", x: 3.04, y: 0.65, d: 0.3 },
       { id: "B", x: 0.25, y: 1.61, d: 0.3 },
       { id: "M", x: 0.25, y: 2.24, d: 0.3 }
     ],
-    caps: [{ id: "G", x: 1.57, y: 2.9, d: 0.19 }],
+    caps: [{ id: "G", x: 1.72, y: 2.92, d: 0.19 }],
     // One adjuster per panel legend row, in the same top-to-bottom order.
     // hiStat is 72% of loStat's diameter, as on the real face.
     dials: [
       { id: "damper", x: 1.15, y: 1.95, d: 1, kind: "damper" },
-      { id: "resetStart", x: 2.24, y: 0.58, d: 0.9, kind: "arrow" },
+      { id: "resetStart", x: 2.16, y: 0.68, d: 0.9, kind: "arrow" },
       { id: "loStat", x: 2.21, y: 1.93, d: 0.9, kind: "arrow" },
       { id: "hiStat", x: 3.13, y: 1.95, d: 0.648, kind: "arrow" },
-      { id: "resetSpan", x: 2.48, y: 3.1, d: 0.9, kind: "screw" }
+      { id: "resetSpan", x: 2.47, y: 3.14, d: 0.9, kind: "screw" }
     ],
     panel: {
       x: 2.76, y: 1.28, w: 1.36, h: 1.3,
       lines: [
         { t: "RESET START", dy: 0.2 },
-        { t: "LO STAT ΔP", dy: 0.49, dx: 0.78 },
-        { t: "HI STAT ΔP", dy: 0.78, dx: 0.78 },
+        { t: "LO STAT \u0394P", dy: 0.49, dx: 0.78 },
+        { t: "HI STAT \u0394P", dy: 0.78, dx: 0.78 },
         { t: "RESET SPAN", dy: 1.07 }
       ],
       sticker: { dx: 0.08, dy: 1.13, w: 1.04, h: 0.15 }
