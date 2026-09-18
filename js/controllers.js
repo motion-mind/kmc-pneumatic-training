@@ -46,14 +46,18 @@
       { id: "resetSpan", x: 2.47, y: 3.14, d: 0.9, kind: "screw" }
     ],
     panel: {
-      x: 2.76, y: 1.28, w: 1.36, h: 1.3,
+      // Narrow and tall: RESET START + LO STAT ΔP stack above the HI STAT
+      // dial, HI STAT ΔP sits to the dial's right, then the blank tag, then
+      // RESET SPAN at the bottom.
+      x: 2.78, y: 1.05, w: 1.20, h: 1.68,
       lines: [
-        { t: "RESET START", dy: 0.2 },
-        { t: "LO STAT \u0394P", dy: 0.49, dx: 0.78 },
-        { t: "HI STAT \u0394P", dy: 0.78, dx: 0.78 },
-        { t: "RESET SPAN", dy: 1.07 }
+        { t: "RESET START", dy: 0.17 },
+        { t: "LO STAT \u0394P", dy: 0.40 },
+        { t: "HI STAT", dy: 0.84, dx: 0.68 },
+        { t: "\u0394P", dy: 0.99, dx: 0.68 },
+        { t: "RESET SPAN", dy: 1.50 }
       ],
-      sticker: { dx: 0.08, dy: 1.13, w: 1.04, h: 0.15 }
+      sticker: { dx: 0.08, dy: 1.28, w: 0.94, h: 0.15 }
     }
   };
 
