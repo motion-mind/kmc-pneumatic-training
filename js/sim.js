@@ -44,10 +44,61 @@
     csc2000: { hi: "X", lo: "Y", branch: "B", main: "M", stat: "T" }
   };
 
-  // Sensor probes and their tap x positions (fixed graphics).
+  // Sensor tap positions. These follow the controller's H and L ports so the
+  // probe body stays centred between them and the leads drop straight in.
   var PROBE = { hot: { hi: [570, 150], lo: [607, 150] },
                 cold: { hi: [570, 440], lo: [607, 440] } };
+  // The CSC-2000's velocity ports (X/Y) are stacked on one axis, so there is
+  // nothing to centre between — keep the stock probe spacing there.
+  var PROBE_FIXED = { hot: { hi: [570, 150], lo: [607, 150] },
+                      cold: { hi: [570, 440], lo: [607, 440] } };
   var ACTUATOR_X = 460, TEE = [1000, 400], TRUNK_X = 240;
+
+  function probeTaps(deck) {
+    var y = deck === "hot" ? 150 : 440;
+    if (state.series === "2000") {
+      return { hi: [PROBE_FIXED[deck].hi[0], y], lo: [PROBE_FIXED[deck].lo[0], y] };
+    }
+    var hi = Controllers.anchor("csc3000", deck, "H");
+    var lo = Controllers.anchor("csc3000", deck, "L");
+    if (!hi || !lo) return { hi: [PROBE[deck].hi[0], y], lo: [PROBE[deck].lo[0], y] };
+    return { hi: [hi.x, y], lo: [lo.x, y] };
+  }
+
+  function rebuildProbe() {
+    ["hot", "cold"].forEach(function (deck) {
+      var t = probeTaps(deck);
+      PROBE[deck].hi = t.hi;
+      PROBE[deck].lo = t.lo;
+    });
+  }
+
+  // Move the drawn sensor so its probe sits midway between the H and L ports.
+  // Probe body = the vertical averaging probe plus its sensing points; the two
+  // taps land on the port positions and the lead spans between them.
+  function positionSensor(deck) {
+    var g = document.getElementById(deck === "hot" ? "sensorHot" : "sensorCold");
+    if (!g || typeof Controllers === "undefined") return;
+    var t = probeTaps(deck);
+    var hi = { x: t.hi[0] }, lo = { x: t.lo[0] };
+    var mid = (hi.x + lo.x) / 2, taps = [], k;
+    for (k = 0; k < g.children.length; k++) {
+      var c = g.children[k];
+      var cls = (c.getAttribute && c.getAttribute("class")) || "";
+      if (cls.indexOf("sensor-probe") === 0) {
+        c.setAttribute("x1", mid); c.setAttribute("x2", mid);
+      } else if (cls.indexOf("sensor-port") === 0) {
+        c.setAttribute("cx", mid);
+      } else if (cls.indexOf("sensor-lead") === 0) {
+        c.setAttribute("x1", hi.x); c.setAttribute("x2", lo.x);
+        c.setAttribute("y1", t.hi[1]); c.setAttribute("y2", t.hi[1]);
+      } else if (cls.indexOf("sensor-tap") === 0) {
+        taps.push(c);
+      }
+    }
+    if (taps[0]) { taps[0].setAttribute("cx", hi.x); taps[0].setAttribute("cy", t.hi[1]); }
+    if (taps[1]) { taps[1].setAttribute("cx", lo.x); taps[1].setAttribute("cy", t.lo[1]); }
+  }
 
   function ports(model, deck) {
     var m = PORTMAP[model], o = {};
@@ -104,6 +155,10 @@
 
   // Rebuild routing when the series or the controller artwork changes.
   function retube() {
+    if (typeof Controllers === "undefined") return;
+    rebuildProbe();
+    positionSensor("hot");
+    positionSensor("cold");
     TUBE_GEOM = buildTubeSpecs(state.series === "2000" ? "csc2000" : "csc3000");
   }
 
@@ -625,6 +680,11 @@
     Controllers.afterRender = function () {
       if (typeof els !== "undefined" && Object.keys(els).length) rebuildTubes();
     };
+  }
+
+  // Preview/test hook: lets a headless host select the controller series.
+  if (typeof window !== "undefined") {
+    window.__sim = { setSeries: setSeries, retube: rebuildTubes, state: state };
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
