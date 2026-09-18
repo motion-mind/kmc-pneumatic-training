@@ -31,8 +31,8 @@
     ports: [
       { id: "H", x: 0.72, y: 0.71, d: 0.3 },
       { id: "L", x: 1.21, y: 0.7, d: 0.3 },
-      { id: "T", x: 3.04, y: 0.65, d: 0.3 },
-      { id: "B", x: 0.25, y: 1.61, d: 0.3 },
+      { id: "T", x: 3.04, y: 0.65, d: 0.3, label: { dx: 0.30, dy: 0.05, anchor: "start" } },
+      { id: "B", x: 0.25, y: 1.61, d: 0.3, label: { dx: 0.10, dy: -0.34, anchor: "middle" } },
       { id: "M", x: 0.25, y: 2.24, d: 0.3 }
     ],
     caps: [{ id: "G", x: 1.72, y: 2.92, d: 0.19 }],
@@ -185,7 +185,7 @@
     }));
   }
 
-  function buildDial(g, s, d, deck, ppu) {
+  function buildDial(g, s, d, deck, ppu, uid) {
     var x = d.x * ppu, y = d.y * ppu, r = d.d / 2 * ppu;
 
     if (d.kind === "damper") {
@@ -231,11 +231,37 @@
     g.appendChild(el("circle", "tc-dial-rim", { cx: x, cy: y, r: f1(r) }));
     g.appendChild(el("circle", "tc-dial-face", { cx: x, cy: y, r: f1(r * 0.60) }));
     if (d.kind === "arrow") {
-      var rr = r * 0.40;
+      // Counter-clockwise arc across the top (decreasing angle in SVG's
+      // y-down space = CCW on screen), with a head at the trailing end.
+      var ra = r * 0.66, aFrom = 330, aTo = 210;
+      var rad = function (deg) { return deg * Math.PI / 180; };
+      var pt = function (R, deg) { return [x + R * Math.cos(rad(deg)), y + R * Math.sin(rad(deg))]; };
+      var A = pt(ra, aFrom), B = pt(ra, aTo);
       g.appendChild(el("path", "tc-dial-arrow", {
-        d: "M " + f1(x - rr) + " " + f1(y) +
-           " A " + f1(rr) + " " + f1(rr) + " 0 0 1 " + f1(x + rr) + " " + f1(y)
+        d: "M " + f1(A[0]) + " " + f1(A[1]) +
+           " A " + f1(ra) + " " + f1(ra) + " 0 0 0 " + f1(B[0]) + " " + f1(B[1])
       }));
+      // head: tangent at the end of a CCW sweep is (sin t, -cos t)
+      var t = rad(aTo), dir = [Math.sin(t), -Math.cos(t)];
+      var perp = [-dir[1], dir[0]], hl = 5.4, hw = 3.0;
+      var bc = [B[0] - dir[0] * hl, B[1] - dir[1] * hl];
+      g.appendChild(el("polygon", "tc-dial-arrowhead", {
+        points: f1(B[0]) + "," + f1(B[1]) + " " +
+                f1(bc[0] + perp[0] * hw) + "," + f1(bc[1] + perp[1] * hw) + " " +
+                f1(bc[0] - perp[0] * hw) + "," + f1(bc[1] - perp[1] * hw)
+      }));
+      // "INCR" curved along the bottom, inside the rim. Laid out glyph by
+      // glyph rather than with <textPath> so it renders everywhere.
+      var word = "INCR", rt = r * 0.62, sweep = 108;
+      var gstep = sweep / word.length;
+      for (var ci = 0; ci < word.length; ci++) {
+        var ga = (90 + sweep / 2) - (ci + 0.5) * gstep;    // 90 = bottom (y-down)
+        var gp = pt(rt, ga);
+        var gt = txt("tc-dial-incr", f1(gp[0]), f1(gp[1]), word.charAt(ci), "middle",
+          "rotate(" + f1(ga - 90) + " " + f1(gp[0]) + " " + f1(gp[1]) + ")");
+        gt.setAttribute("font-size", f1(Math.max(3.4, r * 0.23)));
+        g.appendChild(gt);
+      }
     }
     buildScrew(g, x, y, r);
   }
@@ -283,7 +309,7 @@
     });
     // Panel first: the HI STAT adjuster sits on top of the printed plate.
     buildPanel(g, s, ppu);
-    items(model, "dials").forEach(function (d) { buildDial(g, s, d, deck, ppu); });
+    items(model, "dials").forEach(function (d) { buildDial(g, s, d, deck, ppu, model + "-" + deck); });
     items(model, "ports").forEach(function (p) { buildPort(g, s, p, ppu); });
 
     var bs = bodySize(s);
