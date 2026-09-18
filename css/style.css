@@ -385,3 +385,4 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .tc-dial-arcpath { fill: none; stroke: none; }
 .tc-dial-incr { fill: #6d5f42; font-size: 5px; font-weight: 800; letter-spacing: 0.02em; }
 .tc-panel-lead { stroke: #a2916f; stroke-width: 0.8; fill: none; }
+.tc-plate-outline { fill: #efe9dc; stroke: #b3a482; stroke-width: 1; }

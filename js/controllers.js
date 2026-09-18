@@ -63,23 +63,34 @@
   // Two diaphragm housings plus six mounting bolts.
   var csc2000 = {
     name: "CSC-2000",
-    body: { top: 2.33, diag: 0.65, side: 2.6425 },
+    // 3-1/4" (83) x 3-9/16" (91) mounting plate, per KMC DS_CSC-2000.
+    size: { w: 3.25, h: 3.5625 },
+    plate: { r: 0.16 },
+    // Lobed housing: a large primary diaphragm plus a smaller secondary one,
+    // with four mount lobes on the diagonals.  Same read as the drawing's
+    // scalloped outline.
     circles: [
-      { x: 1.62, y: 1.53, d: 1.84 },
-      { x: 1.62, y: 2.90, d: 1.30 }
+      { x: 1.62, y: 1.42, d: 1.98 },
+      { x: 1.62, y: 2.92, d: 1.42 },
+      { x: 0.92, y: 0.52, d: 0.76 },
+      { x: 2.32, y: 0.52, d: 0.76 },
+      { x: 0.92, y: 2.94, d: 0.76 },
+      { x: 2.32, y: 2.94, d: 0.76 }
     ],
+    // mount holes: four lobe holes plus the two mid-side tab holes
     bolts: [
-      { id: "b1", x: 0.60, y: 0.60 }, { id: "b2", x: 2.65, y: 0.60 },
-      { id: "b3", x: 0.32, y: 1.78 }, { id: "b4", x: 2.93, y: 1.78 },
-      { id: "b5", x: 0.60, y: 2.96 }, { id: "b6", x: 2.65, y: 2.96 }
+      { id: "h1", x: 0.92, y: 0.52 }, { id: "h2", x: 2.32, y: 0.52 },
+      { id: "h3", x: 0.12, y: 1.72 }, { id: "h4", x: 3.13, y: 1.72 },
+      { id: "h5", x: 0.92, y: 2.94 }, { id: "h6", x: 2.32, y: 2.94 }
     ],
     boltD: 0.30,
+    // 1/4" push-on fittings, same as the CSC-3000's barbed ports.
     ports: [
-      { id: "X", x: 1.62, y: 0.52, d: 0.34, label: { dx: -0.32, dy: 0.04, anchor: "end" } },
-      { id: "Y", x: 1.62, y: 1.18, d: 0.34, label: { dx: 0, dy: 0.44, anchor: "middle" } },
-      { id: "M", x: 1.06, y: 1.98, d: 0.34, label: { dx: -0.32, dy: 0.06, anchor: "end" } },
-      { id: "B", x: 2.18, y: 1.98, d: 0.34, label: { dx: 0.32, dy: 0.06, anchor: "start" } },
-      { id: "T", x: 1.52, y: 2.96, d: 0.40, label: { dx: -0.36, dy: -0.06, anchor: "end" } }
+      { id: "X", x: 1.62, y: 0.44, d: 0.22, label: { dx: -0.24, dy: 0.04, anchor: "end" } },
+      { id: "Y", x: 1.62, y: 0.94, d: 0.22, label: { dx: 0, dy: 0.34, anchor: "middle" } },
+      { id: "M", x: 1.35, y: 1.72, d: 0.22, label: { dx: -0.24, dy: 0.04, anchor: "end" } },
+      { id: "B", x: 1.90, y: 1.72, d: 0.22, label: { dx: 0.24, dy: 0.04, anchor: "start" } },
+      { id: "T", x: 1.62, y: 2.62, d: 0.22, label: { dx: 0, dy: -0.30, anchor: "middle" } }
     ]
   };
 
@@ -301,6 +312,12 @@
     var pl = place(model, deck), ppu = pl.ppu;
     var g = el("g", null, {});
 
+    if (s.plate) {
+      g.appendChild(el("rect", "tc-plate-outline", {
+        x: 0, y: 0, width: f1(s.size.w * ppu), height: f1(s.size.h * ppu),
+        rx: f1((s.plate.r || 0.15) * ppu)
+      }));
+    }
     if (s.body) g.appendChild(el("polygon", "tc-body", { points: bodyPoints(s, ppu) }));
     items(model, "circles").forEach(function (c) {
       g.appendChild(el("circle", "tc-body", {
