@@ -388,3 +388,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .tc-plate-outline { fill: #efe9dc; stroke: #b3a482; stroke-width: 1; }
 /* Actuator body: plain black rectangle, width one third of its height. */
 .act-body { fill: #16181a; stroke: none; }
+/* On the dark theme the black actuator bodies would disappear into the
+   background, so give them a lighter outline there. */
+body.theme-dark .act-body { stroke: var(--muted); stroke-width: 1.6; }
