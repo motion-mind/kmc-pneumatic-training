@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=67">
+<link rel="stylesheet" href="css/style.css?v=68">
 </head>
 <body>
 <header class="topbar">
@@ -141,7 +141,7 @@
           <rect class="tstat-recess" x="1030" y="250" width="150" height="120" rx="11"/>
           <line class="tstat-louvre" x1="1040" y1="355" x2="1170" y2="355"/>
           <line class="tstat-louvre" x1="1040" y1="362" x2="1170" y2="362"/>
-          <g id="tstatDial" class="clickable" tabindex="0" role="slider" aria-label="Thermostat setpoint" aria-valuemin="60" aria-valuemax="80">
+          <g id="tstatDial" class="clickable" tabindex="0" role="slider" aria-label="Thermostat setpoint" aria-valuemin="55" aria-valuemax="95">
             <circle class="tstat-dial" cx="1058" cy="292" r="24"/>
             <g id="tstatScale"></g>
             <line id="tNeedle" class="needle" x1="1058" y1="292" x2="1058" y2="270"/>
@@ -203,7 +203,7 @@
         </label>
         <label class="ctl">
           <span>Thermostat setpoint <output id="spOut">72&deg;F</output></span>
-          <input id="spSl" type="range" min="60" max="80" step="0.5" value="72">
+          <input id="spSl" type="range" min="55" max="95" step="0.5" value="72">
           <p class="hint">Drag the dial on the thermostat, or use this slider.</p>
         </label>
         <div class="ctl">
@@ -297,7 +297,7 @@
   </div>
 </footer>
 
-<script src="js/controllers.js?v=67"></script>
-<script src="js/sim.js?v=67"></script>
+<script src="js/controllers.js?v=68"></script>
+<script src="js/sim.js?v=68"></script>
 </body>
 </html>

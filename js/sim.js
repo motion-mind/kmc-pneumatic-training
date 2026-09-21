@@ -5,6 +5,14 @@
   var tubeLayer = document.getElementById("tubeLayer");
 
   var MAX = 200, MIN = 50, RESET_START = 8, RESET_SPAN = 5;
+  // Thermostat setpoint range and the dial's mechanical sweep either side of 12 o'clock.
+  var SP_MIN = 55, SP_MAX = 95, SP_SWEEP = 60;
+  function spFromAngle(ang) {
+    return SP_MIN + (ang + SP_SWEEP) / (2 * SP_SWEEP) * (SP_MAX - SP_MIN);
+  }
+  function angleFromSp(sp) {
+    return -SP_SWEEP + (sp - SP_MIN) / (SP_MAX - SP_MIN) * (2 * SP_SWEEP);
+  }
   // Actuator response (first-order). Slowed 50% from the previous 0.4 s baseline.
   var ACT_TAU = 0.8;
   var DEFAULTS = { mainOn: true, setpoint: 72, roomTemp: 78, oat: 70, twoControllers: true, coldAction: "NO", hotAction: "NC", series: "3000" };
@@ -182,17 +190,17 @@
   function initDeviceArt() {
     var gs = document.getElementById("tstatScale");
     if (!gs) return;
-    for (var a = -60; a <= 60; a += 15) {
+    for (var a = -SP_SWEEP; a <= SP_SWEEP; a += 15) {
       var major = (a % 30 === 0);
       var p1 = polar(1058, 292, 26, a), p2 = polar(1058, 292, major ? 31.5 : 30, a);
       gs.appendChild(seg("tstat-tick" + (major ? " major" : ""), p1[0], p1[1], p2[0], p2[1]));
     }
-    [-60, -30, 0, 30, 60].forEach(function (ang) {
+    [-SP_SWEEP, -30, 0, 30, SP_SWEEP].forEach(function (ang) {
       var pt = polar(1058, 292, 20.5, ang);
       var t = document.createElementNS(NS, "text");
       t.setAttribute("class", "tstat-num");
       t.setAttribute("x", pt[0].toFixed(1)); t.setAttribute("y", (pt[1] + 2.8).toFixed(1));
-      t.textContent = String(60 + (ang + 60) / 120 * 20);
+      t.textContent = String(spFromAngle(ang));
       gs.appendChild(t);
     });
   }
@@ -397,7 +405,7 @@
     document.getElementById("sensorHot").style.display = two ? "block" : "none";
     document.getElementById("sensorCold").style.display = two ? "block" : "none";
 
-    var needAng = -60 + (state.setpoint - 60) / 20 * 120;
+    var needAng = angleFromSp(state.setpoint);
     document.getElementById("tNeedle").setAttribute("transform", "rotate(" + needAng.toFixed(1) + " 1058 292)");
 
     setFlowAnim(document.getElementById("flowLine"), clamp(state.coldPct / 100, 0, 1));
@@ -625,8 +633,8 @@
         var box = document.getElementById("sim").getBoundingClientRect();
         var x = (evt.clientX - box.left) / box.width * 1250;
         var y = (evt.clientY - box.top) / box.height * 700;
-        var ang = clamp(Math.atan2(x - 1058, -(y - 292)) * 180 / Math.PI, -60, 60);
-        state.setpoint = Math.round((60 + (ang + 60) / 120 * 20) * 2) / 2;
+        var ang = clamp(Math.atan2(x - 1058, -(y - 292)) * 180 / Math.PI, -SP_SWEEP, SP_SWEEP);
+        state.setpoint = Math.round(spFromAngle(ang) * 2) / 2;
         syncControls();
       }
       dial.addEventListener("pointerdown", function (e) {
@@ -641,7 +649,7 @@
         var d = 0;
         if (e.key === "ArrowUp" || e.key === "ArrowRight") d = 0.5;
         else if (e.key === "ArrowDown" || e.key === "ArrowLeft") d = -0.5;
-        if (d) { state.setpoint = clamp(state.setpoint + d, 60, 80); syncControls(); e.preventDefault(); }
+        if (d) { state.setpoint = clamp(state.setpoint + d, SP_MIN, SP_MAX); syncControls(); e.preventDefault(); }
       });
     }
 
