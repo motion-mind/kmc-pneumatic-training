@@ -79,7 +79,7 @@
   // nothing to centre between — keep the stock probe spacing there.
   var PROBE_FIXED = { hot: { hi: [570, 150], lo: [607, 150] },
                       cold: { hi: [570, 440], lo: [607, 440] } };
-  var ACTUATOR_X = 460, TEE = [1000, 400], TRUNK_X = 240;
+  var ACTUATOR_X = 442, TEE = [1000, 400], TRUNK_X = 240;
 
   function activeModel() { return state.series === "2000" ? "csc2000" : "csc3000"; }
 
@@ -502,8 +502,8 @@
           "translate(" + cx + "," + cy + ") rotate(" + theta.toFixed(1) + ")");
       }
     }
-    linkage("crankHot", "rodHot", "pinHot", "actBodyHot", 430, 110, hotAng, 448, 186, 36);
-    linkage("crankCold", "rodCold", "pinCold", "actBodyCold", 430, 400, coldAng, 448, 476, 36);
+    linkage("crankHot", "rodHot", "pinHot", "actBodyHot", 430, 110, hotAng, 430, 186, 36);
+    linkage("crankCold", "rodCold", "pinCold", "actBodyCold", 430, 400, coldAng, 430, 476, 36);
     // Single shaft: the one actuator drives the cold blade's crank, and the
     // opposed link carries that on to the hot blade.
     linkage("crankSingle", "rodSingle", "pinSingle", "actBodySingle", 430, 400, coldAng, 445, 500, 45);

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=109">
+<link rel="stylesheet" href="css/style.css?v=110">
 </head>
 <body>
 <header class="topbar">
@@ -86,10 +86,10 @@
           <line id="crankHot" class="crank" x1="430" y1="110" x2="430" y2="130"/>
           <line id="rodHot" class="linkage" x1="430" y1="130" x2="448" y2="170"/>
           <circle id="pinHot" class="pin" cx="430" cy="130" r="3.5"/>
-          <g id="actBodyHot" transform="translate(448,196)">
+          <g id="actBodyHot" transform="translate(430,186)">
             <rect class="act-body" x="-12" y="-36" width="24" height="72"/>
           </g>
-          <text id="rdActHot" class="lbl val" x="500" y="218" text-anchor="middle">0%</text>
+          <text id="rdActHot" class="lbl val" x="430" y="218" text-anchor="middle">0%</text>
         </g>
         <g id="opposedNote" transform="translate(0,10)">
           <rect class="unit" x="340" y="170" width="120" height="60" rx="8"/>
@@ -103,10 +103,10 @@
           <line id="crankCold" class="crank" x1="430" y1="400" x2="430" y2="420"/>
           <line id="rodCold" class="linkage" x1="430" y1="420" x2="448" y2="460"/>
           <circle id="pinCold" class="pin" cx="430" cy="420" r="3.5"/>
-          <g id="actBodyCold" transform="translate(448,486)">
+          <g id="actBodyCold" transform="translate(430,476)">
             <rect class="act-body" x="-12" y="-36" width="24" height="72"/>
           </g>
-          <text id="rdActCold" class="lbl val" x="500" y="508" text-anchor="middle">0%</text>
+          <text id="rdActCold" class="lbl val" x="430" y="508" text-anchor="middle">0%</text>
         </g>
 
         <!-- single-shaft (opposed) actuator: one actuator, mounted perpendicular to the cold deck unit -->
@@ -310,7 +310,7 @@
   </div>
 </footer>
 
-<script src="js/controllers.js?v=109"></script>
-<script src="js/sim.js?v=109"></script>
+<script src="js/controllers.js?v=110"></script>
+<script src="js/sim.js?v=110"></script>
 </body>
 </html>
