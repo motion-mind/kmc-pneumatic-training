@@ -4,7 +4,14 @@
   var NS = "http://www.w3.org/2000/svg";
   var tubeLayer = document.getElementById("tubeLayer");
 
-  var MAX = 200, MIN = 50, RESET_START = 8, RESET_SPAN = 5;
+  var MAX = 200, MIN = 50, RESET_SPAN = 5;
+  // Reset ranges overlap symmetrically about the neutral signal (9 psi), so at
+  // a 72 F setpoint both decks sit half open. The cold deck takes over as the
+  // call moves one way and the hot deck the other.
+  // Cold deck carries a minimum flow (MIN), so its reset start is set to put
+  // the damper at half travel at neutral, matching the hot deck.
+  var COLD_RESET_START = 7.33, HOT_RESET_START = 11.5;
+  var SP_NEUTRAL = 72;   // setpoint at which the two decks balance
   // Thermostat setpoint range and the dial's mechanical sweep either side of 12 o'clock.
   var SP_MIN = 55, SP_MAX = 95, SP_SWEEP = 135;
   // The room is bounded whatever the box does.
@@ -340,7 +347,8 @@
     // The thermostat loses output authority in proportion to its supply.
     var tHasAir = statLeg && state.trunkPSI > 0;
     var tOut = tHasAir
-      ? clamp(9 + (state.roomTemp - state.setpoint) * 1.2, 3, 15) * (state.statPSI / 20)
+      ? clamp(9 + (state.roomTemp - state.setpoint) * 1.2
+                + (SP_NEUTRAL - state.setpoint) * 0.5, 3, 15) * (state.statPSI / 20)
       : 0;
 
     var coldPct, hotPct, coldT = 0, hotT = 0, failHeat = false, outPsi = tOut;
@@ -361,7 +369,7 @@
       // The selector sets the actuator type (spring/fail position) AND the drive
       // direction: the correct pairing is cold = N.C., hot = N.O. Setting either
       // selector to the other value reverses that deck's operating direction.
-      var fc = clamp((coldT - RESET_START) / RESET_SPAN, 0, 1);
+      var fc = clamp((coldT - COLD_RESET_START) / RESET_SPAN, 0, 1);
       var coldSP = MIN + fc * (MAX - MIN);
       var coldCmd = coldAir ? clamp(coldSP / MAX * 100, 0, 100) : null;
       if (coldAir && !sensorOK("cold")) coldCmd = 100;
@@ -376,15 +384,9 @@
       // regardless of what the controller is putting out.
       if (!L.coldB) coldTgt = 0;
 
-      var fh = clamp((RESET_START - hotT) / RESET_SPAN, 0, 1);
+      var fh = clamp((HOT_RESET_START - hotT) / RESET_SPAN, 0, 1);
       var hotSP = fh * MAX;
       var hotCmd = hotAir ? clamp(hotSP / MAX * 100, 0, 100) : null;
-      // Once the room is on setpoint the two decks share the load, so the hot
-      // deck holds a minimum rather than sitting shut. A decisive cooling call
-      // (thermostat well above neutral) still closes it right down, which is
-      // what happens at extreme setpoints.
-      var hotFloor = hotT >= 12 ? 0 : (hotT <= 9 ? 25 : (12 - hotT) / 3 * 25);
-      if (hotCmd !== null) hotCmd = Math.max(hotCmd, hotFloor);
       if (hotAir && !sensorOK("hot")) hotCmd = 100;
       var hotTgt;
       if (hotCmd === null) hotTgt = 100;
