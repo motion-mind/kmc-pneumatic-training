@@ -500,8 +500,6 @@
     setText("rdMainCold", two && state.coldPSI ? state.coldPSI + " psi" : "0 psi", two && !state.coldPSI);
     setText("rdTHot", (two ? state.hotT : state.tOut).toFixed(1) + " psi", two && state.hotT <= 0);
     setText("rdTCold", (two ? state.coldT : state.tOut).toFixed(1) + " psi", two && state.coldT <= 0);
-    setText("rdBHot", two ? state.hotPct.toFixed(0) + "%" : "\u2014", false);
-    setText("rdBCold", two ? state.coldPct.toFixed(0) + "%" : "\u2014", false);
 
     setText("roMain", mainPSI, !state.mainOn);
     setText("roT", state.tOut.toFixed(1) + " psi", !state.tHasAir);
