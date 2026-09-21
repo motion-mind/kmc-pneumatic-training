@@ -40,7 +40,7 @@
       mainHot: true, mainCold: true, mainTstat: true,
       tMain: true, tHot: true, tCold: true, tDirect: true
     },
-    trunkOK: true,
+    trunkPSI: 20, hotPSI: 20, coldPSI: 20,
     tOut: 9, coldT: 9, hotT: 9, coldPct: 45, hotPct: 0,
     coldFlow: 50, hotFlow: 0, supplyTemp: 55, flow: 50, failHeat: false
   };
@@ -293,19 +293,25 @@
   function update(dt) {
     var L = state.lines;
     var two = state.twoControllers;
-    // Both controllers tee off ONE main-air trunk. Pulling the leg to either
-    // controller leaves an open end on that trunk, so it vents and BOTH
-    // controllers lose main air — the other deck drops with it.
-    var trunkOK = state.mainOn && L.mainHot && L.mainCold;
-    state.trunkOK = trunkOK;
+    // Both controllers tee off ONE main-air trunk. Pulling either leg leaves
+    // an open end, so the trunk divides down to roughly half pressure: the
+    // disconnected deck loses its air entirely, while the other keeps working
+    // at about 10 psi rather than dropping away.
+    var hotLeg = state.mainOn && L.mainHot;
+    var coldLeg = state.mainOn && L.mainCold;
+    var legsOn = (hotLeg ? 1 : 0) + (coldLeg ? 1 : 0);
+    state.trunkPSI = legsOn === 2 ? 20 : (legsOn === 1 ? 10 : 0);
+    state.hotPSI = hotLeg ? state.trunkPSI : 0;
+    state.coldPSI = coldLeg ? state.trunkPSI : 0;
+    var trunkOK = (legsOn === 2);
     var tHasAir = state.mainOn && L.mainTstat;
     var tOut = tHasAir ? clamp(9 + (state.roomTemp - state.setpoint) * 1.2, 3, 15) : 0;
 
     var coldPct, hotPct, coldT = 0, hotT = 0, failHeat = false, outPsi = tOut;
 
     if (two) {
-      var coldAir = trunkOK;
-      var hotAir = trunkOK;
+      var coldAir = coldLeg;
+      var hotAir = hotLeg;
       var sig = L.tMain && tHasAir;
       // A broken leg on the teed signal is an open bleed: the restrictor can no
       // longer hold the shared line, so both legs collapse. One open leg leaves
@@ -446,8 +452,8 @@
     setText("rdTSp", "set " + state.setpoint.toFixed(1) + "\u00B0F", false);
     setText("rdTOut", state.tOut.toFixed(1) + " psi", !state.tHasAir);
 
-    setText("rdMainHot", two && state.trunkOK ? "20 psi" : "0 psi", two && !state.trunkOK);
-    setText("rdMainCold", two && state.trunkOK ? "20 psi" : "0 psi", two && !state.trunkOK);
+    setText("rdMainHot", two && state.hotPSI ? state.hotPSI + " psi" : "0 psi", two && !state.hotPSI);
+    setText("rdMainCold", two && state.coldPSI ? state.coldPSI + " psi" : "0 psi", two && !state.coldPSI);
     setText("rdTHot", (two ? state.hotT : state.tOut).toFixed(1) + " psi", two && state.hotT <= 0);
     setText("rdTCold", (two ? state.coldT : state.tOut).toFixed(1) + " psi", two && state.coldT <= 0);
     setText("rdBHot", two ? state.hotPct.toFixed(0) + "%" : "\u2014", false);
@@ -474,9 +480,9 @@
     } else if (!L.mainTstat) {
       cls = "warn"; msg = "The thermostat has no main air, so its output bleeds to 0 psi.";
     } else if (two && (!L.mainHot || !L.mainCold)) {
-      cls = "bad";
-      msg = "Main air pulled from one controller. The trunk they share is now open to atmosphere, so it vents and BOTH controllers lose main air \u2014 the other deck drops too (" +
-        (L.mainCold ? "hot" : "cold") + " leg open).";
+      cls = "warn";
+      msg = "Main air pulled from one controller. Both legs tee off one trunk, so it divides to roughly half pressure \u2014 the disconnected deck loses air, while the other keeps running at about " +
+        Math.round(state.trunkPSI) + " psi.";
     } else if (two) {
       var coldAir = L.mainCold, hotAir = L.mainHot;
       if (!coldAir && !hotAir) {
