@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=71">
+<link rel="stylesheet" href="css/style.css?v=72">
 </head>
 <body>
 <header class="topbar">
@@ -197,11 +197,6 @@
       <section class="panel">
         <h2>Controls</h2>
         <label class="ctl">
-          <span>Outside air temp <output id="oatOut">70&deg;F</output></span>
-          <input id="oatSl" type="range" min="0" max="105" step="1" value="70">
-          <p class="hint">Cold outside &rarr; hot deck stays open more; hot outside &rarr; cold deck.</p>
-        </label>
-        <label class="ctl">
           <span>Thermostat setpoint <output id="spOut">72&deg;F</output></span>
           <input id="spSl" type="range" min="55" max="95" step="0.5" value="72">
           <p class="hint">Drag the dial on the thermostat, or use this slider.</p>
@@ -297,7 +292,7 @@
   </div>
 </footer>
 
-<script src="js/controllers.js?v=71"></script>
-<script src="js/sim.js?v=71"></script>
+<script src="js/controllers.js?v=72"></script>
+<script src="js/sim.js?v=72"></script>
 </body>
 </html>
