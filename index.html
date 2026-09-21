@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=113">
+<link rel="stylesheet" href="css/style.css?v=114">
 </head>
 <body>
 <header class="topbar">
@@ -127,6 +127,10 @@
         <g id="ctrlHot"></g>
 
         <!-- RCC-1012 reversing relay on the hot deck branch -->
+          <g id="ctrlHot2"></g>
+          <g id="ctrlCold2"></g>
+
+
         <g id="relayHot">
           <rect class="relay-body" x="444" y="274" width="72" height="72" rx="6"/>
           <circle class="relay-screw" cx="451.7" cy="281.7" r="7.7"/>
@@ -139,18 +143,12 @@
           <circle class="tc-bore" cx="455.5" cy="307.6" r="3"/>
           <circle class="tc-boss" cx="493.9" cy="307.6" r="7.2"/>
           <circle class="tc-bore" cx="493.9" cy="307.6" r="3"/>
-          <text class="portlbl" x="491" y="300" text-anchor="start">M</text>
+          <text class="portlbl" x="480" y="280" text-anchor="middle">M</text>
           <text class="portlbl" x="466" y="312" text-anchor="start">S</text>
           <text class="portlbl" x="505" y="312" text-anchor="start">B</text>
           <line class="wire wire-main" x1="480" y1="230" x2="480" y2="290.3"/>
-          <line class="wire wire-branch" x1="455.5" y1="359.6" x2="455.5" y2="307.6"/>
-          <line class="wire wire-act" x1="493.9" y1="250" x2="493.9" y2="307.6"/>
           <text class="tc-paneltext" x="480" y="360" text-anchor="middle">RCC-1012</text>
         </g>
-          <g id="ctrlHot2"></g>
-          <g id="ctrlCold2"></g>
-
-
         <g id="tubeLayer"></g>
 
         <g id="tunerLayer"></g>
@@ -310,7 +308,7 @@
   </div>
 </footer>
 
-<script src="js/controllers.js?v=113"></script>
-<script src="js/sim.js?v=113"></script>
+<script src="js/controllers.js?v=114"></script>
+<script src="js/sim.js?v=114"></script>
 </body>
 </html>
