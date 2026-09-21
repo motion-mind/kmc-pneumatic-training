@@ -6,7 +6,7 @@
 
   var MAX = 200, MIN = 50, RESET_START = 8, RESET_SPAN = 5;
   // Thermostat setpoint range and the dial's mechanical sweep either side of 12 o'clock.
-  var SP_MIN = 55, SP_MAX = 95, SP_SWEEP = 75;
+  var SP_MIN = 55, SP_MAX = 95, SP_SWEEP = 135;   // 270-degree sweep, gap at the bottom
   // Dial graduations: a minor notch every TICK_STEP degF, a long notch and a
   // number every LABEL_STEP.  Entry resolution is coarser than the notches
   // (see SP_STEP) so the readout still lands on clean half degrees.
