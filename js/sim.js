@@ -169,7 +169,7 @@
         cls: "wire-reset", name: "teed signal to hot controller", mode: "ctrl" },
       { id: "tCold", points: [TEE, [TEE[0], tColdY], [c.stat.x, tColdY], [c.stat.x, c.stat.y]],
         cls: "wire-reset", name: "teed signal to cold controller", mode: "ctrl" },
-      { id: "tDirect", points: [[1105, 380], [1105, 400], TEE, [1000, 490], [460, 490]],
+      { id: "tDirect", points: [[1105, 380], [1105, 400], TEE, [1000, 610], [445, 610], [445, 557]],
         cls: "wire-reset", name: "thermostat to linked actuator", mode: "opposed" }
     ];
   }
