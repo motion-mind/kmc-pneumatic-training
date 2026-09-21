@@ -82,7 +82,7 @@
     boltD: 0.25,
     // all ports 0.36"
     ports: [
-      { id: "X", x: 1.7, y: 0, d: 0.36, label: { dx: -0.30, dy: 0.06, anchor: "end" } },
+      { id: "X", x: 1.7, y: 0, d: 0.36, label: { dx: -0.30, dy: 0.40, anchor: "end" } },
       { id: "Y", x: 1.7, y: 0.65, d: 0.36, label: { dx: 0, dy: 0.42, anchor: "middle" } },
       { id: "M", x: 1.48, y: 1.5, d: 0.36, label: { dx: -0.28, dy: 0.06, anchor: "end" } },
       { id: "B", x: 1.92, y: 1.5, d: 0.36, label: { dx: 0.28, dy: 0.06, anchor: "start" } },
