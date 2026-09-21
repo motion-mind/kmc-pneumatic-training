@@ -40,7 +40,7 @@
       mainHot: true, mainCold: true, mainTstat: true,
       tMain: true, tHot: true, tCold: true, tDirect: true
     },
-    trunkPSI: 20, hotPSI: 20, coldPSI: 20,
+    trunkPSI: 20, hotPSI: 20, coldPSI: 20, statPSI: 20,
     tOut: 9, coldT: 9, hotT: 9, coldPct: 45, hotPct: 0,
     coldFlow: 50, hotFlow: 0, supplyTemp: 55, flow: 50, failHeat: false
   };
@@ -293,19 +293,26 @@
   function update(dt) {
     var L = state.lines;
     var two = state.twoControllers;
-    // Both controllers tee off ONE main-air trunk. Pulling either leg leaves
-    // an open end, so the trunk divides down to roughly half pressure: the
-    // disconnected deck loses its air entirely, while the other keeps working
-    // at about 10 psi rather than dropping away.
+    // The two controllers AND the thermostat all tee off ONE main-air trunk.
+    // Any open leg divides the trunk down (one open leg ≈ half pressure), so
+    // pulling air anywhere lowers everyone's pressure: the disconnected leg
+    // reads 0, the others keep working at reduced pressure. Everything is
+    // affected by everything else.
     var hotLeg = state.mainOn && L.mainHot;
     var coldLeg = state.mainOn && L.mainCold;
-    var legsOn = (hotLeg ? 1 : 0) + (coldLeg ? 1 : 0);
-    state.trunkPSI = legsOn === 2 ? 20 : (legsOn === 1 ? 10 : 0);
+    var statLeg = state.mainOn && L.mainTstat;
+    var legsOn = (hotLeg ? 1 : 0) + (coldLeg ? 1 : 0) + (statLeg ? 1 : 0);
+    var open = 3 - legsOn;
+    state.trunkPSI = legsOn === 0 ? 0 : 20 / (1 + open);
     state.hotPSI = hotLeg ? state.trunkPSI : 0;
     state.coldPSI = coldLeg ? state.trunkPSI : 0;
-    var trunkOK = (legsOn === 2);
-    var tHasAir = state.mainOn && L.mainTstat;
-    var tOut = tHasAir ? clamp(9 + (state.roomTemp - state.setpoint) * 1.2, 3, 15) : 0;
+    state.statPSI = statLeg ? state.trunkPSI : 0;
+    var trunkOK = (open === 0);
+    // The thermostat loses output authority in proportion to its supply.
+    var tHasAir = statLeg && state.trunkPSI > 0;
+    var tOut = tHasAir
+      ? clamp(9 + (state.roomTemp - state.setpoint) * 1.2, 3, 15) * (state.statPSI / 20)
+      : 0;
 
     var coldPct, hotPct, coldT = 0, hotT = 0, failHeat = false, outPsi = tOut;
 
