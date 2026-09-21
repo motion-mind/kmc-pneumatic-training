@@ -14,7 +14,8 @@
   var SP_NEUTRAL = 72;   // setpoint at which the two decks balance
   // Thermostat setpoint range and the dial's mechanical sweep either side of 12 o'clock.
   var SP_MIN = 55, SP_MAX = 95, SP_SWEEP = 135;
-  // The room is bounded whatever the box does.
+  // The room is naturally bounded by the deck supply temperatures (see the
+  // temperature-weighted pull below); these are only for readout colouring.
   var ROOM_MIN = 65, ROOM_MAX = 80;
   // Deck supply temperatures: cold deck 55 F, hot deck 80 F.
   var COLD_DECK_T = 55, HOT_DECK_T = 80;   // 270-degree sweep, gap at the bottom
@@ -431,8 +432,11 @@
     var excess = Math.abs(pull) > dead
       ? (Math.abs(pull) - dead) * Math.sign(pull)
       : 0;
+    // No hard room limits: the decks' authority fades to zero as the room
+    // approaches their own supply temperature, so it settles naturally between
+    // the cold and hot deck temperatures.
     var target = state.setpoint + excess * 25;
-    state.roomTemp = clamp(state.roomTemp + (target - state.roomTemp) * 1.3 * dt, ROOM_MIN, ROOM_MAX);
+    state.roomTemp = state.roomTemp + (target - state.roomTemp) * 1.3 * dt;
 
     state.tOut = outPsi;
     state.tHasAir = tHasAir;
