@@ -65,9 +65,11 @@
   // The controller end of every tube is read straight from the controller spec
   // (Controllers.anchor), so retuning the artwork in js/controllers.js moves the
   // tubing with it.  The other end is fixed plant: probes, actuators, tee.
+  // Which physical port each sensor lead lands on. The high and low taps are
+  // crossed: high lands on L (CSC-3000) / Y (CSC-2000) and low on H / X.
   var PORTMAP = {
-    csc3000: { hi: "H", lo: "L", branch: "B", main: "M", stat: "T" },
-    csc2000: { hi: "X", lo: "Y", branch: "B", main: "M", stat: "T" }
+    csc3000: { hi: "L", lo: "H", branch: "B", main: "M", stat: "T" },
+    csc2000: { hi: "Y", lo: "X", branch: "B", main: "M", stat: "T" }
   };
 
   // Sensor tap positions. These follow the controller's H and L ports so the
