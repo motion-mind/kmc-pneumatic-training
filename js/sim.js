@@ -376,8 +376,11 @@
       var legsOpen = (L.tHot ? 0 : 1) + (L.tCold ? 0 : 1);
       if (!sig || legsOpen >= 2) outPsi = 0;
       else if (legsOpen === 1) outPsi = Math.round(tOut * 0.2 * 10) / 10;
-      coldT = (coldAir && sig && L.tCold) ? outPsi : 0;
-      hotT = (hotAir && sig && L.tHot) ? outPsi : 0;
+      // The teed signal is a shared line: losing a controller's MAIN air does
+      // not depressurise it, so both T branches read the same pressure. Only an
+      // unplugged signal leg, or the thermostat itself, reads 0.
+      coldT = (sig && L.tCold) ? outPsi : 0;
+      hotT = (sig && L.tHot) ? outPsi : 0;
 
       // The selector sets the actuator type (spring/fail position) AND the drive
       // direction: the correct pairing is cold = N.C., hot = N.O. Setting either
