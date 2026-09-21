@@ -163,11 +163,15 @@
     // RCC-1012 reversing relay (hot deck, CSC-2000 only): S takes the
     // controller's branch, B drives the actuator, M takes main air.
     var hasRelay = (model === "csc2000");
+    // The CSC-2000 mounts its deck actuators 10px higher than the CSC-3000.
+    // Only the tube termination moves here; the body follows via the linkage,
+    // so the crank stays on the damper pivot.
+    var actLift = (model === "csc2000") ? 10 : 0;
     var RELAY_S = [455.5, 307.6], RELAY_B = [493.9, 307.6];
 
     var specs = [];
     if (hasRelay) {
-      specs.push({ id: "hotAct", points: [[ACTUATOR_X, 237], [ACTUATOR_X, 250],
+      specs.push({ id: "hotAct", points: [[ACTUATOR_X, 237 - actLift], [ACTUATOR_X, 250 - actLift],
         [RELAY_B[0], 250], [RELAY_B[0], RELAY_B[1]]],
         cls: "wire-act", name: "relay to hot actuator", mode: "ctrl" });
     }
@@ -185,10 +189,10 @@
       { id: "hotB", points: hasRelay
           ? [[h.branch.x, h.branch.y], [h.branch.x, RELAY_S[1] + 52],
              [RELAY_S[0], RELAY_S[1] + 52], [RELAY_S[0], RELAY_S[1]]]
-          : [[ACTUATOR_X, 237], [ACTUATOR_X, h.branch.y + bOff],
+          : [[ACTUATOR_X, 237 - actLift], [ACTUATOR_X, h.branch.y + bOff],
              [h.branch.x, h.branch.y + bOff], [h.branch.x, h.branch.y]],
         cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
-      { id: "coldB", points: [[ACTUATOR_X, 527], [ACTUATOR_X, c.branch.y + bOff],
+      { id: "coldB", points: [[ACTUATOR_X, 527 - actLift], [ACTUATOR_X, c.branch.y + bOff],
         [c.branch.x, c.branch.y + bOff], [c.branch.x, c.branch.y]],
         cls: "wire-branch", name: "cold deck branch", mode: "ctrl" },
       { id: "mainHot", points: [[TRUNK_X, h.main.y], [h.main.x, h.main.y]],
@@ -502,8 +506,9 @@
           "translate(" + cx + "," + cy + ") rotate(" + theta.toFixed(1) + ")");
       }
     }
-    linkage("crankHot", "rodHot", "pinHot", "actBodyHot", 430, 110, hotAng, 430, 196, 36);
-    linkage("crankCold", "rodCold", "pinCold", "actBodyCold", 430, 400, coldAng, 430, 486, 36);
+    var actLift = (state.series === "2000") ? 10 : 0;
+    linkage("crankHot", "rodHot", "pinHot", "actBodyHot", 430, 110, hotAng, 430, 196 - actLift, 36);
+    linkage("crankCold", "rodCold", "pinCold", "actBodyCold", 430, 400, coldAng, 430, 486 - actLift, 36);
     // Single shaft: the one actuator drives the cold blade's crank, and the
     // opposed link carries that on to the hot blade.
     linkage("crankSingle", "rodSingle", "pinSingle", "actBodySingle", 430, 400, coldAng, 445, 500, 45);
