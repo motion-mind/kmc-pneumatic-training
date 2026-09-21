@@ -343,6 +343,9 @@
       var coldTgt;
       if (coldCmd === null) coldTgt = 0;
       else coldTgt = (state.coldAction === "NO") ? coldCmd : (100 - coldCmd);
+      // An unplugged branch never reaches the actuator, so it springs home
+      // regardless of what the controller is putting out.
+      if (!L.coldB) coldTgt = 0;
 
       var fh = clamp((RESET_START - hotT) / RESET_SPAN, 0, 1);
       var hotSP = fh * MAX;
@@ -351,6 +354,7 @@
       var hotTgt;
       if (hotCmd === null) hotTgt = 100;
       else hotTgt = (state.hotAction === "NC") ? hotCmd : (100 - hotCmd);
+      if (!L.hotB) hotTgt = 100;
 
       // the actuators stroke to the commanded position at a finite rate
       coldPct = actLag(state.coldPct, coldTgt, dt);
@@ -519,6 +523,11 @@
       cls = "bad"; msg = "Main air is OFF. The box fails to heat \u2014 the cold deck springs closed and the hot deck springs open.";
     } else if (!L.mainTstat) {
       cls = "warn"; msg = "The thermostat has no main air, so its output bleeds to 0 psi.";
+    } else if (two && (!L.hotB || !L.coldB)) {
+      cls = "bad";
+      msg = "The branch line to the " + (!L.hotB && !L.coldB ? "actuators" : (L.hotB ? "cold" : "hot")) +
+        " deck actuator is unplugged. With no branch pressure that actuator springs home (" +
+        (L.hotB ? "cold deck shuts" : "hot deck opens") + ").";
     } else if (two && (!L.mainHot || !L.mainCold)) {
       cls = "warn";
       msg = "Main air pulled from one controller. Both legs tee off one trunk, so it divides to roughly half pressure \u2014 the disconnected deck loses air, while the other keeps running at about " +
