@@ -403,11 +403,15 @@
     var supplyTemp = flow > 0
       ? (coldFlow * COLD_DECK_T + hotFlow * HOT_DECK_T) / flow
       : COLD_DECK_T;
+    // Each deck's authority scales with how far its supply air is from the
+    // room, so the 55 F cold deck cools harder than the 80 F hot deck heats.
+    var hotDelta = Math.max(0, HOT_DECK_T - state.roomTemp);
+    var coldDelta = Math.max(0, state.roomTemp - COLD_DECK_T);
+    var pull = (hotFlow * hotDelta - coldFlow * coldDelta) / (MAX * 9);
     // The thermostat trims ordinary deck imbalance out, so the room settles on
     // setpoint with no standing offset. Only a large imbalance — the box
     // driving the wrong way, or springs failed — moves the room off setpoint.
-    var pull = (hotFlow - coldFlow) / MAX;          // + heating, - cooling
-    var dead = 0.4;    // covers the box's own minimum-flow imbalance
+    var dead = 0.7;    // covers the box's own minimum-flow imbalance
     var excess = Math.abs(pull) > dead
       ? (Math.abs(pull) - dead) * Math.sign(pull)
       : 0;
