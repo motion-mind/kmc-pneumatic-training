@@ -109,12 +109,9 @@
     if (!g || typeof Controllers === "undefined") return;
     var t = probeTaps(deck);
     var hi = { x: t.hi[0] }, lo = { x: t.lo[0] };
-    // CSC-3000: the probe body sits over the H port so H is directly beneath
-    // it. CSC-2000 keeps the probe centred (its X/Y pair is stacked, not side
-    // by side).  Note the lead mapping is crossed, so "H" is looked up by port
-    // id rather than by which tap lands on it.
-    var hPort = Controllers.anchor("csc3000", deck, "H");
-    var mid = (state.series === "2000") ? (hi.x + lo.x) / 2 : (hPort ? hPort.x : hi.x);
+    // The probe body sits midway between the two velocity ports, so the lead
+    // spans symmetrically either side of it.
+    var mid = (hi.x + lo.x) / 2;
     var taps = [], k;
     for (k = 0; k < g.children.length; k++) {
       var c = g.children[k];
