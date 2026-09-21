@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=119">
+<link rel="stylesheet" href="css/style.css?v=120">
 </head>
 <body>
 <header class="topbar">
@@ -243,7 +243,9 @@
         </div>
       </section>
 
-      <section class="panel">
+      <!-- Controller artwork tuner: hidden from the page, kept for future
+           calibration work. Remove the style attribute to show it again. -->
+      <section class="panel" style="display:none">
         <h2>Controller artwork</h2>
         <p class="hint">Artwork is defined in inches in <code>js/controllers.js</code>.
           Drag any handle to match your hardware, then copy the spec back.</p>
@@ -308,7 +310,7 @@
   </div>
 </footer>
 
-<script src="js/controllers.js?v=119"></script>
-<script src="js/sim.js?v=119"></script>
+<script src="js/controllers.js?v=120"></script>
+<script src="js/sim.js?v=120"></script>
 </body>
 </html>
