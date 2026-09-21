@@ -194,7 +194,7 @@
         cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
       { id: "coldB", points: [[ACTUATOR_X, 527 - actLift], [ACTUATOR_X, c.branch.y + bOff],
         [c.branch.x, c.branch.y + bOff], [c.branch.x, c.branch.y]],
-        cls: "wire-branch", name: "cold deck branch", mode: "ctrl" },
+        cls: "wire-act", name: "cold deck branch", mode: "ctrl" },
       { id: "mainHot", points: [[TRUNK_X, h.main.y], [h.main.x, h.main.y]],
         cls: "wire-main", name: "main air to hot controller", mode: "ctrl" },
       { id: "mainCold", points: [[TRUNK_X, c.main.y], [c.main.x, c.main.y]],
