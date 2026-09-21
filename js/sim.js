@@ -361,9 +361,15 @@
     var coldFlow = coldPct / 100 * MAX, hotFlow = hotPct / 100 * MAX;
     var flow = coldFlow + hotFlow;
     var supplyTemp = flow > 0 ? (coldFlow * 55 + hotFlow * 95) / flow : 55;
-    // The room responds to supply air alone and is held between ROOM_MIN and
-    // ROOM_MAX, so it never runs away however much air the box delivers.
-    var target = state.setpoint + (hotFlow - coldFlow) / MAX * 20;
+    // The thermostat trims ordinary deck imbalance out, so the room settles on
+    // setpoint with no standing offset. Only a large imbalance — the box
+    // driving the wrong way, or springs failed — moves the room off setpoint.
+    var pull = (hotFlow - coldFlow) / MAX;          // + heating, - cooling
+    var dead = 0.4;    // covers the box's own minimum-flow imbalance
+    var excess = Math.abs(pull) > dead
+      ? (Math.abs(pull) - dead) * Math.sign(pull)
+      : 0;
+    var target = state.setpoint + excess * 25;
     state.roomTemp = clamp(state.roomTemp + (target - state.roomTemp) * 1.3 * dt, ROOM_MIN, ROOM_MAX);
 
     state.tOut = outPsi;
