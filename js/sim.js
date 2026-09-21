@@ -464,7 +464,7 @@
     linkage("crankCold", "rodCold", "pinCold", "actBodyCold", 430, 400, coldAng, 448, 486, 36);
     // Single shaft: the one actuator drives the cold blade's crank, and the
     // opposed link carries that on to the hot blade.
-    linkage("crankSingle", "rodSingle", "pinSingle", "actBodySingle", 430, 400, coldAng, 440, 500, 60);
+    linkage("crankSingle", "rodSingle", "pinSingle", "actBodySingle", 430, 400, coldAng, 445, 500, 45);
 
     document.getElementById("hotActuator").style.display = two ? "block" : "none";
     document.getElementById("coldActuator").style.display = two ? "block" : "none";
