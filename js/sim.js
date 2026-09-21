@@ -38,7 +38,7 @@
       hotH: true, hotL: true, coldH: true, coldL: true,
       hotB: true, coldB: true,
       mainHot: true, mainCold: true, mainTstat: true,
-      tMain: true, tHot: true, tCold: true, tDirect: true
+      tMain: true, tHot: true, tCold: true, tDirect: true, hotAct: true
     },
     trunkPSI: 20, hotPSI: 20, coldPSI: 20, statPSI: 20,
     tOut: 9, coldT: 9, hotT: 9, coldPct: 45, hotPct: 0,
@@ -142,9 +142,20 @@
     // so the main and branch runs would lie on top of each other. Drop the
     // branch run clear of the main so they read as two separate lines.
     var bOff = (model === "csc2000") ? 16 : 0;
+    // RCC-1012 reversing relay (hot deck, CSC-2000 only): S takes the
+    // controller's branch, B drives the actuator, M takes main air.
+    var hasRelay = (model === "csc2000");
+    var RELAY_S = [455.5, 307.6], RELAY_B = [493.9, 307.6];
+
+    var specs = [];
+    if (hasRelay) {
+      specs.push({ id: "hotAct", points: [[ACTUATOR_X, 237], [ACTUATOR_X, RELAY_B[1] + 18],
+        [RELAY_B[0], RELAY_B[1] + 18], [RELAY_B[0], RELAY_B[1] + 7]],
+        cls: "wire-branch", name: "relay to hot actuator", mode: "ctrl" });
+    }
     var tHotY = model === "csc2000" ? 295 : 175;
     var tColdY = model === "csc2000" ? 589 : 475;
-    return [
+    return specs.concat([
       { id: "hotH", points: probeRoute(PROBE.hot.hi, h.hi, 180),
         cls: "wire-sensor", name: "hot deck sensor H", mode: "ctrl" },
       { id: "hotL", points: probeRoute(PROBE.hot.lo, h.lo, 170),
@@ -153,8 +164,11 @@
         cls: "wire-sensor", name: "cold deck sensor H", mode: "ctrl" },
       { id: "coldL", points: probeRoute(PROBE.cold.lo, c.lo, 460),
         cls: "wire-sensor", name: "cold deck sensor L", mode: "ctrl" },
-      { id: "hotB", points: [[ACTUATOR_X, 237], [ACTUATOR_X, h.branch.y + bOff],
-        [h.branch.x, h.branch.y + bOff], [h.branch.x, h.branch.y]],
+      { id: "hotB", points: hasRelay
+          ? [[h.branch.x, h.branch.y], [h.branch.x, RELAY_S[1] + 33],
+             [RELAY_S[0], RELAY_S[1] + 33], [RELAY_S[0], RELAY_S[1] + 7]]
+          : [[ACTUATOR_X, 237], [ACTUATOR_X, h.branch.y + bOff],
+             [h.branch.x, h.branch.y + bOff], [h.branch.x, h.branch.y]],
         cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
       { id: "coldB", points: [[ACTUATOR_X, 527], [ACTUATOR_X, c.branch.y + bOff],
         [c.branch.x, c.branch.y + bOff], [c.branch.x, c.branch.y]],
@@ -171,7 +185,7 @@
         cls: "wire-reset", name: "teed signal to cold controller", mode: "ctrl" },
       { id: "tDirect", points: [[1105, 380], [1105, 400], TEE, [1000, 610], [445, 610], [445, 557]],
         cls: "wire-reset", name: "thermostat to linked actuator", mode: "opposed" }
-    ];
+    ]);
   }
 
   var TUBE_GEOM = [];
