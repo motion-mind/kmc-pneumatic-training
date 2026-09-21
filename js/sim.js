@@ -85,7 +85,12 @@
   function probeTaps(deck) {
     var y = deck === "hot" ? 150 : 440;
     if (state.series === "2000") {
-      return { hi: [PROBE_FIXED[deck].hi[0], y], lo: [PROBE_FIXED[deck].lo[0], y] };
+      // The CSC-2000's X and Y ports are stacked on one axis, so sit the sensor
+      // over them and keep the taps the same distance either side of centre.
+      var half = (PROBE_FIXED[deck].lo[0] - PROBE_FIXED[deck].hi[0]) / 2;
+      var ax = Controllers.anchor("csc2000", deck, PORTMAP.csc2000.hi);
+      var c = ax ? ax.x : PROBE[deck].hi[0] + half;
+      return { hi: [c - half, y], lo: [c + half, y], centre: c };
     }
     var hi = Controllers.anchor("csc3000", deck, "H");
     var lo = Controllers.anchor("csc3000", deck, "L");
@@ -111,7 +116,7 @@
     var hi = { x: t.hi[0] }, lo = { x: t.lo[0] };
     // The probe body sits midway between the two velocity ports, so the lead
     // spans symmetrically either side of it.
-    var mid = (hi.x + lo.x) / 2;
+    var mid = (t.centre !== undefined) ? t.centre : (hi.x + lo.x) / 2;
     var taps = [], k;
     for (k = 0; k < g.children.length; k++) {
       var c = g.children[k];
