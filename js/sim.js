@@ -653,7 +653,15 @@
   }
 
   function setActuators(two) {
-    if (state.series === "2000" && !two) { state.series = "3000"; } state.twoControllers = two; syncMode(); syncControls(); }
+    // Single-shaft has no controller, so the series falls back to the default.
+    // The tubing must be rebuilt with it, or it keeps the CSC-2000 relay
+    // routing while the artwork reverts to CSC-3000.
+    if (state.series !== DEFAULTS.series && !two) { state.series = DEFAULTS.series; rebuildTubes(); }
+    state.twoControllers = two; syncMode(); syncControls();
+    if (typeof Controllers !== "undefined" && Controllers.setTuneModel) {
+      Controllers.setTuneModel(state.series === "2000" ? "csc2000" : "csc3000");
+    }
+  }
   function setColdAction(a) { state.coldAction = a; }
   function setHotAction(a) { state.hotAction = a; }
 
