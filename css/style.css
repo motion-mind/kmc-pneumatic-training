@@ -395,3 +395,6 @@ body.theme-dark .act-body { stroke: var(--muted); stroke-width: 1.6; }
 .crank { stroke: #6d5f42; stroke-width: 5; stroke-linecap: round; }
 .linkage { stroke: #7d8388; stroke-width: 4; stroke-linecap: round; }
 .pin { fill: #c3c7ca; stroke: #7d8388; stroke-width: 1.4; }
+/* RCC-1012 reversing relay: 1-1/2" square body with corner screws. */
+.relay-body { fill: url(#panelGrad); stroke: #9c8a63; stroke-width: 1.4; }
+.relay-screw { fill: #c3c7ca; stroke: #7d8388; stroke-width: 1; }

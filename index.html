@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=92">
+<link rel="stylesheet" href="css/style.css?v=93">
 </head>
 <body>
 <header class="topbar">
@@ -128,11 +128,23 @@
 
         <!-- RCC-1012 reversing relay on the hot deck branch -->
         <g id="relayHot">
-          <line class="wire wire-branch" x1="500" y1="237" x2="498" y2="252"/>
-          <circle class="tc-boss" cx="498" cy="266" r="13"/>
-          <circle class="tc-bore" cx="498" cy="266" r="5"/>
-          <text class="tc-paneltext" x="498" y="288" text-anchor="middle">RCC-1012</text>
-          <text class="tc-paneltext" x="498" y="297" text-anchor="middle">REV. RELAY</text>
+          <line class="wire wire-branch" x1="500" y1="237" x2="480" y2="237"/>
+          <line class="wire wire-branch" x1="480" y1="237" x2="480" y2="283"/>
+          <rect class="relay-body" x="444" y="274" width="72" height="72" rx="6"/>
+          <circle class="relay-screw" cx="456" cy="286" r="7.7"/>
+          <circle class="relay-screw" cx="504" cy="286" r="7.7"/>
+          <circle class="relay-screw" cx="456" cy="334" r="7.7"/>
+          <circle class="relay-screw" cx="504" cy="334" r="7.7"/>
+          <circle class="tc-boss" cx="480" cy="290.3" r="7.2"/>
+          <circle class="tc-bore" cx="480" cy="290.3" r="3"/>
+          <circle class="tc-boss" cx="455.5" cy="307.6" r="7.2"/>
+          <circle class="tc-bore" cx="455.5" cy="307.6" r="3"/>
+          <circle class="tc-boss" cx="493.9" cy="307.6" r="7.2"/>
+          <circle class="tc-bore" cx="493.9" cy="307.6" r="3"/>
+          <text class="portlbl" x="491" y="300" text-anchor="start">M</text>
+          <text class="portlbl" x="466" y="312" text-anchor="start">S</text>
+          <text class="portlbl" x="505" y="312" text-anchor="start">B</text>
+          <text class="tc-paneltext" x="480" y="360" text-anchor="middle">RCC-1012</text>
         </g>
           <g id="ctrlHot2"></g>
           <g id="ctrlCold2"></g>
@@ -297,7 +309,7 @@
   </div>
 </footer>
 
-<script src="js/controllers.js?v=92"></script>
-<script src="js/sim.js?v=92"></script>
+<script src="js/controllers.js?v=93"></script>
+<script src="js/sim.js?v=93"></script>
 </body>
 </html>
