@@ -71,6 +71,8 @@
                       cold: { hi: [570, 440], lo: [607, 440] } };
   var ACTUATOR_X = 460, TEE = [1000, 400], TRUNK_X = 240;
 
+  function activeModel() { return state.series === "2000" ? "csc2000" : "csc3000"; }
+
   function probeTaps(deck) {
     var y = deck === "hot" ? 150 : 440;
     if (state.series === "2000") {
@@ -161,7 +163,7 @@
         cls: "wire-main", name: "main air to hot controller", mode: "ctrl" },
       { id: "mainCold", points: [[TRUNK_X, c.main.y], [c.main.x, c.main.y]],
         cls: "wire-main", name: "main air to cold controller", mode: "ctrl" },
-      { id: "mainTstat", points: [[1165, 645], [1165, 380]], cls: "wire-main", name: "main air to thermostat" },
+      { id: "mainTstat", points: [[1165, 660], [1165, 380]], cls: "wire-main", name: "main air to thermostat" },
       { id: "tMain", points: [[1105, 380], [1105, 400], TEE], cls: "wire-reset", name: "thermostat output", mode: "ctrl" },
       { id: "tHot", points: [TEE, [TEE[0], tHotY], [h.stat.x, tHotY], [h.stat.x, h.stat.y]],
         cls: "wire-reset", name: "teed signal to hot controller", mode: "ctrl" },
@@ -177,6 +179,13 @@
   // Rebuild routing when the series or the controller artwork changes.
   function retube() {
     if (typeof Controllers === "undefined") return;
+    // The header trunk has to reach the highest M tap, which moves with the
+    // controller model — a fixed end left a gap on the CSC-2000.
+    var trunk = document.getElementById("mainTrunk");
+    if (trunk) {
+      var pm = ports(activeModel(), "hot"), pc = ports(activeModel(), "cold");
+      trunk.setAttribute("y2", Math.min(pm.main.y, pc.main.y).toFixed(1));
+    }
     rebuildProbe();
     positionSensor("hot");
     positionSensor("cold");
