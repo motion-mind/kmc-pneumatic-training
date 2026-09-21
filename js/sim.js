@@ -6,7 +6,7 @@
 
   var MAX = 200, MIN = 50, RESET_START = 8, RESET_SPAN = 5;
   // Thermostat setpoint range and the dial's mechanical sweep either side of 12 o'clock.
-  var SP_MIN = 55, SP_MAX = 95, SP_SWEEP = 60;
+  var SP_MIN = 55, SP_MAX = 95, SP_SWEEP = 75;
   // Dial graduations: a minor notch every TICK_STEP degF, a long notch and a
   // number every LABEL_STEP.  Entry resolution is coarser than the notches
   // (see SP_STEP) so the readout still lands on clean half degrees.
@@ -19,6 +19,9 @@
   }
   // Actuator response (first-order). Slowed 50% from the previous 0.4 s baseline.
   var ACT_TAU = 0.8;
+  // Global emulator rate. 0.5 = half speed: every rate (actuator stroke, room
+  // response) is driven off dt, so scaling dt here slows the whole thing.
+  var TIME_SCALE = 0.5;
   var DEFAULTS = { mainOn: true, setpoint: 72, roomTemp: 78, oat: 70, twoControllers: true, coldAction: "NO", hotAction: "NC", series: "3000" };
 
   var state = {
@@ -680,7 +683,7 @@
     syncControls();
     var last = performance.now();
     function frame(now) {
-      var dt = Math.min(0.05, (now - last) / 1000); last = now;
+      var dt = Math.min(0.05, (now - last) / 1000) * TIME_SCALE; last = now;
       update(dt);
       requestAnimationFrame(frame);
     }
