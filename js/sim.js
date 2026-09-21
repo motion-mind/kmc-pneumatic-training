@@ -406,6 +406,22 @@
     document.getElementById("hotBlade").setAttribute("transform",
       "rotate(" + hotAng.toFixed(1) + " 430 120)");
 
+    // Damper linkage: a crank on the blade rotates with it, so the rod down to
+    // the actuator lengthens and shortens — the actuator appears to stroke.
+    function linkage(crankId, rodId, pinId, bx, by, ang, ax, ay) {
+      var rad = (ang + 90) * Math.PI / 180, r = 20;
+      var ex = bx + r * Math.cos(rad), ey = by + r * Math.sin(rad);
+      var c = document.getElementById(crankId), rod = document.getElementById(rodId), pin = document.getElementById(pinId);
+      if (c) { c.setAttribute("x2", ex.toFixed(1)); c.setAttribute("y2", ey.toFixed(1)); }
+      if (rod) {
+        rod.setAttribute("x1", ex.toFixed(1)); rod.setAttribute("y1", ey.toFixed(1));
+        rod.setAttribute("x2", ax); rod.setAttribute("y2", ay);
+      }
+      if (pin) { pin.setAttribute("cx", ex.toFixed(1)); pin.setAttribute("cy", ey.toFixed(1)); }
+    }
+    linkage("crankHot", "rodHot", "pinHot", 430, 110, hotAng, 448, 170);
+    linkage("crankCold", "rodCold", "pinCold", 430, 400, coldAng, 448, 460);
+
     document.getElementById("hotActuator").style.display = two ? "block" : "none";
     document.getElementById("coldActuator").style.display = two ? "block" : "none";
     document.getElementById("singleActuator").style.display = two ? "none" : "block";

@@ -391,3 +391,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 /* On the dark theme the black actuator bodies would disappear into the
    background, so give them a lighter outline there. */
 body.theme-dark .act-body { stroke: var(--muted); stroke-width: 1.6; }
+/* Damper linkage: crank arm on the blade, rod down to the actuator. */
+.crank { stroke: #6d5f42; stroke-width: 5; stroke-linecap: round; }
+.linkage { stroke: #7d8388; stroke-width: 4; stroke-linecap: round; }
+.pin { fill: #c3c7ca; stroke: #7d8388; stroke-width: 1.4; }
