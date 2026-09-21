@@ -144,12 +144,12 @@
   }
 
   // Route helper: drop the probe tap to `jog`, run across to the port, drop in.
-  function probeRoute(tap, port, jog) {
+  // Drop straight from the tap first, then run across into the port. Routing
+  // the other way round made the second lead run down through the first port
+  // on the CSC-2000, where X and Y are stacked.
+  function probeRoute(tap, port) {
     var pts = [tap];
-    if (Math.abs(tap[0] - port.x) > 0.6) {
-      pts.push([tap[0], jog]);
-      pts.push([port.x, jog]);
-    }
+    if (Math.abs(tap[0] - port.x) > 0.6) pts.push([tap[0], port.y]);
     pts.push([port.x, port.y]);
     return pts;
   }
@@ -178,13 +178,13 @@
     var tHotY = model === "csc2000" ? 295 : 175;
     var tColdY = model === "csc2000" ? 589 : 475;
     return specs.concat([
-      { id: "hotH", points: probeRoute(PROBE.hot.hi, h.hi, 180),
+      { id: "hotH", points: probeRoute(PROBE.hot.hi, h.hi),
         cls: "wire-sensor", name: "hot deck sensor H", mode: "ctrl" },
-      { id: "hotL", points: probeRoute(PROBE.hot.lo, h.lo, 170),
+      { id: "hotL", points: probeRoute(PROBE.hot.lo, h.lo),
         cls: "wire-sensor", name: "hot deck sensor L", mode: "ctrl" },
-      { id: "coldH", points: probeRoute(PROBE.cold.hi, c.hi, 470),
+      { id: "coldH", points: probeRoute(PROBE.cold.hi, c.hi),
         cls: "wire-sensor", name: "cold deck sensor H", mode: "ctrl" },
-      { id: "coldL", points: probeRoute(PROBE.cold.lo, c.lo, 460),
+      { id: "coldL", points: probeRoute(PROBE.cold.lo, c.lo),
         cls: "wire-sensor", name: "cold deck sensor L", mode: "ctrl" },
       { id: "hotB", points: hasRelay
           ? [[h.branch.x, h.branch.y], [h.branch.x, RELAY_S[1] + 52],
