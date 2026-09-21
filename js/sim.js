@@ -554,7 +554,6 @@
     setText("rdHot", Math.round(state.hotPct) + "%", false);
     setText("rdActCold", Math.round(state.coldPct) + "%", false);
     setText("rdActHot", Math.round(state.hotPct) + "%", false);
-    setText("rdActSingle", Math.round(state.coldPct) + "%", false);
     setText("rdCfmHot", Math.round(state.hotFlow) + " CFM", false);
     setText("rdCfmCold", Math.round(state.coldFlow) + " CFM", false);
     setText("rdRoomT", "room " + state.roomTemp.toFixed(1) + "\u00B0F", false);
