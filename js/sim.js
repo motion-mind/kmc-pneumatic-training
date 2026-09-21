@@ -151,7 +151,7 @@
     if (hasRelay) {
       specs.push({ id: "hotAct", points: [[ACTUATOR_X, 237], [ACTUATOR_X, 250],
         [RELAY_B[0], 250], [RELAY_B[0], RELAY_B[1]]],
-        cls: "wire-branch", name: "relay to hot actuator", mode: "ctrl" });
+        cls: "wire-act", name: "relay to hot actuator", mode: "ctrl" });
     }
     var tHotY = model === "csc2000" ? 295 : 175;
     var tColdY = model === "csc2000" ? 589 : 475;
