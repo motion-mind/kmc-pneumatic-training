@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pneumatic VAV Trainer — dual duct</title>
 <meta name="description" content="Interactive pneumatic dual-duct VAV training: two KMC controllers (one per deck), plug and unplug lines and watch the box respond. Single-shaft opposed boxes run straight off the thermostat.">
-<link rel="stylesheet" href="css/style.css?v=91">
+<link rel="stylesheet" href="css/style.css?v=92">
 </head>
 <body>
 <header class="topbar">
@@ -206,14 +206,6 @@
           <input id="spSl" type="range" min="55" max="95" step="0.5" value="72">
           <p class="hint">Drag the dial on the thermostat, or use this slider.</p>
         </label>
-        <div class="ctl">
-          <span>Controller series</span>
-          <div class="seg">
-            <button id="cs3000" class="segbtn active" type="button">CSC-3000</button>
-            <button id="cs2000" class="segbtn" type="button">CSC-2000</button>
-          </div>
-          <p class="hint" id="csHint">CSC-3000 &mdash; universal reset volume controller (direct / reverse acting).</p>
-        </div>
         <div class="ctl" id="dualActCtl">
           <span>Deck dampers</span>
           <div class="seg">
@@ -221,6 +213,14 @@
             <button id="daSingle" class="segbtn" type="button">1 shaft (opposed)</button>
           </div>
           <p class="hint" id="actHint">Two actuators &rarr; one KMC controller per deck; thermostat signal teed.</p>
+        </div>
+        <div class="ctl" id="seriesCtl">
+          <span>Controller series</span>
+          <div class="seg">
+            <button id="cs3000" class="segbtn active" type="button">CSC-3000</button>
+            <button id="cs2000" class="segbtn" type="button">CSC-2000</button>
+          </div>
+          <p class="hint" id="csHint">CSC-3000 &mdash; universal reset volume controller (direct / reverse acting).</p>
         </div>
         <div class="ctl">
           <span>Air supply</span>
@@ -297,7 +297,7 @@
   </div>
 </footer>
 
-<script src="js/controllers.js?v=91"></script>
-<script src="js/sim.js?v=91"></script>
+<script src="js/controllers.js?v=92"></script>
+<script src="js/sim.js?v=92"></script>
 </body>
 </html>

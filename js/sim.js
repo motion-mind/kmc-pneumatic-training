@@ -589,6 +589,9 @@
     document.getElementById("actHint").textContent = state.twoControllers
       ? "Two actuators \u2192 one KMC controller per deck; thermostat signal teed."
       : "Single shaft, 90\u00B0 opposed \u2192 no KMC controller; thermostat drives it directly.";
+    // The controller series only applies when there are two controllers, so
+    // hide the whole block for the single-shaft system.
+    document.getElementById("seriesCtl").style.display = state.twoControllers ? "" : "none";
     document.getElementById("cs3000").classList.toggle("active", state.series === "3000");
     document.getElementById("cs2000").classList.toggle("active", state.series === "2000");
     document.getElementById("csHint").textContent = state.series === "3000"
