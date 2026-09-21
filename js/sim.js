@@ -136,6 +136,10 @@
 
   function buildTubeSpecs(model) {
     var h = ports(model, "hot"), c = ports(model, "cold");
+    // On the CSC-2000 the M and B ports sit side by side at the same height,
+    // so the main and branch runs would lie on top of each other. Drop the
+    // branch run clear of the main so they read as two separate lines.
+    var bOff = (model === "csc2000") ? 16 : 0;
     var tHotY = model === "csc2000" ? 295 : 175;
     var tColdY = model === "csc2000" ? 589 : 475;
     return [
@@ -147,11 +151,11 @@
         cls: "wire-sensor", name: "cold deck sensor H", mode: "ctrl" },
       { id: "coldL", points: probeRoute(PROBE.cold.lo, c.lo, 460),
         cls: "wire-sensor", name: "cold deck sensor L", mode: "ctrl" },
-      { id: "hotB", points: [[ACTUATOR_X, 237], [ACTUATOR_X, h.branch.y],
-        [h.branch.x, h.branch.y]],
+      { id: "hotB", points: [[ACTUATOR_X, 237], [ACTUATOR_X, h.branch.y + bOff],
+        [h.branch.x, h.branch.y + bOff], [h.branch.x, h.branch.y]],
         cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
-      { id: "coldB", points: [[ACTUATOR_X, 527], [ACTUATOR_X, c.branch.y],
-        [c.branch.x, c.branch.y]],
+      { id: "coldB", points: [[ACTUATOR_X, 527], [ACTUATOR_X, c.branch.y + bOff],
+        [c.branch.x, c.branch.y + bOff], [c.branch.x, c.branch.y]],
         cls: "wire-branch", name: "cold deck branch", mode: "ctrl" },
       { id: "mainHot", points: [[TRUNK_X, h.main.y], [h.main.x, h.main.y]],
         cls: "wire-main", name: "main air to hot controller", mode: "ctrl" },
