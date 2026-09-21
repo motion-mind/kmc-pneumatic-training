@@ -408,19 +408,30 @@
 
     // Damper linkage: a crank on the blade rotates with it, so the rod down to
     // the actuator lengthens and shortens — the actuator appears to stroke.
-    function linkage(crankId, rodId, pinId, bx, by, ang, ax, ay) {
+    function linkage(crankId, rodId, pinId, bodyId, bx, by, ang, cx, cy) {
       var rad = (ang + 90) * Math.PI / 180, r = 20;
       var ex = bx + r * Math.cos(rad), ey = by + r * Math.sin(rad);
-      var c = document.getElementById(crankId), rod = document.getElementById(rodId), pin = document.getElementById(pinId);
+      var c = document.getElementById(crankId), rod = document.getElementById(rodId);
+      var pin = document.getElementById(pinId), body = document.getElementById(bodyId);
       if (c) { c.setAttribute("x2", ex.toFixed(1)); c.setAttribute("y2", ey.toFixed(1)); }
+      if (pin) { pin.setAttribute("cx", ex.toFixed(1)); pin.setAttribute("cy", ey.toFixed(1)); }
+      // Body stays centred on (cx,cy) and swings to lie along the rod, so the
+      // rod meets its top face and the whole actuator reads as one piece.
+      var dx = cx - ex, dy = cy - ey, L = Math.hypot(dx, dy) || 1;
+      var ux = dx / L, uy = dy / L;
+      var rx = cx - 36 * ux, ry = cy - 36 * uy;
       if (rod) {
         rod.setAttribute("x1", ex.toFixed(1)); rod.setAttribute("y1", ey.toFixed(1));
-        rod.setAttribute("x2", ax); rod.setAttribute("y2", ay);
+        rod.setAttribute("x2", rx.toFixed(1)); rod.setAttribute("y2", ry.toFixed(1));
       }
-      if (pin) { pin.setAttribute("cx", ex.toFixed(1)); pin.setAttribute("cy", ey.toFixed(1)); }
+      if (body) {
+        var theta = Math.atan2(-ux, uy) * 180 / Math.PI;
+        body.setAttribute("transform",
+          "translate(" + cx + "," + cy + ") rotate(" + theta.toFixed(1) + ")");
+      }
     }
-    linkage("crankHot", "rodHot", "pinHot", 430, 110, hotAng, 448, 170);
-    linkage("crankCold", "rodCold", "pinCold", 430, 400, coldAng, 448, 460);
+    linkage("crankHot", "rodHot", "pinHot", "actBodyHot", 430, 110, hotAng, 448, 196);
+    linkage("crankCold", "rodCold", "pinCold", "actBodyCold", 430, 400, coldAng, 448, 486);
 
     document.getElementById("hotActuator").style.display = two ? "block" : "none";
     document.getElementById("coldActuator").style.display = two ? "block" : "none";
