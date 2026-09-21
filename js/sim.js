@@ -7,6 +7,10 @@
   var MAX = 200, MIN = 50, RESET_START = 8, RESET_SPAN = 5;
   // Thermostat setpoint range and the dial's mechanical sweep either side of 12 o'clock.
   var SP_MIN = 55, SP_MAX = 95, SP_SWEEP = 60;
+  // Dial graduations: a minor notch every TICK_STEP degF, a long notch and a
+  // number every LABEL_STEP.  Entry resolution is coarser than the notches
+  // (see SP_STEP) so the readout still lands on clean half degrees.
+  var TICK_STEP = 2.5, LABEL_STEP = 10, SP_STEP = 0.5;
   function spFromAngle(ang) {
     return SP_MIN + (ang + SP_SWEEP) / (2 * SP_SWEEP) * (SP_MAX - SP_MIN);
   }
@@ -190,19 +194,24 @@
   function initDeviceArt() {
     var gs = document.getElementById("tstatScale");
     if (!gs) return;
-    for (var a = -SP_SWEEP; a <= SP_SWEEP; a += 15) {
-      var major = (a % 30 === 0);
-      var p1 = polar(1058, 292, 26, a), p2 = polar(1058, 292, major ? 31.5 : 30, a);
+    var nMinor = Math.round((SP_MAX - SP_MIN) / TICK_STEP);
+    var perLabel = Math.round(LABEL_STEP / TICK_STEP);
+    for (var i = 0; i <= nMinor; i++) {
+      var a = -SP_SWEEP + i * (2 * SP_SWEEP / nMinor);
+      var major = (i % perLabel === 0);
+      var p1 = polar(1058, 292, major ? 26 : 28, a);
+      var p2 = polar(1058, 292, major ? 32 : 30.5, a);
       gs.appendChild(seg("tstat-tick" + (major ? " major" : ""), p1[0], p1[1], p2[0], p2[1]));
     }
-    [-SP_SWEEP, -30, 0, 30, SP_SWEEP].forEach(function (ang) {
-      var pt = polar(1058, 292, 20.5, ang);
+    for (var k = 0; k <= nMinor; k += perLabel) {
+      var ang = -SP_SWEEP + k * (2 * SP_SWEEP / nMinor);
+      var pt = polar(1058, 292, 18, ang);
       var t = document.createElementNS(NS, "text");
       t.setAttribute("class", "tstat-num");
       t.setAttribute("x", pt[0].toFixed(1)); t.setAttribute("y", (pt[1] + 2.8).toFixed(1));
       t.textContent = String(spFromAngle(ang));
       gs.appendChild(t);
-    });
+    }
   }
 
   function buildTube(t) {
@@ -634,7 +643,7 @@
         var x = (evt.clientX - box.left) / box.width * 1250;
         var y = (evt.clientY - box.top) / box.height * 700;
         var ang = clamp(Math.atan2(x - 1058, -(y - 292)) * 180 / Math.PI, -SP_SWEEP, SP_SWEEP);
-        state.setpoint = Math.round(spFromAngle(ang) * 2) / 2;
+        state.setpoint = Math.round(spFromAngle(ang) / SP_STEP) * SP_STEP;
         syncControls();
       }
       dial.addEventListener("pointerdown", function (e) {

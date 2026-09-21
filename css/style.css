@@ -182,7 +182,7 @@ main {
 .tstat-dial { fill: var(--scale); stroke: var(--dev-plate-edge); stroke-width: 1.5; }
 .tstat-tick { stroke: var(--scale-line); stroke-width: 1.4; stroke-linecap: round; }
 .tstat-tick.major { stroke-width: 2.2; }
-.tstat-num { fill: var(--scale-line); font-size: 8px; font-weight: 750; text-anchor: middle; }
+.tstat-num { fill: var(--scale-line); font-size: 6.5px; font-weight: 750; text-anchor: middle; }
 .tstat-idx { fill: var(--accent); }
 
 .tc-body { fill: url(#bodyGrad); stroke: #9c8a63; stroke-width: 1.6; }
