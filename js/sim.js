@@ -149,8 +149,8 @@
 
     var specs = [];
     if (hasRelay) {
-      specs.push({ id: "hotAct", points: [[ACTUATOR_X, 237], [ACTUATOR_X, RELAY_B[1] + 18],
-        [RELAY_B[0], RELAY_B[1] + 18], [RELAY_B[0], RELAY_B[1] + 7]],
+      specs.push({ id: "hotAct", points: [[ACTUATOR_X, 237], [ACTUATOR_X, 250],
+        [RELAY_B[0], 250], [RELAY_B[0], RELAY_B[1]]],
         cls: "wire-branch", name: "relay to hot actuator", mode: "ctrl" });
     }
     var tHotY = model === "csc2000" ? 295 : 175;
@@ -165,8 +165,8 @@
       { id: "coldL", points: probeRoute(PROBE.cold.lo, c.lo, 460),
         cls: "wire-sensor", name: "cold deck sensor L", mode: "ctrl" },
       { id: "hotB", points: hasRelay
-          ? [[h.branch.x, h.branch.y], [h.branch.x, RELAY_S[1] + 33],
-             [RELAY_S[0], RELAY_S[1] + 33], [RELAY_S[0], RELAY_S[1] + 7]]
+          ? [[h.branch.x, h.branch.y], [h.branch.x, RELAY_S[1] + 52],
+             [RELAY_S[0], RELAY_S[1] + 52], [RELAY_S[0], RELAY_S[1]]]
           : [[ACTUATOR_X, 237], [ACTUATOR_X, h.branch.y + bOff],
              [h.branch.x, h.branch.y + bOff], [h.branch.x, h.branch.y]],
         cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
