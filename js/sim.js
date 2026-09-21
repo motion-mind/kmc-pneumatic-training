@@ -438,7 +438,7 @@
 
     // Damper linkage: a crank on the blade rotates with it, so the rod down to
     // the actuator lengthens and shortens — the actuator appears to stroke.
-    function linkage(crankId, rodId, pinId, bodyId, bx, by, ang, cx, cy) {
+    function linkage(crankId, rodId, pinId, bodyId, bx, by, ang, cx, cy, half) {
       var rad = (ang + 90) * Math.PI / 180, r = 20;
       var ex = bx + r * Math.cos(rad), ey = by + r * Math.sin(rad);
       var c = document.getElementById(crankId), rod = document.getElementById(rodId);
@@ -449,7 +449,7 @@
       // rod meets its top face and the whole actuator reads as one piece.
       var dx = cx - ex, dy = cy - ey, L = Math.hypot(dx, dy) || 1;
       var ux = dx / L, uy = dy / L;
-      var rx = cx - 36 * ux, ry = cy - 36 * uy;
+      var rx = cx - half * ux, ry = cy - half * uy;
       if (rod) {
         rod.setAttribute("x1", ex.toFixed(1)); rod.setAttribute("y1", ey.toFixed(1));
         rod.setAttribute("x2", rx.toFixed(1)); rod.setAttribute("y2", ry.toFixed(1));
@@ -460,8 +460,11 @@
           "translate(" + cx + "," + cy + ") rotate(" + theta.toFixed(1) + ")");
       }
     }
-    linkage("crankHot", "rodHot", "pinHot", "actBodyHot", 430, 110, hotAng, 448, 196);
-    linkage("crankCold", "rodCold", "pinCold", "actBodyCold", 430, 400, coldAng, 448, 486);
+    linkage("crankHot", "rodHot", "pinHot", "actBodyHot", 430, 110, hotAng, 448, 196, 36);
+    linkage("crankCold", "rodCold", "pinCold", "actBodyCold", 430, 400, coldAng, 448, 486, 36);
+    // Single shaft: the one actuator drives the cold blade's crank, and the
+    // opposed link carries that on to the hot blade.
+    linkage("crankSingle", "rodSingle", "pinSingle", "actBodySingle", 430, 400, coldAng, 440, 500, 60);
 
     document.getElementById("hotActuator").style.display = two ? "block" : "none";
     document.getElementById("coldActuator").style.display = two ? "block" : "none";
