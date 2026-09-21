@@ -379,6 +379,12 @@
       var fh = clamp((RESET_START - hotT) / RESET_SPAN, 0, 1);
       var hotSP = fh * MAX;
       var hotCmd = hotAir ? clamp(hotSP / MAX * 100, 0, 100) : null;
+      // Once the room is on setpoint the two decks share the load, so the hot
+      // deck holds a minimum rather than sitting shut. A decisive cooling call
+      // (thermostat well above neutral) still closes it right down, which is
+      // what happens at extreme setpoints.
+      var hotFloor = hotT >= 12 ? 0 : (hotT <= 9 ? 25 : (12 - hotT) / 3 * 25);
+      if (hotCmd !== null) hotCmd = Math.max(hotCmd, hotFloor);
       if (hotAir && !sensorOK("hot")) hotCmd = 100;
       var hotTgt;
       if (hotCmd === null) hotTgt = 100;
