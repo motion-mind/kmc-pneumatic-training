@@ -8,7 +8,9 @@
   // Thermostat setpoint range and the dial's mechanical sweep either side of 12 o'clock.
   var SP_MIN = 55, SP_MAX = 95, SP_SWEEP = 135;
   // The room is bounded whatever the box does.
-  var ROOM_MIN = 65, ROOM_MAX = 80;   // 270-degree sweep, gap at the bottom
+  var ROOM_MIN = 65, ROOM_MAX = 80;
+  // Deck supply temperatures: cold deck 55 F, hot deck 80 F.
+  var COLD_DECK_T = 55, HOT_DECK_T = 80;   // 270-degree sweep, gap at the bottom
   // Dial graduations: a minor notch every TICK_STEP degF, a long notch and a
   // number every LABEL_STEP.  Entry resolution is coarser than the notches
   // (see SP_STEP) so the readout still lands on clean half degrees.
@@ -398,7 +400,9 @@
 
     var coldFlow = coldPct / 100 * MAX, hotFlow = hotPct / 100 * MAX;
     var flow = coldFlow + hotFlow;
-    var supplyTemp = flow > 0 ? (coldFlow * 55 + hotFlow * 95) / flow : 55;
+    var supplyTemp = flow > 0
+      ? (coldFlow * COLD_DECK_T + hotFlow * HOT_DECK_T) / flow
+      : COLD_DECK_T;
     // The thermostat trims ordinary deck imbalance out, so the room settles on
     // setpoint with no standing offset. Only a large imbalance — the box
     // driving the wrong way, or springs failed — moves the room off setpoint.
