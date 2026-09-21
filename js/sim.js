@@ -167,7 +167,7 @@
 
     var specs = [];
     if (hasRelay) {
-      specs.push({ id: "hotAct", points: [[ACTUATOR_X, 237], [ACTUATOR_X, 250],
+      specs.push({ id: "hotAct", points: [[ACTUATOR_X, 227], [ACTUATOR_X, 250],
         [RELAY_B[0], 250], [RELAY_B[0], RELAY_B[1]]],
         cls: "wire-act", name: "relay to hot actuator", mode: "ctrl" });
     }
@@ -185,10 +185,10 @@
       { id: "hotB", points: hasRelay
           ? [[h.branch.x, h.branch.y], [h.branch.x, RELAY_S[1] + 52],
              [RELAY_S[0], RELAY_S[1] + 52], [RELAY_S[0], RELAY_S[1]]]
-          : [[ACTUATOR_X, 237], [ACTUATOR_X, h.branch.y + bOff],
+          : [[ACTUATOR_X, 227], [ACTUATOR_X, h.branch.y + bOff],
              [h.branch.x, h.branch.y + bOff], [h.branch.x, h.branch.y]],
         cls: "wire-branch", name: "hot deck branch", mode: "ctrl" },
-      { id: "coldB", points: [[ACTUATOR_X, 527], [ACTUATOR_X, c.branch.y + bOff],
+      { id: "coldB", points: [[ACTUATOR_X, 517], [ACTUATOR_X, c.branch.y + bOff],
         [c.branch.x, c.branch.y + bOff], [c.branch.x, c.branch.y]],
         cls: "wire-branch", name: "cold deck branch", mode: "ctrl" },
       { id: "mainHot", points: [[TRUNK_X, h.main.y], [h.main.x, h.main.y]],
@@ -502,8 +502,8 @@
           "translate(" + cx + "," + cy + ") rotate(" + theta.toFixed(1) + ")");
       }
     }
-    linkage("crankHot", "rodHot", "pinHot", "actBodyHot", 430, 110, hotAng, 448, 196, 36);
-    linkage("crankCold", "rodCold", "pinCold", "actBodyCold", 430, 400, coldAng, 448, 486, 36);
+    linkage("crankHot", "rodHot", "pinHot", "actBodyHot", 430, 110, hotAng, 448, 186, 36);
+    linkage("crankCold", "rodCold", "pinCold", "actBodyCold", 430, 400, coldAng, 448, 476, 36);
     // Single shaft: the one actuator drives the cold blade's crank, and the
     // opposed link carries that on to the hot blade.
     linkage("crankSingle", "rodSingle", "pinSingle", "actBodySingle", 430, 400, coldAng, 445, 500, 45);
